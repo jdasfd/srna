@@ -70,8 +70,9 @@ prefetch --help
 Using fastq-dump in SRAtoolkit to convert sra files to fastq files.
 
 ```bash
-cd /mnt/e/project/srna/sRNA/srr
+cd /mnt/e/project/srna/srr
 parallel -j 12 "fastq-dump {}" ::: $(ls *.sra)
+rm *.sra
 ```
 
 ###  Quality control
@@ -89,101 +90,75 @@ trim_galore --phred33 --small_rna --output_dir ../trim *.fastq
 
 
 
-##  Using Bowtie
+##  Using Bowtie2
 
-Bowtie is an ultrafast, memory-efficient short read aligner geared toward quickly aligning large sets of short DNA sequences (reads) to large genomes. It aligns 35-base-pair reads to the human genome at a rate of 25 million reads per hour on a typical workstation.
+Because of Bowtie has been outdated and has problem in downloading it. I decided to adopt Bowtie2, though Bowtie has advantages in mapping short reads.
 
-**Why use Bowtie rather than Bowtie2:** For relatively short reads (*e.g.* less than 50 bp), Bowtie 1 is sometimes faster and/or more sensitive. Bowtie 1 does not yet report gapped alignments; this is future work (Bowtie 2). For sRNA, usually we do not consider mismatches.
+###  Aligning sRNA-seq data to plant genome
 
-Because of Bowtie had been outdated and had problem in downloading it. I decided to adopt Bowtie2.
+First, I aligned sRNA-seq reads to the *A. tha* genome to validate whether there were reads that could not be aligned to the genome.
 
-## Aligning sRNA-seq data to plant genome
-
-First, I aligned sRNA-seq reads to the *A. tha* genome to validate whether there were reads that could not be align to the genome.
-
-###  Indexing
+#### Indexing
 
 ```bash
-cd /mnt/e/project/srna/genome/plant/Atha/genome
+cd /mnt/e/project/srna/genome/plant/genome
 
 bowtie2-build --threads 12 --quiet Atha.fna Atha
 ```
 
-###  Aligning
+####  Aligning
 
 ```bash
 cd /mnt/e/project/srna/trim
 
-nohup parallel -j 3 "
-    bowtie -v 0 -a -m1 --best --strata --threads 4 --quiet \
-    -x ../../plant/Atha/genome/Atha {} -S ../output/bowtie/{}.sam
-" ::: $(ls SRR1004935*.fq)
-# -v or -n: decide allowed max mismatches. Usually in sRNA it is 0
-# -a: output all possible alignment
-# -k: if there are multi-alignments, output all good aligments up to k
-# -m: if there are multi-alignments, output all alignments more than m
-# -S: report .sam file
-# --best --strata: best means alignments sort from high score to low score (ties broken by quality). strata must use with best, means report the best part only
-# bowtie can accept different file format input, included fastq and fasta
-
-nohup parallel -j 3 "
-    bowtie -v 0 -a -m1 --best --strata --threads 4 --quiet \
-    -x ../../plant/Atha/genome/Atha {} --al ../output/bowtie/{}.ali.fastq \
-" ::: $(ls SRR1004935*.fq)
-# output aligned reads to the fastq file
-
-nohup parallel -j 3 "
-    bowtie -v 0 -a -m1 --best --strata --threads 4 --quiet \
-    -x ../../plant/Atha/genome/Atha {} --un ../output/bowtie/{}.unali.fastq \
-" ::: $(ls SRR1004935*.fq)
-# output unaligned reads to the fastq file
+parallel -j 3 "
+    bowtie2 -q {}_trimmed.fq --local -x ../genome/plant/Atha/Atha \
+    --un ../output/{}_unali.fq --threads 4 -S ../output/{}_plant.sam
+" ::: $(ls SRR1004935*.fq | perl -p -e 's/_trimmed\.fq//')
 ```
 
-Using Bowtie2
+After run this, bowtie2 would show alignment results on screen
 
 ```bash
-cd /mnt/e/project/srna/trim
-
-nohup parallel -j 3 "
-    bowtie2 -q {} --end-to-end -x ../genome/plant/Atha/Atha \
-    --un ../output/{}.unali.fq --threads 4 -S ../output/{}.sam
-" ::: $(ls SRR1004935*.fq | perl -p -e 's/_trimmed\.fq$//')
-
 23131748 reads; of these:
   23131748 (100.00%) were unpaired; of these:
-    1164936 (5.04%) aligned 0 times
-    10693063 (46.23%) aligned exactly 1 time
-    11273749 (48.74%) aligned >1 times
-94.96% overall alignment rate
-21565629 reads; of these:
-  21565629 (100.00%) were unpaired; of these:
-    1059845 (4.91%) aligned 0 times
-    8465079 (39.25%) aligned exactly 1 time
-    12040705 (55.83%) aligned >1 times
-95.09% overall alignment rate
+    9194122 (39.75%) aligned 0 times
+    9421082 (40.73%) aligned exactly 1 time
+    4516544 (19.53%) aligned >1 times
+60.25% overall alignment rate
 23119819 reads; of these:
   23119819 (100.00%) were unpaired; of these:
-    956732 (4.14%) aligned 0 times
-    11659236 (50.43%) aligned exactly 1 time
-    10503851 (45.43%) aligned >1 times
-95.86% overall alignment rate
-22719863 reads; of these:
-  22719863 (100.00%) were unpaired; of these:
-    1307511 (5.75%) aligned 0 times
-    9259237 (40.75%) aligned exactly 1 time
-    12153115 (53.49%) aligned >1 times
-94.25% overall alignment rate
+    8802807 (38.07%) aligned 0 times
+    10349574 (44.76%) aligned exactly 1 time
+    3967438 (17.16%) aligned >1 times
+61.93% overall alignment rate
+21565629 reads; of these:
+  21565629 (100.00%) were unpaired; of these:
+    8696299 (40.32%) aligned 0 times
+    7765072 (36.01%) aligned exactly 1 time
+    5104258 (23.67%) aligned >1 times
+59.68% overall alignment rate
 22224601 reads; of these:
   22224601 (100.00%) were unpaired; of these:
-    716329 (3.22%) aligned 0 times
-    9437770 (42.47%) aligned exactly 1 time
-    12070502 (54.31%) aligned >1 times
-96.78% overall alignment rate
+    8400742 (37.80%) aligned 0 times
+    8933235 (40.20%) aligned exactly 1 time
+    4890624 (22.01%) aligned >1 times
+62.20% overall alignment rate
+22719863 reads; of these:
+  22719863 (100.00%) were unpaired; of these:
+    8497773 (37.40%) aligned 0 times
+    8664376 (38.14%) aligned exactly 1 time
+    5557714 (24.46%) aligned >1 times
+62.60% overall alignment rate
 ```
 
-##  Aligning unaligned reads to bacterial genomes
 
-###  Indexing
+
+###  Aligning unaligned reads to bacterial genomes
+
+We chose 365 bacterial genomes from 191 species as our target bacteria.
+
+####  Indexing
 
 ```bash
 cd /mnt/e/project/srna/genome/bacteria
@@ -191,47 +166,53 @@ cd /mnt/e/project/srna/genome/bacteria
 bowtie2-build --threads 12 --quiet bacteria.fna bacteria
 ```
 
-###  Aligning
+####  Aligning
 
 ```bash
 cd /mnt/e/project/srna/output
 
-bowtie2 -x ../genome/bacteria/bacteria -q SRR4039757_trimmed.fq.unali.fq --end-to-end --threads 12 -S SRR4039757_trimmed.fq.unali.fq.sam
-
-nohup parallel -j 3 "
-    bowtie2 -q {} --end-to-end -x ../genome/bacteria/bacteria \
-    --threads 4 -S ./{}.sam
-" ::: $(ls SRR1004935*.unali.fq)
+parallel -j 3 "
+    bowtie2 -q {}_unali.fq --local -x ../genome/bacteria/bacteria \
+    --threads 4 -S ./{}_bac.sam
+" ::: $(ls SRR1004935*_unali.fq | perl -p -e 's/_unali\.fq$//')
 ```
 
-
-
-## Aligning unaligned reads to bacterial tRNAs
-
-I chose tRNAs from 192 bacterial species as our target to check whether reads could align to bacterial tRNAs.
-
-###  Indexing
+Alignment results:
 
 ```bash
-cd /mnt/e/project/srna/bac/trna
-bowtie-build --threads 12 --quiet bac_trna.fna bac
+8802807 reads; of these:
+  8802807 (100.00%) were unpaired; of these:
+    8727037 (99.14%) aligned 0 times
+    6225 (0.07%) aligned exactly 1 time
+    69545 (0.79%) aligned >1 times
+0.86% overall alignment rate
+8696299 reads; of these:
+  8696299 (100.00%) were unpaired; of these:
+    8669356 (99.69%) aligned 0 times
+    7280 (0.08%) aligned exactly 1 time
+    19663 (0.23%) aligned >1 times
+0.31% overall alignment rate
+9194122 reads; of these:
+  9194122 (100.00%) were unpaired; of these:
+    9163807 (99.67%) aligned 0 times
+    10560 (0.11%) aligned exactly 1 time
+    19755 (0.21%) aligned >1 times
+0.33% overall alignment rate
+8400742 reads; of these:
+  8400742 (100.00%) were unpaired; of these:
+    8390361 (99.88%) aligned 0 times
+    1805 (0.02%) aligned exactly 1 time
+    8576 (0.10%) aligned >1 times
+0.12% overall alignment rate
+8497773 reads; of these:
+  8497773 (100.00%) were unpaired; of these:
+    8448696 (99.42%) aligned 0 times
+    18110 (0.21%) aligned exactly 1 time
+    30967 (0.36%) aligned >1 times
+0.58% overall alignment rate
 ```
 
-Get .bed file of selected bacterial tRNAs
-
-```bash
-cd /mnt/e/project/srna/annotation/bacteria
-
-cat bac.gtf | grep -v '#' | tsv-filter --str-eq 2:RefSeq --str-eq 3:gene --regex '9:tRNA' > bac_trna.gtf
-cat bac_trna.gtf | convert2bed --input=gtf > bac_trna.bed
-```
-
-```bash
-cat bac.gtf | grep -v '#' | tsv-filter --str-eq 2:RefSeq --str-eq 3:gene --regex '9:rRNA' > bac_rrna.gtf
-cat bac_rrna.gtf | convert2bed --input=gtf > bac_rrna.bed
-```
-
-
+Convert sam to bam file for minimum storage stress.
 
 ```bash
 cd /mnt/e/project/srna/output
@@ -240,56 +221,34 @@ parallel -j 3 "
 	samtools sort -@ 4 {1}.sam > {1}.sort.bam
 	samtools index {1}.sort.bam
 " ::: $(ls *.sam | perl -p -e 's/\.sam$//')
+
+rm *.sam
 ```
 
-mosdepth for counting the coverage
+### mosdepth for counting the coverage
 
 ```bash
 parallel -j 3 "
-	mosdepth -t 4 -b ../annotation/bacteria/bac_trna.bed {} {}
-" ::: $(ls *unali.fq.sort.bam)
+	mosdepth -t 4 -b ../annotation/bacteria/bac_trna.bed {}_trna {}_bac.sort.bam
+" ::: $(ls *_bac.sort.bam | perl -p -e 's/_bac\.sort\.bam//')
+# -t: threads, it has been said that 4 could reach the max speed 
 ```
 
 ```bash
-parallel -j 3 "
-	mosdepth -t 4 -b ../annotation/bacteria/bac_rrna.bed {}rrna {}
-" ::: $(ls *unali.fq.sort.bam)
-```
-
-
-
-###  Aligning
-
-```bash
-cd /mnt/e/project/srna/sRNA/output/bowtie
-
-nohup parallel -j 3 "
-    bowtie -v 0 -a -m1 --best --strata --threads 4 --quiet \
-    -x ../../../bac/trna/bac {} --al ../bac_bowtie/{}.bac_ali.fastq \
-" ::: $(ls *.unali.fastq)
+cat SRR10049355_trna.mosdepth.summary.txt | perl ../species/chi.pl > ../species/result.tsv
 ```
 
 ```bash
-nohup parallel -j 3 "
-    bowtie -v 0 -a -m1 --best --strata --threads 4 --quiet \
-    -x ../../../bac/trna/bac {} -S ../bac_bowtie/{}.bac_ali.sam \
-" ::: $(ls *.unali.fastq)
+cd /mnt/e/project/srna/species
+
+cat result.tsv |
+    parallel --colsep '\t' -j 1 -k '
+        echo "==> {1}"
+        Rscript -e "
+            x <- matrix(c({2}, {4}, {3}, {5}), nrow=2)
+            x
+            chisq.test(x)
+        "
+    '
 ```
 
-
-
-```bash
-cd /mnt/e/project/srna/sRNA/output/bac_bowtie
-
-nohup parallel -j 3 "
-    bowtie -v 0 -a -m1 --best --strata --threads 4 --quiet \
-    -x ../../../Atha/genome/Atha_rna {} --al ../bac_bowtie/{}_mrna.ali.fastq \
-" ::: $(ls *bac_ali.fastq)
-```
-
-```bash
-nohup parallel -j 3 "
-    bowtie -v 0 -a -m1 --best --strata --threads 4 --quiet \
-    -x ../../../Atha/genome/Atha_rna {} -S ../bac_bowtie/{}_mrna.ali.sam \
-" ::: $(ls *bac_ali.fastq)
-```
