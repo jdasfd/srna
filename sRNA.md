@@ -411,7 +411,7 @@ cat result.tsv |
             x
             chisq.test(x)
         "
-    '
+    ' > chi-square.txt
 ```
 
 
@@ -453,5 +453,11 @@ Comparing two runlist files for their intersect part
 ```bash
 spanr compare SRR10049355_unali.per-base.yml tRNA.yml -o intersect.yml
 # spanr compare could manipulate aggregation, including intersect (default), union, diff or xor
+```
+
+```bash
+tsv-join -H --filter-file trna.tsv --key-fields 1 --append-fields 3 result_unali.tsv > result1.tsv
+tsv-join -H --filter-file intersect.tsv --key-fields 1 --append-fields 3 result1.tsv > result.tsv
+sed -i '1d' result.tsv
 ```
 
