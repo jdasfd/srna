@@ -414,3 +414,44 @@ cat result.tsv |
     '
 ```
 
+
+
+
+
+```bash
+spanr stat bacteria.chr.sizes SRR10049355_unali.per-base.yml > result_unali.csv
+```
+
+```bash
+cat SRR10049355_unali.per-base.ranges | perl ../../species/deal.pl > SRR10049355_unali.per-base.yml
+sed -i '1d' SRR10049355_unali.per-base.yml
+```
+
+```bash
+faops size bacteria.fna > bacteria.chr.sizes
+```
+
+```bash
+cat SRR10049355_unali.per-base.bed | tsv-filter --ge 4:1 | perl -n -e \
+'while(<>){chomp;\
+@a=(split/\t/,$_);\
+print"$a[0]:$a[1]-$a[2]\n";\
+}' > SRR10049355_unali.per-base.ranges
+```
+
+
+
+Extract tRNA from .gff file 
+
+```bash
+spanr gff bacteria.gff --tag tRNA > tRNA.yml
+# --tag: selected gene name
+```
+
+Comparing two runlist files for their intersect part
+
+```bash
+spanr compare SRR10049355_unali.per-base.yml tRNA.yml -o intersect.yml
+# spanr compare could manipulate aggregation, including intersect (default), union, diff or xor
+```
+
