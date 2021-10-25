@@ -113,7 +113,7 @@ cd /mnt/e/project/srna/trim
 
 parallel -j 3 "
     bowtie2 -q {}_trimmed.fq -N 0 -x ../genome/plant/Atha/Atha \
-    --al ../output/fastq/{}_aliall.fq --no-unal --threads 4 -S ../output/sam/{}_plantall.sam
+    --al ../output/fastq/{}_aliall.fq --no-unal --threads 4 -S ../output/bam/{}_plantall.sam
 " ::: $(ls SRR1004935*.fq | perl -p -e 's/_trimmed\.fq//')
 ```
 
@@ -157,7 +157,7 @@ Then we need another mapping round for the 1 mismatch allowed
 ```bash
 parallel -j 3 "
     bowtie2 -q {}_trimmed.fq -N 1 -x ../genome/plant/Atha/Atha \
-    --al ../output/fastq/{}_ali1mis.fq --un ../output/fastq/{}_unali.fq --no-unal --threads 4 -S ../output/sam/{}_plant1mis.sam
+    --al ../output/fastq/{}_ali1mis.fq --un ../output/fastq/{}_unali.fq --no-unal --threads 4 -S ../output/bam/{}_plant1mis.sam
 " ::: $(ls SRR1004935*.fq | perl -p -e 's/_trimmed\.fq//')
 ```
 
@@ -231,7 +231,7 @@ cd /mnt/e/project/srna/output/fastq
 
 parallel -j 3 "
     bowtie2 -q {}_unali.fq -x ../../genome/bacteria/bacteria \
-    --threads 4 -S ../sam/{}_unali.sam
+    --threads 4 -S ../bam/{}_unali.sam
 " ::: $(ls SRR1004935*_unali.fq | perl -p -e 's/_unali\.fq$//')
 ```
 
@@ -275,7 +275,7 @@ Aligning 1 mismatch allowed reads to bacteria species
 ```bash
 parallel -j 3 "
     bowtie2 -q {}_1mis.fq -x ../../genome/bacteria/bacteria \
-    --threads 4 -S ../sam/{}_1mis.sam
+    --threads 4 -S ../bam/{}_1mis.sam
 " ::: $(ls SRR1004935*_1mis.fq | perl -p -e 's/_1mis\.fq$//')
 ```
 
@@ -317,7 +317,7 @@ Aligning perfectly matched reads to bacteria species
 ```bash
 parallel -j 3 "
     bowtie2 -q {}_aliall.fq -x ../../genome/bacteria/bacteria \
-    --threads 4 -S ../sam/{}_aliall.sam
+    --threads 4 -S ../bam/{}_aliall.sam
 " ::: $(ls SRR1004935*_aliall.fq | perl -p -e 's/_aliall\.fq$//')
 ```
 
@@ -357,7 +357,7 @@ parallel -j 3 "
 Convert sam to bam file for minimum storage stress.
 
 ```bash
-cd /mnt/e/project/srna/output/sam
+cd /mnt/e/project/srna/output/bam
 
 parallel -j 3 " 
 samtools sort -@ 4 {1}.sam > {1}.sort.bam 
@@ -376,11 +376,18 @@ cd /mnt/e/project/srna/annotation/bacteria
 
 cat bac.gtf | grep -v '#' | tsv-filter --str-eq 2:RefSeq --str-eq 3:gene --regex '9:tRNA' > bac_trna.gtf
 cat bac_trna.gtf | convert2bed --input=gtf > bac_trna.bed
+
+cat bac.gtf | grep -v '#' | tsv-filter --str-eq 2:RefSeq --str-eq 3:gene --ff-lt 4:5 > bac_gene.gtf
+cat bac_gene.gtf | convert2bed --input=gtf > bac_gene.bed
 ```
 
 
 
 ### mosdepth for counting the coverage
+
+```bash
+cd /mnt/e/project/srna/output/bam
+```
 
 ```bash
 parallel -j 3 "
