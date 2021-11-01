@@ -500,10 +500,11 @@ Use chi-square test for calculating whether there are differences between genome
 
 ```bash
 mkdir /mnt/e/project/srna/output/chi
-cd /mnt/e/project/srna/output/chi
+cd /mnt/e/project/srna/output/result
 
-parallel 
-cat result.tsv |
+for tsv in `ls *.result.tsv`
+do
+cat $tsv |
     parallel --colsep '\t' -j 1 -k '
         echo "==> {1}"
         Rscript -e "
@@ -511,7 +512,27 @@ cat result.tsv |
             x
             chisq.test(x)
         "
-    ' > chi-square.txt
+    ' > ../chi/$tsv.chi-square.txt
+done
 ```
 
+
+
+
+
+```bash
+cd /mnt/e/project/srna/output/chi
+
+parallel -j 3 " \
+cat {}.result.tsv.chi-square.txt | perl ../../script/square.pl > {}.chi.tsv \
+" ::: $(ls *.txt | perl -p -e 's/\.result.+txt$//')
+```
+
+
+
+```bash
+cd /mnt/e/project/srna
+
+perl script/name.pl name.txt > output/chi/name.tsv
+```
 
