@@ -516,9 +516,15 @@ cat $tsv |
 done
 ```
 
+Get the name list.
 
+```bash
+cd /mnt/e/project/srna
 
+perl script/name.pl name.txt > output/chi/name.tsv
+```
 
+Use a simple script for getting chi-square results.
 
 ```bash
 cd /mnt/e/project/srna/output/chi
@@ -528,11 +534,11 @@ cat {}.result.tsv.chi-square.txt | perl ../../script/square.pl > {}.chi.tsv \
 " ::: $(ls *.txt | perl -p -e 's/\.result.+txt$//')
 ```
 
-
+Join tsv together for better analysis.
 
 ```bash
-cd /mnt/e/project/srna
-
-perl script/name.pl name.txt > output/chi/name.tsv
+parallel -j 3 " \
+cat {}.chi.tsv | tsv-join --filter-file name.tsv -k 1 --append-fields 2,3 > {}.result.tsv \
+" ::: $(ls *.chi.tsv | perl -p -e 's/\.chi\.tsv//')
 ```
 
