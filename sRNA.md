@@ -457,6 +457,8 @@ spanr gff bacteria.gff --tag rRNA > rRNA.yml
 Compare two runlist files for their intersect part.
 
 ```bash
+cd /mnt/e/project/srna/output/mosdepth
+
 parallel -j 3 " \
 spanr compare {}.yml ../../annotation/bacteria/tRNA.yml -o {}.intersect.yml \
 " ::: $(ls *.yml | perl -p -e 's/\.yml//')
@@ -470,6 +472,8 @@ spanr stat bacteria.chr.sizes ../../annotation/bacteria/tRNA.yml -o ../result/tR
 ```
 
 ```bash
+cd /mnt/e/project/srna/output/mosdepth
+
 parallel -j 3 " \
 spanr stat bacteria.chr.sizes {}.intersect.yml -o ../result/{}.intersect.csv \
 " ::: $(ls *.intersect.yml | perl -p -e 's/\.inter.+yml$//')
@@ -478,6 +482,8 @@ spanr stat bacteria.chr.sizes {}.intersect.yml -o ../result/{}.intersect.csv \
 Convert .csv to .tsv format.
 
 ```bash
+cd /mnt/e/project/srna/output/result
+
 parallel -j 3 " \
 cat {}.csv | csv2tsv -H > {}.tsv \
 " ::: $(ls *.csv | perl -p -e 's/\.csv$//')
@@ -531,7 +537,7 @@ cd /mnt/e/project/srna/output/chi
 
 parallel -j 3 " \
 cat {}.result.tsv.chi-square.txt | perl ../../script/square.pl > {}.chi.tsv \
-" ::: $(ls *.txt | perl -p -e 's/\.result.+txt$//')
+" ::: $(ls *.result.tsv.chi-square.txt | perl -p -e 's/\.result.+txt$//')
 ```
 
 Join tsv together for better analysis.
@@ -541,4 +547,78 @@ parallel -j 3 " \
 cat {}.chi.tsv | tsv-join --filter-file name.tsv -k 1 --append-fields 2,3 > {}.result.tsv \
 " ::: $(ls *.chi.tsv | perl -p -e 's/\.chi\.tsv//')
 ```
+
+
+
+###  rRNA
+
+```bash
+parallel -j 3 " \
+spanr compare {}.yml ../../annotation/bacteria/rRNA.yml -o {}.rRNA.intersect.yml \
+" ::: $(ls *.yml | grep -v 'intersect' | perl -p -e 's/\.yml//')
+```
+
+```bash
+spanr stat bacteria.chr.sizes ../../annotation/bacteria/rRNA.yml -o ../result/rRNA.csv
+```
+
+```bash
+cd /mnt/e/project/srna/output/mosdepth
+
+parallel -j 3 " \
+spanr stat bacteria.chr.sizes {}.intersect.yml -o ../result/{}.intersect.csv \
+" ::: $(ls *.rRNA.intersect.yml | perl -p -e 's/\.inter.+yml$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/result
+
+parallel -j 3 " \
+cat {}.csv | csv2tsv -H > {}.tsv \
+" ::: $(ls *.csv | perl -p -e 's/\.csv$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/result
+
+parallel -j 3 " \
+cat {}.tsv | cut -f 1,2,3 | \
+tsv-join -H --filter-file rRNA.tsv --key-fields 1 --append-fields 3 | \
+tsv-join -H --filter-file {}.rRNA.intersect.tsv --key-fields 1 --append-fields 3 | \
+sed '1d' > {}.rRNA.result.tsv \
+" ::: $(ls *.rRNA.intersect.tsv | perl -p -e 's/\.rRNA.*tsv$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/result
+
+for tsv in `ls *.rRNA.result.tsv`
+do
+cat $tsv |
+    parallel --colsep '\t' -j 1 -k '
+        echo "==> {1}"
+        Rscript -e "
+            x <- matrix(c({2}, {4}, {3}, {5}), nrow=2)
+            x
+            chisq.test(x)
+        "
+    ' > ../chi/$tsv.chi-square.txt
+done
+```
+
+```bash
+cd /mnt/e/project/srna/output/chi
+
+parallel -j 3 " \
+cat {}.result.tsv.chi-square.txt | perl ../../script/square.pl > {}.chi.tsv \
+" ::: $(ls *.rRNA.*.txt | perl -p -e 's/\.result.+txt$//')
+```
+
+```bash
+parallel -j 3 " \
+cat {}.chi.tsv | tsv-join --filter-file name.tsv -k 1 --append-fields 2,3 > {}.result.tsv \
+" ::: $(ls *.rRNA.chi.tsv | perl -p -e 's/\.chi\.tsv//')
+```
+
+
 
