@@ -416,6 +416,8 @@ gzip -d *.per-base.bed.gz
 Convert bed format file to runlist files for better manipulating using a perl script.
 
 ```bash
+/mnt/e/project/srna/output/mosdepth
+
 parallel -j 3 " \
 cat {}.per-base.bed | perl ../../script/bed2yml.pl > {}.yml \
 " ::: $(ls *.per-base.bed | perl -p -e 's/\.per-base\.bed//')
@@ -438,6 +440,8 @@ Calculate the coverage.
 The .csv file contains 4 columns, chr, chrLength, size and coverage. We need the column 2 ‘chrLength’ (representing genome length) and the column 3 ‘size’ (representing genome covered length).
 
 ```bash
+cd /mnt/e/project/srna/output/result
+
 parallel -j 3 " \
 spanr stat bacteria.chr.sizes {}.yml -o ../result/{}.csv \
 " ::: $(ls *.yml | perl -p -e 's/\.yml//')
@@ -462,6 +466,10 @@ cd /mnt/e/project/srna/output/mosdepth
 parallel -j 3 " \
 spanr compare {}.yml ../../annotation/bacteria/tRNA.yml -o {}.intersect.yml \
 " ::: $(ls *.yml | perl -p -e 's/\.yml//')
+
+parallel -j 3 " \
+spanr compare --op diff {}.yml ../../annotation/bacteria/tRNA.yml -o {}.diff.yml \
+" ::: $(ls *.yml | grep -v 'intersect' | perl -p -e 's/\.yml//')
 # spanr compare could manipulate aggregation, including intersect (default), union, diff or xor
 ```
 
@@ -477,6 +485,10 @@ cd /mnt/e/project/srna/output/mosdepth
 parallel -j 3 " \
 spanr stat bacteria.chr.sizes {}.intersect.yml -o ../result/{}.intersect.csv \
 " ::: $(ls *.intersect.yml | perl -p -e 's/\.inter.+yml$//')
+
+parallel -j 3 " \
+spanr stat bacteria.chr.sizes {}.diff.yml -o ../result/{}.diff.csv \
+" ::: $(ls *.diff.yml | perl -p -e 's/\.diff\.yml$//')
 ```
 
 Convert .csv to .tsv format.
@@ -487,17 +499,25 @@ cd /mnt/e/project/srna/output/result
 parallel -j 3 " \
 cat {}.csv | csv2tsv -H > {}.tsv \
 " ::: $(ls *.csv | perl -p -e 's/\.csv$//')
+
+rm *.csv
 ```
 
 Use tsv-utils join tsv together.
 
 ```bash
 parallel -j 3 " \
-cat {}.tsv | cut -f 1,2,3 | \
+cat {}.diff.tsv | cut -f 1,2,3 | \
 tsv-join -H --filter-file tRNA.tsv --key-fields 1 --append-fields 3 | \
 tsv-join -H --filter-file {}.intersect.tsv --key-fields 1 --append-fields 3 | \
-sed '1d' > {}.result.tsv \
+sed '1d' > {}.tsv \
 " ::: $(ls *.tsv | perl -p -e 's/\..*tsv$//' | uniq | grep -v 'tRNA')
+```
+
+```bash
+parallel -j 3 " \
+cat {}.tsv | perl ../../script/change.pl > {}.result.tsv \
+" ::: $(ls *.tsv | perl -p -e 's/\..*tsv//' | grep -v 'tRNA' | uniq)
 ```
 
 ###  Chi-square test
@@ -510,13 +530,13 @@ cd /mnt/e/project/srna/output/result
 
 for tsv in `ls *.result.tsv`
 do
-cat $tsv |
-    parallel --colsep '\t' -j 1 -k '
+cat $tsv | parallel --colsep '\t' -j 1 -k '
         echo "==> {1}"
         Rscript -e "
-            x <- matrix(c({2}, {4}, {3}, {5}), nrow=2)
-            x
-            chisq.test(x)
+            x <- c({5}, {3})
+            a <- {4}/{2}
+            b <- 1-({4}/{2})
+            chisq.test(x, p = c(a, b))
         "
     ' > ../chi/$tsv.chi-square.txt
 done
@@ -546,6 +566,14 @@ Join tsv together for better analysis.
 parallel -j 3 " \
 cat {}.chi.tsv | tsv-join --filter-file name.tsv -k 1 --append-fields 2,3 > {}.result.tsv \
 " ::: $(ls *.chi.tsv | perl -p -e 's/\.chi\.tsv//')
+```
+
+Filter for the results
+
+```bash
+parallel -j 3 " \
+cat {} | tsv-filter --le 2:0.05 --eq 4:1 | wc -l \
+" ::: $(ls *.result.tsv)
 ```
 
 
