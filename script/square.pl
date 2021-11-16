@@ -16,7 +16,7 @@ else{
     $_=~s/(X\-squared\s=\s)/\#/g;
     $_=~s/df\s=\s1\s?p-value\s[<=]\s/\#/g;
     $_=~s/(\n.?\s)$/\#\n/g;
-    ($name,$chi,$pval)=(split/\#/,$_)[0,2,3];
-    print"$name\t$chi\t$pval\n";
+    ($name,$pval)=(split/\#/,$_)[0,3];
+    print"$name\t$pval\n";
     }
 }

@@ -83,7 +83,7 @@ Use trim galore for automatic adapters cut. Trim galore is a perl wrapper for Fa
 cd /mnt/e/project/srna/srr
 parallel -j 4 " \
 trim_galore --phred33 --small_rna --output_dir ../trim {} \
-" ::; $(ls *.fastq)
+" ::: $(ls *.fastq)
 trim_galore --phred33 --small_rna --output_dir ../trim *.fastq
 # --small_rna: automatically remove adapters for small rna sequencing
 ```
@@ -112,8 +112,9 @@ bowtie2-build --threads 12 --quiet Atha.fna Atha
 cd /mnt/e/project/srna/trim
 
 parallel -j 3 " \
-bowtie2 -q {}_trimmed.fq -N 0 -x ../genome/plant/Atha/Atha \
---al ../output/fastq/{}_aliall.fq --no-unal --threads 4 -S ../output/bam/{}_plantall.sam \
+echo "{}"; bowtie2 -q {}_trimmed.fq -N 0 \
+-x ../genome/plant/Atha/Atha --al ../output/fastq/{}_aliall.fq \
+--no-unal --threads 4 -S ../output/bam/{}_plantall.sam \
 " ::: $(ls SRR1004935*.fq | perl -p -e 's/_trimmed\.fq//')
 ```
 
@@ -126,24 +127,28 @@ After run the above command, we would get results (none mismatch allowed).
     8465079 (39.25%) aligned exactly 1 time
     12040705 (55.83%) aligned >1 times
 95.09% overall alignment rate
+
 23131748 reads; of these:
   23131748 (100.00%) were unpaired; of these:
     1164936 (5.04%) aligned 0 times
     10693063 (46.23%) aligned exactly 1 time
     11273749 (48.74%) aligned >1 times
 94.96% overall alignment rate
+
 23119819 reads; of these:
   23119819 (100.00%) were unpaired; of these:
     956732 (4.14%) aligned 0 times
     11659236 (50.43%) aligned exactly 1 time
     10503851 (45.43%) aligned >1 times
 95.86% overall alignment rate
+
 22719863 reads; of these:
   22719863 (100.00%) were unpaired; of these:
     1307511 (5.75%) aligned 0 times
     9259237 (40.75%) aligned exactly 1 time
     12153115 (53.49%) aligned >1 times
 94.25% overall alignment rate
+
 22224601 reads; of these:
   22224601 (100.00%) were unpaired; of these:
     716329 (3.22%) aligned 0 times
@@ -156,38 +161,44 @@ Then we need another mapping round for the 1 mismatch allowed.
 
 ```bash
 parallel -j 3 " \
-bowtie2 -q {}_trimmed.fq -N 1 -x ../genome/plant/Atha/Atha \
---al ../output/fastq/{}_ali1mis.fq --un ../output/fastq/{}_unali.fq --no-unal --threads 4 -S ../output/bam/{}_plant1mis.sam \
+echo "{}"; bowtie2 -q {}_trimmed.fq -N 1 \
+-x ../genome/plant/Atha/Atha --al ../output/fastq/{}_ali1mis.fq \
+--un ../output/fastq/{}_unali.fq --no-unal --threads 4 -S ../output/bam/{}_plant1mis.sam \
 " ::: $(ls SRR1004935*.fq | perl -p -e 's/_trimmed\.fq//')
 ```
 
 After run this, bowtie2 would show alignment results on screen.
 
 ```bash
+SRR10049356
 23131748 reads; of these:
   23131748 (100.00%) were unpaired; of these:
     1067707 (4.62%) aligned 0 times
     10500848 (45.40%) aligned exactly 1 time
     11563193 (49.99%) aligned >1 times
 95.38% overall alignment rate
+SRR10049355
 23119819 reads; of these:
   23119819 (100.00%) were unpaired; of these:
     878194 (3.80%) aligned 0 times
     11431813 (49.45%) aligned exactly 1 time
     10809812 (46.76%) aligned >1 times
 96.20% overall alignment rate
+SRR10049357
 21565629 reads; of these:
   21565629 (100.00%) were unpaired; of these:
     969920 (4.50%) aligned 0 times
     8299226 (38.48%) aligned exactly 1 time
     12296483 (57.02%) aligned >1 times
 95.50% overall alignment rate
+SRR10049358
 22719863 reads; of these:
   22719863 (100.00%) were unpaired; of these:
     1207658 (5.32%) aligned 0 times
     9077386 (39.95%) aligned exactly 1 time
     12434819 (54.73%) aligned >1 times
 94.68% overall alignment rate
+SRR10049359
 22224601 reads; of these:
   22224601 (100.00%) were unpaired; of these:
     633246 (2.85%) aligned 0 times
@@ -230,37 +241,43 @@ Aligning unaligned reads to bacteria species.
 cd /mnt/e/project/srna/output/fastq
 
 parallel -j 3 " \
-bowtie2 -q {}_unali.fq -x ../../genome/bacteria/bacteria --threads 4 -S ../bam/{}_unali.sam \
+echo "{}"; bowtie2 -q {}_unali.fq \
+-x ../../genome/bacteria/bacteria --threads 4 -S ../bam/{}_unali.sam \
 " ::: $(ls SRR1004935*_unali.fq | perl -p -e 's/_unali\.fq$//')
 ```
 
 Alignment results:
 
 ```bash
+SRR10049355
 878194 reads; of these:
   878194 (100.00%) were unpaired; of these:
     656447 (74.75%) aligned 0 times
     36265 (4.13%) aligned exactly 1 time
     185482 (21.12%) aligned >1 times
 25.25% overall alignment rate
+SRR10049357
 969920 reads; of these:
   969920 (100.00%) were unpaired; of these:
     850850 (87.72%) aligned 0 times
     47548 (4.90%) aligned exactly 1 time
     71522 (7.37%) aligned >1 times
 12.28% overall alignment rate
+SRR10049356
 1067707 reads; of these:
   1067707 (100.00%) were unpaired; of these:
     928017 (86.92%) aligned 0 times
     52590 (4.93%) aligned exactly 1 time
     87100 (8.16%) aligned >1 times
 13.08% overall alignment rate
+SRR10049359
 633246 reads; of these:
   633246 (100.00%) were unpaired; of these:
     556391 (87.86%) aligned 0 times
     31810 (5.02%) aligned exactly 1 time
     45045 (7.11%) aligned >1 times
 12.14% overall alignment rate
+SRR10049358
 1207658 reads; of these:
   1207658 (100.00%) were unpaired; of these:
     1037552 (85.91%) aligned 0 times
@@ -273,35 +290,42 @@ Aligning 1 mismatch allowed reads to bacteria species.
 
 ```bash
 parallel -j 3 " \
-bowtie2 -q {}_1mis.fq -x ../../genome/bacteria/bacteria --threads 4 -S ../bam/{}_1mis.sam \
+echo "{}"; bowtie2 -q {}_1mis.fq --al ../target/{}.fq \
+-x ../../genome/bacteria/bacteria --threads 4 -S ../bam/{}_1mis.sam \
 " ::: $(ls SRR1004935*_1mis.fq | perl -p -e 's/_1mis\.fq$//')
+# --al: alignment fastq extraction. 1mis would be the potential sequence targeting the plant genome.
 ```
 
 ```bash
+SRR10049355
 78576 reads; of these:
   78576 (100.00%) were unpaired; of these:
     75892 (96.58%) aligned 0 times
     478 (0.61%) aligned exactly 1 time
     2206 (2.81%) aligned >1 times
 3.42% overall alignment rate
+SRR10049357
 89955 reads; of these:
   89955 (100.00%) were unpaired; of these:
     87678 (97.47%) aligned 0 times
     980 (1.09%) aligned exactly 1 time
     1297 (1.44%) aligned >1 times
 2.53% overall alignment rate
+SRR10049356
 97262 reads; of these:
   97262 (100.00%) were unpaired; of these:
     94600 (97.26%) aligned 0 times
     995 (1.02%) aligned exactly 1 time
     1667 (1.71%) aligned >1 times
 2.74% overall alignment rate
+SRR10049359
 83126 reads; of these:
   83126 (100.00%) were unpaired; of these:
     81217 (97.70%) aligned 0 times
     833 (1.00%) aligned exactly 1 time
     1076 (1.29%) aligned >1 times
 2.30% overall alignment rate
+SRR10049358
 99894 reads; of these:
   99894 (100.00%) were unpaired; of these:
     97139 (97.24%) aligned 0 times
@@ -314,35 +338,41 @@ Aligning perfectly matched reads to bacteria species.
 
 ```bash
 parallel -j 3 " \
-bowtie2 -q {}_aliall.fq -x ../../genome/bacteria/bacteria --threads 4 -S ../bam/{}_aliall.sam \
+echo "{}"; bowtie2 -q {}_aliall.fq \
+-x ../../genome/bacteria/bacteria --threads 4 -S ../bam/{}_aliall.sam \
 " ::: $(ls SRR1004935*_aliall.fq | perl -p -e 's/_aliall\.fq$//')
 ```
 
 ```bash
+SRR10049357
 20505784 reads; of these:
   20505784 (100.00%) were unpaired; of these:
     19612390 (95.64%) aligned 0 times
     429307 (2.09%) aligned exactly 1 time
     464087 (2.26%) aligned >1 times
 4.36% overall alignment rate
+SRR10049355
 22163087 reads; of these:
   22163087 (100.00%) were unpaired; of these:
     21471794 (96.88%) aligned 0 times
     404653 (1.83%) aligned exactly 1 time
     286640 (1.29%) aligned >1 times
 3.12% overall alignment rate
+SRR10049356
 21966812 reads; of these:
   21966812 (100.00%) were unpaired; of these:
     21269151 (96.82%) aligned 0 times
     366359 (1.67%) aligned exactly 1 time
     331302 (1.51%) aligned >1 times
 3.18% overall alignment rate
+SRR10049358
 21412352 reads; of these:
   21412352 (100.00%) were unpaired; of these:
     20676114 (96.56%) aligned 0 times
     361101 (1.69%) aligned exactly 1 time
     375137 (1.75%) aligned >1 times
 3.44% overall alignment rate
+SRR10049359
 21508272 reads; of these:
   21508272 (100.00%) were unpaired; of these:
     20748319 (96.47%) aligned 0 times
@@ -366,20 +396,6 @@ rm *.sam
 
 
 
-### Get .bed file of selected bacterial tRNAs
-
-```bash
-cd /mnt/e/project/srna/annotation/bacteria
-
-cat bac.gtf | grep -v '#' | tsv-filter --str-eq 2:RefSeq --str-eq 3:gene --regex '9:tRNA' > bac_trna.gtf
-cat bac_trna.gtf | convert2bed --input=gtf > bac_trna.bed
-
-cat bac.gtf | grep -v '#' | tsv-filter --str-eq 2:RefSeq --str-eq 3:gene --ff-lt 4:5 > bac_gene.gtf
-cat bac_gene.gtf | convert2bed --input=gtf > bac_gene.bed
-```
-
-
-
 ### Counting the coverage
 
 ####  Mosdepth
@@ -389,20 +405,26 @@ Mosdepth for counting the coverage.
 ```bash
 cd /mnt/e/project/srna/output/bam
 
-parallel -j 3 " mosdepth -t 4 {}_aliall {}_aliall.sort.bam " ::: $(ls *_aliall.sort.bam | perl -p -e 's/_aliall\.sort\.bam//')
+parallel -j 3 " \
+mosdepth -t 4 {}_aliall {}_aliall.sort.bam \
+" ::: $(ls *_aliall.sort.bam | perl -p -e 's/_aliall\.sort\.bam//')
 # -t: threads, it has been said that 4 could reach the max speed
 
 mv *_aliall.per-base.bed* *.txt ../mosdepth
 ```
 
 ```bash
-parallel -j 3 " mosdepth -t 4 {}_1mis {}_1mis.sort.bam " ::: $(ls *_1mis.sort.bam | perl -p -e 's/_1mis\.sort\.bam//')
+parallel -j 3 " \
+mosdepth -t 4 {}_1mis {}_1mis.sort.bam \
+" ::: $(ls *_1mis.sort.bam | perl -p -e 's/_1mis\.sort\.bam//')
 
 mv *_1mis.per-base.bed* *.txt ../mosdepth
 ```
 
 ```bash
-parallel -j 3 " mosdepth -t 4 {}_unali {}_unali.sort.bam " ::: $(ls *_unali.sort.bam | perl -p -e 's/_unali\.sort\.bam//')
+parallel -j 3 " \
+mosdepth -t 4 {}_unali {}_unali.sort.bam \
+" ::: $(ls *_unali.sort.bam | perl -p -e 's/_unali\.sort\.bam//')
 
 mv *_unali.per-base.bed* *.txt ../mosdepth
 ```
@@ -416,7 +438,7 @@ gzip -d *.per-base.bed.gz
 Convert bed format file to runlist files for better manipulating using a perl script.
 
 ```bash
-/mnt/e/project/srna/output/mosdepth
+cd /mnt/e/project/srna/output/mosdepth
 
 parallel -j 3 " \
 cat {}.per-base.bed | perl ../../script/bed2yml.pl > {}.yml \
@@ -430,7 +452,9 @@ Use spanr from wang-q [intspan](https://github.com/wang-q/intspan).
 Get all used bacteria genome size in .chr.sizes format.
 
 ```bash
-cd /mnt/e/project/srna/output/mosdepth
+mkdir -p /mnt/e/project/srna/output/opt
+mkdir -p /mnt/e/project/srna/output/result
+cd /mnt/e/project/srna/output/opt
 
 faops size ../../genome/bacteria/bacteria.fna > bacteria.chr.sizes
 ```
@@ -440,10 +464,10 @@ Calculate the coverage.
 The .csv file contains 4 columns, chr, chrLength, size and coverage. We need the column 2 ‘chrLength’ (representing genome length) and the column 3 ‘size’ (representing genome covered length).
 
 ```bash
-cd /mnt/e/project/srna/output/result
+cd /mnt/e/project/srna/output/mosdepth
 
 parallel -j 3 " \
-spanr stat bacteria.chr.sizes {}.yml -o ../result/{}.csv \
+spanr stat ../opt/bacteria.chr.sizes {}.yml -o ../opt/{}.csv \
 " ::: $(ls *.yml | perl -p -e 's/\.yml//')
 ```
 
@@ -456,6 +480,13 @@ spanr gff bacteria.gff --tag tRNA > tRNA.yml
 # --tag: selected gene name
 
 spanr gff bacteria.gff --tag rRNA > rRNA.yml
+
+spanr gff bacteria.gff --tag CDS > mRNA_all.yml
+spanr compare --op diff mRNA_all.yml tRNA.yml -o mRNA1.yml
+spanr compare --op diff mRNA1.yml rRNA.yml -o mRNA.yml
+rm mRNA_all.yml mRNA1.yml
+# mRNA region without tRNA and rRNA
+# spanr compare could manipulate aggregation, including intersect (default), union, diff or xor
 ```
 
 Compare two runlist files for their intersect part.
@@ -464,71 +495,153 @@ Compare two runlist files for their intersect part.
 cd /mnt/e/project/srna/output/mosdepth
 
 parallel -j 3 " \
-spanr compare {}.yml ../../annotation/bacteria/tRNA.yml -o {}.intersect.yml \
+spanr compare {}.yml ../../annotation/bacteria/tRNA.yml \
+-o ../opt/{}.tRNA.intersect.yml \
 " ::: $(ls *.yml | perl -p -e 's/\.yml//')
 
 parallel -j 3 " \
-spanr compare --op diff {}.yml ../../annotation/bacteria/tRNA.yml -o {}.diff.yml \
-" ::: $(ls *.yml | grep -v 'intersect' | perl -p -e 's/\.yml//')
-# spanr compare could manipulate aggregation, including intersect (default), union, diff or xor
+spanr compare --op diff {}.yml ../../annotation/bacteria/tRNA.yml \
+-o ../opt/{}.tRNA.diff.yml \
+" ::: $(ls *.yml | perl -p -e 's/\.yml//')
+
+parallel -j 3 " \
+spanr compare {}.yml ../../annotation/bacteria/rRNA.yml \
+-o ../opt/{}.rRNA.intersect.yml \
+" ::: $(ls *.yml | perl -p -e 's/\.yml//')
+
+parallel -j 3 " \
+spanr compare --op diff {}.yml ../../annotation/bacteria/rRNA.yml \
+-o ../opt/{}.rRNA.diff.yml \
+" ::: $(ls *.yml | perl -p -e 's/\.yml//')
+
+parallel -j 3 " \
+spanr compare {}.yml ../../annotation/bacteria/mRNA.yml \
+-o ../opt/{}.mRNA.intersect.yml \
+" ::: $(ls *.yml | perl -p -e 's/\.yml//')
+
+parallel -j 3 " \
+spanr compare --op diff {}.yml ../../annotation/bacteria/mRNA.yml \
+-o ../opt/{}.mRNA.diff.yml \
+" ::: $(ls *.yml | perl -p -e 's/\.yml//')
 ```
 
 Get the same .csv results including tRNA length and tRNA covered length
 
 ```bash
-spanr stat bacteria.chr.sizes ../../annotation/bacteria/tRNA.yml -o ../result/tRNA.csv
+cd /mnt/e/project/srna/output/opt
+
+spanr stat bacteria.chr.sizes ../../annotation/bacteria/tRNA.yml -o tRNA.csv
+spanr stat bacteria.chr.sizes ../../annotation/bacteria/rRNA.yml -o rRNA.csv
+spanr stat bacteria.chr.sizes ../../annotation/bacteria/mRNA.yml -o mRNA.csv
 ```
 
 ```bash
-cd /mnt/e/project/srna/output/mosdepth
+cd /mnt/e/project/srna/output/opt
 
 parallel -j 3 " \
-spanr stat bacteria.chr.sizes {}.intersect.yml -o ../result/{}.intersect.csv \
-" ::: $(ls *.intersect.yml | perl -p -e 's/\.inter.+yml$//')
+spanr stat bacteria.chr.sizes {}.tRNA.intersect.yml \
+-o {}.tRNA.intersect.csv \
+" ::: $(ls *.tRNA.intersect.yml | perl -p -e 's/\.tRNA.+yml$//')
 
 parallel -j 3 " \
-spanr stat bacteria.chr.sizes {}.diff.yml -o ../result/{}.diff.csv \
-" ::: $(ls *.diff.yml | perl -p -e 's/\.diff\.yml$//')
+spanr stat bacteria.chr.sizes {}.tRNA.diff.yml \
+-o {}.tRNA.diff.csv \
+" ::: $(ls *.tRNA.diff.yml | perl -p -e 's/\.tRNA.+yml$//')
+
+parallel -j 3 " \
+spanr stat bacteria.chr.sizes {}.rRNA.intersect.yml \
+-o {}.rRNA.intersect.csv \
+" ::: $(ls *.rRNA.intersect.yml | perl -p -e 's/\.rRNA.+yml$//')
+
+parallel -j 3 " \
+spanr stat bacteria.chr.sizes {}.rRNA.diff.yml \
+-o {}.rRNA.diff.csv \
+" ::: $(ls *.rRNA.diff.yml | perl -p -e 's/\.rRNA.+yml$//')
+
+parallel -j 3 " \
+spanr stat bacteria.chr.sizes {}.mRNA.intersect.yml \
+-o {}.mRNA.intersect.csv \
+" ::: $(ls *.mRNA.intersect.yml | perl -p -e 's/\.mRNA.+yml$//')
+
+parallel -j 3 " \
+spanr stat bacteria.chr.sizes {}.mRNA.diff.yml \
+-o {}.mRNA.diff.csv \
+" ::: $(ls *.mRNA.diff.yml | perl -p -e 's/\.mRNA.+yml$//')
 ```
 
 Convert .csv to .tsv format.
 
 ```bash
-cd /mnt/e/project/srna/output/result
-
 parallel -j 3 " \
 cat {}.csv | csv2tsv -H > {}.tsv \
 " ::: $(ls *.csv | perl -p -e 's/\.csv$//')
 
-rm *.csv
+rm *.csv *.yml
 ```
 
 Use tsv-utils join tsv together.
 
 ```bash
+cd /mnt/e/project/srna/output/opt
+
 parallel -j 3 " \
-cat {}.diff.tsv | cut -f 1,2,3 | \
+cat {}.tRNA.diff.tsv | cut -f 1,2,3 | \
 tsv-join -H --filter-file tRNA.tsv --key-fields 1 --append-fields 3 | \
-tsv-join -H --filter-file {}.intersect.tsv --key-fields 1 --append-fields 3 | \
-sed '1d' > {}.tsv \
-" ::: $(ls *.tsv | perl -p -e 's/\..*tsv$//' | uniq | grep -v 'tRNA')
+tsv-join -H --filter-file {}.tRNA.intersect.tsv --key-fields 1 --append-fields 3 | \
+tsv-join --filter-file ../../name.tsv --key-fields 1 --append-fields 2,3 | \
+perl ../../script/change.pl \
+> ../result/{}.tRNA.tsv \
+" ::: $(ls *.tRNA.*.tsv | perl -p -e 's/\..*tsv$//' | uniq)
+
+parallel -j 3 " \
+cat {}.rRNA.diff.tsv | cut -f 1,2,3 | \
+tsv-join -H --filter-file rRNA.tsv --key-fields 1 --append-fields 3 | \
+tsv-join -H --filter-file {}.rRNA.intersect.tsv --key-fields 1 --append-fields 3 | \
+tsv-join --filter-file ../../name.tsv --key-fields 1 --append-fields 2,3 | \
+perl ../../script/change.pl \
+> ../result/{}.rRNA.tsv \
+" ::: $(ls *.rRNA.*.tsv | perl -p -e 's/\..*tsv$//' | uniq)
+
+parallel -j 3 " \
+cat {}.mRNA.diff.tsv | cut -f 1,2,3 | \
+tsv-join -H --filter-file mRNA.tsv --key-fields 1 --append-fields 3 | \
+tsv-join -H --filter-file {}.mRNA.intersect.tsv --key-fields 1 --append-fields 3 | \
+tsv-join --filter-file ../../name.tsv --key-fields 1 --append-fields 2,3 | \
+perl ../../script/change.pl \
+> ../result/{}.mRNA.tsv \
+" ::: $(ls *.mRNA.*.tsv | perl -p -e 's/\..*tsv$//' | uniq)
 ```
 
-```bash
-parallel -j 3 " \
-cat {}.tsv | perl ../../script/change.pl > {}.result.tsv \
-" ::: $(ls *.tsv | perl -p -e 's/\..*tsv//' | grep -v 'tRNA' | uniq)
-```
+
 
 ###  Chi-square test
 
-Use chi-square test for calculating whether there are differences between genome covered length and tRNA covered length. 
+Use chi-square tests performing chi-squared contingency  interspeices.
 
 ```bash
 mkdir /mnt/e/project/srna/output/chi
 cd /mnt/e/project/srna/output/result
 
-for tsv in `ls *.result.tsv`
+for tsv in `ls *.tsv`
+do
+cat $tsv | perl ../../script/interspecie.pl | \
+parallel --colsep '\t' -j 1 -k '
+    echo "==> {1}"
+    Rscript -e "
+        x <- matrix(c({2},{4},{3},{5}), nrow=2)
+        x
+        chisq.test(x)
+        "
+' > ../chi/$tsv.inter.txt
+done
+```
+
+Use goodness-of-fit tests performing genome covered length and tRNA covered length consistent with expectation.
+
+```bash
+cd /mnt/e/project/srna/output/result
+
+for tsv in `ls *.tsv`
 do
 cat $tsv | parallel --colsep '\t' -j 1 -k '
         echo "==> {1}"
@@ -538,16 +651,8 @@ cat $tsv | parallel --colsep '\t' -j 1 -k '
             b <- 1-({4}/{2})
             chisq.test(x, p = c(a, b))
         "
-    ' > ../chi/$tsv.chi-square.txt
+' > ../chi/$tsv.intra.txt
 done
-```
-
-Get the name list.
-
-```bash
-cd /mnt/e/project/srna
-
-perl script/name.pl name.txt > output/chi/name.tsv
 ```
 
 Use a simple script for getting chi-square results.
@@ -556,96 +661,18 @@ Use a simple script for getting chi-square results.
 cd /mnt/e/project/srna/output/chi
 
 parallel -j 3 " \
-cat {}.result.tsv.chi-square.txt | perl ../../script/square.pl > {}.chi.tsv \
-" ::: $(ls *.result.tsv.chi-square.txt | perl -p -e 's/\.result.+txt$//')
+cat {}.tsv.chi-square.txt | perl ../../script/square.pl > {}.chi.tsv \
+" ::: $(ls *.tsv.chi-square.txt | perl -p -e 's/\.tsv.*txt$//')
 ```
 
 Join tsv together for better analysis.
 
 ```bash
 parallel -j 3 " \
-cat {}.chi.tsv | tsv-join --filter-file name.tsv -k 1 --append-fields 2,3 > {}.result.tsv \
+cat {}.chi.tsv | tsv-join --filter-file name.tsv -k 1 --append-fields 2,3 > {}.tsv \
 " ::: $(ls *.chi.tsv | perl -p -e 's/\.chi\.tsv//')
-```
 
-Filter for the results
-
-```bash
-parallel -j 3 " \
-cat {} | tsv-filter --le 2:0.05 --eq 4:1 | wc -l \
-" ::: $(ls *.result.tsv)
-```
-
-
-
-###  rRNA
-
-```bash
-parallel -j 3 " \
-spanr compare {}.yml ../../annotation/bacteria/rRNA.yml -o {}.rRNA.intersect.yml \
-" ::: $(ls *.yml | grep -v 'intersect' | perl -p -e 's/\.yml//')
-```
-
-```bash
-spanr stat bacteria.chr.sizes ../../annotation/bacteria/rRNA.yml -o ../result/rRNA.csv
-```
-
-```bash
-cd /mnt/e/project/srna/output/mosdepth
-
-parallel -j 3 " \
-spanr stat bacteria.chr.sizes {}.intersect.yml -o ../result/{}.intersect.csv \
-" ::: $(ls *.rRNA.intersect.yml | perl -p -e 's/\.inter.+yml$//')
-```
-
-```bash
-cd /mnt/e/project/srna/output/result
-
-parallel -j 3 " \
-cat {}.csv | csv2tsv -H > {}.tsv \
-" ::: $(ls *.csv | perl -p -e 's/\.csv$//')
-```
-
-```bash
-cd /mnt/e/project/srna/output/result
-
-parallel -j 3 " \
-cat {}.tsv | cut -f 1,2,3 | \
-tsv-join -H --filter-file rRNA.tsv --key-fields 1 --append-fields 3 | \
-tsv-join -H --filter-file {}.rRNA.intersect.tsv --key-fields 1 --append-fields 3 | \
-sed '1d' > {}.rRNA.result.tsv \
-" ::: $(ls *.rRNA.intersect.tsv | perl -p -e 's/\.rRNA.*tsv$//')
-```
-
-```bash
-cd /mnt/e/project/srna/output/result
-
-for tsv in `ls *.rRNA.result.tsv`
-do
-cat $tsv |
-    parallel --colsep '\t' -j 1 -k '
-        echo "==> {1}"
-        Rscript -e "
-            x <- matrix(c({2}, {4}, {3}, {5}), nrow=2)
-            x
-            chisq.test(x)
-        "
-    ' > ../chi/$tsv.chi-square.txt
-done
-```
-
-```bash
-cd /mnt/e/project/srna/output/chi
-
-parallel -j 3 " \
-cat {}.result.tsv.chi-square.txt | perl ../../script/square.pl > {}.chi.tsv \
-" ::: $(ls *.rRNA.*.txt | perl -p -e 's/\.result.+txt$//')
-```
-
-```bash
-parallel -j 3 " \
-cat {}.chi.tsv | tsv-join --filter-file name.tsv -k 1 --append-fields 2,3 > {}.result.tsv \
-" ::: $(ls *.rRNA.chi.tsv | perl -p -e 's/\.chi\.tsv//')
+rm *.chi.tsv
 ```
 
 
