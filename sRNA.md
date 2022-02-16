@@ -71,6 +71,8 @@ prefetch --help
 
 ####  Samtools
 
+The basic SAM/BAM file manipulating tools.
+
 ```bash
 brew install samtools
 ```
@@ -87,7 +89,7 @@ brew install fastqc
 
 [intspan](https://github.com/wang-q/intspan) and [anchr](https://github.com/wang-q/anchr) were written by my lab professor [Qiang Wang](https://www.github.com/wang-q).
 
-Go check the install.
+Go check and install.
 
 #### Bowtie2
 
@@ -129,16 +131,25 @@ Using anchr for downloading fastq, which could avoid using fastq-dump (time-wast
 
 These information needed for downloading: Experiment (SRX number for each sample), Sample_Name (represent each sample name), Bases (size of the sequencing files). We should put it together in an tsv file format and then anchr could get the ftp automatically.
 
-SraRunTable.txt is metadata with all sequencing file information for one project. We could use SraRunSelector for getting this metadata.
+SraRunTable.txt is metadata with all sequencing file information for one project. We could use SraRunSelector for getting this metadata. Download every SraRunTable manually and then extract information from it.
 
 ```bash
-mkdir -p /mnt/e/project/srna/ena
+mkdir -p /mnt/e/project/srna/ena/thale
 cd /mnt/e/project/srna/ena
+# <download metadata file here>
 
 cat SraRunTable.txt | mlr --icsv --otsv cat | \
-tsv-select -H -f Experiment,"Sample\ Name",Bases | sed '1d' >> SraRunTable.tsv
+tsv-select -H -f Experiment,"Sample\ Name",Bases > ./thale/SraRunTable.tsv
+# rm and get next
 
-cat SraRunTable.tsv | sed '1 s/^/#/' | keep-header -- tsv-sort -k2,2 -k3,3nr | \
+cat SraRunTable.txt | mlr --icsv --otsv cat | \
+tsv-select -H -f Experiment,"Sample\ Name",Bases | sed '1d' >> ./thale/SraRunTable.tsv
+# continue this until all SraRunTable had been manipulated
+# if there are RNA-seq and ncRNA/sRNA-seq, you could use tsv-filter
+
+cd thale
+cat SraRunTable.tsv | sed '1 s/^/#/' | \
+keep-header -- tsv-sort -k2,2 -k3,3nr | \
 tsv-uniq -H -f "Sample\ Name" --max 1 | mlr --itsv --ocsv cat > source.csv
 
 anchr ena info | perl - -v source.csv > ena_info.yml

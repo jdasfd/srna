@@ -1,0 +1,5341 @@
+--- 
+Col-0-replicates_1: 
+  SRX6783827: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR100/064/SRR10049364/SRR10049364.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: Col-0-replicates_1
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - eb84f33b1b12bcc76cdc4c7f76b2bbeb SRR10049364.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP219944
+    srr: 
+      - SRR10049364
+    srr_info: 
+      SRR10049364: 
+        base_count: 493.59M
+        read_count: 22863345
+    srs: SRS5329996
+    srx: SRX6783827
+Col-0-replicates_2: 
+  SRX6783828: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR100/063/SRR10049363/SRR10049363.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: Col-0-replicates_2
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 1606dc77282ecb3712a74fb4ae65e8e4 SRR10049363.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP219944
+    srr: 
+      - SRR10049363
+    srr_info: 
+      SRR10049363: 
+        base_count: 479.25M
+        read_count: 21954043
+    srs: SRS5329997
+    srx: SRX6783828
+GSM1278497: 
+  SRX386468: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR104/001/SRR1042171/SRR1042171.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 1f87a631d58e6db65c59bd3afb41945b SRR1042171.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP033469
+    srr: 
+      - SRR1042171
+    srr_info: 
+      SRR1042171: 
+        base_count: 714M
+        read_count: 14973700
+    srs: SRS510482
+    srx: SRX386468
+GSM1278498: 
+  SRX386469: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR104/002/SRR1042172/SRR1042172.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 5381b0692fe7dd99a1d222312aea312f SRR1042172.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP033469
+    srr: 
+      - SRR1042172
+    srr_info: 
+      SRR1042172: 
+        base_count: 807.12M
+        read_count: 16926625
+    srs: SRS510483
+    srx: SRX386469
+GSM1278499: 
+  SRX386470: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR104/003/SRR1042173/SRR1042173.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 6eb039ef2925899ff027ee946f76aded SRR1042173.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP033469
+    srr: 
+      - SRR1042173
+    srr_info: 
+      SRR1042173: 
+        base_count: 732.17M
+        read_count: 15354730
+    srs: SRS510484
+    srx: SRX386470
+GSM1278500: 
+  SRX386471: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR104/004/SRR1042174/SRR1042174.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 7e52dad7a04cffacde8b2da5d871481a SRR1042174.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP033469
+    srr: 
+      - SRR1042174
+    srr_info: 
+      SRR1042174: 
+        base_count: 807.78M
+        read_count: 16940366
+    srs: SRS510485
+    srx: SRX386471
+GSM1278501: 
+  SRX386472: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR104/005/SRR1042175/SRR1042175.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - d38900e983fd00254132d277b425d022 SRR1042175.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP033469
+    srr: 
+      - SRR1042175
+    srr_info: 
+      SRR1042175: 
+        base_count: 60.04M
+        read_count: 1259207
+    srs: SRS510486
+    srx: SRX386472
+GSM1278502: 
+  SRX386473: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR104/006/SRR1042176/SRR1042176.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 6ecce837f7c100f2b8d77aa7818351b4 SRR1042176.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP033469
+    srr: 
+      - SRR1042176
+    srr_info: 
+      SRR1042176: 
+        base_count: 149.09M
+        read_count: 4342512
+    srs: SRS510487
+    srx: SRX386473
+GSM1278503: 
+  SRX386474: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR104/007/SRR1042177/SRR1042177.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 9bec13ea2805ac26c0995240fe31fe2c SRR1042177.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP033469
+    srr: 
+      - SRR1042177
+    srr_info: 
+      SRR1042177: 
+        base_count: 130.14M
+        read_count: 3790602
+    srs: SRS510489
+    srx: SRX386474
+GSM1278504: 
+  SRX386475: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR104/008/SRR1042178/SRR1042178.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - dfd6f251772d6fa1ebde6516bf4698e3 SRR1042178.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP033469
+    srr: 
+      - SRR1042178
+    srr_info: 
+      SRR1042178: 
+        base_count: 158.07M
+        read_count: 4604076
+    srs: SRS510488
+    srx: SRX386475
+GSM1278505: 
+  SRX386476: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR104/009/SRR1042179/SRR1042179.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 1db8d0f896e53e8ab89ca077eff7263a SRR1042179.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP033469
+    srr: 
+      - SRR1042179
+    srr_info: 
+      SRR1042179: 
+        base_count: 62.54M
+        read_count: 1311496
+    srs: SRS510490
+    srx: SRX386476
+GSM1529874: 
+  SRX738305: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR161/009/SRR1618839/SRR1618839.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 37d45db6770a4d17ef66bbca28994b57 SRR1618839.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP049163
+    srr: 
+      - SRR1618839
+    srr_info: 
+      SRR1618839: 
+        base_count: 358.53M
+        read_count: 16235953
+    srs: SRS726141
+    srx: SRX738305
+GSM1529876: 
+  SRX738307: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR161/001/SRR1618841/SRR1618841.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR161/002/SRR1618842/SRR1618842.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 47c325e5844572e738de1f305137ca30 SRR1618841.fastq.gz
+      - 4dd8351a75a68d53b507d1c5ab2f39ea SRR1618842.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP049163
+    srr: 
+      - SRR1618841
+      - SRR1618842
+    srr_info: 
+      SRR1618841: 
+        base_count: 122.46M
+        read_count: 6462216
+      SRR1618842: 
+        base_count: 124.31M
+        read_count: 6471204
+    srs: SRS726144
+    srx: SRX738307
+GSM1529878: 
+  SRX738309: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR161/004/SRR1618844/SRR1618844.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b8848419b519e0f352fd2d2442f9a783 SRR1618844.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP049163
+    srr: 
+      - SRR1618844
+    srr_info: 
+      SRR1618844: 
+        base_count: 165.28M
+        read_count: 8423341
+    srs: SRS726143
+    srx: SRX738309
+GSM1529880: 
+  SRX738311: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR161/006/SRR1618846/SRR1618846.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR161/007/SRR1618847/SRR1618847.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 235ad06cfaa5e2a64b70c994a9492542 SRR1618846.fastq.gz
+      - 2ca8233c7bba5b84866b7c88f667d0f7 SRR1618847.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP049163
+    srr: 
+      - SRR1618846
+      - SRR1618847
+    srr_info: 
+      SRR1618846: 
+        base_count: 111.94M
+        read_count: 5686565
+      SRR1618847: 
+        base_count: 126.59M
+        read_count: 6527308
+    srs: SRS726147
+    srx: SRX738311
+GSM2066567: 
+  SRX1592743: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR317/009/SRR3178439/SRR3178439.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - afbf970e310fb715a3279e386fae9114 SRR3178439.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP070554
+    srr: 
+      - SRR3178439
+    srr_info: 
+      SRR3178439: 
+        base_count: 146.27M
+        read_count: 6869596
+    srs: SRS1305152
+    srx: SRX1592743
+GSM2066568: 
+  SRX1592744: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR317/000/SRR3178440/SRR3178440.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 5032eac9ea3bdc9f5aff499af4a7727a SRR3178440.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP070554
+    srr: 
+      - SRR3178440
+    srr_info: 
+      SRR3178440: 
+        base_count: 87.43M
+        read_count: 4117427
+    srs: SRS1305151
+    srx: SRX1592744
+GSM2066569: 
+  SRX1592745: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR317/001/SRR3178441/SRR3178441.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 4970a427d868478ef5a7e0b5d3a7a9ed SRR3178441.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP070554
+    srr: 
+      - SRR3178441
+    srr_info: 
+      SRR3178441: 
+        base_count: 392.15M
+        read_count: 17427101
+    srs: SRS1305150
+    srx: SRX1592745
+GSM2066570: 
+  SRX1592746: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR317/002/SRR3178442/SRR3178442.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b93083e3683d150f248ace984f78dc26 SRR3178442.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP070554
+    srr: 
+      - SRR3178442
+    srr_info: 
+      SRR3178442: 
+        base_count: 404.27M
+        read_count: 17956883
+    srs: SRS1305149
+    srx: SRX1592746
+GSM2066571: 
+  SRX1592747: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR317/003/SRR3178443/SRR3178443.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b404ca953fb763003c3e747b1b40c1a9 SRR3178443.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP070554
+    srr: 
+      - SRR3178443
+    srr_info: 
+      SRR3178443: 
+        base_count: 409.1M
+        read_count: 18229306
+    srs: SRS1305148
+    srx: SRX1592747
+GSM2066572: 
+  SRX1592748: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR317/004/SRR3178444/SRR3178444.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 029376d2c0f024e1b41d4b8ff1a7c405 SRR3178444.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP070554
+    srr: 
+      - SRR3178444
+    srr_info: 
+      SRR3178444: 
+        base_count: 157.26M
+        read_count: 7646594
+    srs: SRS1305147
+    srx: SRX1592748
+GSM2066573: 
+  SRX1592749: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR317/005/SRR3178445/SRR3178445.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 703397610b0dcbca7b36e7a444d0d3bd SRR3178445.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP070554
+    srr: 
+      - SRR3178445
+    srr_info: 
+      SRR3178445: 
+        base_count: 132.01M
+        read_count: 6401409
+    srs: SRS1305146
+    srx: SRX1592749
+GSM2218931: 
+  SRX1881703: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/000/SRR3724580/SRR3724580.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/001/SRR3724581/SRR3724581.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - afc86ed56462ab2556b9c770355888ef SRR3724580.fastq.gz
+      - 880e97172a1e9fe8d51c355407f1eb36 SRR3724581.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP077467
+    srr: 
+      - SRR3724580
+      - SRR3724581
+    srr_info: 
+      SRR3724580: 
+        base_count: 672.65M
+        read_count: 13829924
+      SRR3724581: 
+        base_count: 660.62M
+        read_count: 13582531
+    srs: SRS1528170
+    srx: SRX1881703
+GSM2218932: 
+  SRX1881704: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/002/SRR3724582/SRR3724582.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/003/SRR3724583/SRR3724583.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 5ec842bda1275ea851ffe1823635566c SRR3724582.fastq.gz
+      - 3593e61197bfda3d4323cecd8e753713 SRR3724583.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP077467
+    srr: 
+      - SRR3724582
+      - SRR3724583
+    srr_info: 
+      SRR3724582: 
+        base_count: 744.13M
+        read_count: 15299635
+      SRR3724583: 
+        base_count: 731.97M
+        read_count: 15049550
+    srs: SRS1528171
+    srx: SRX1881704
+GSM2218933: 
+  SRX1881705: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/004/SRR3724584/SRR3724584.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/005/SRR3724585/SRR3724585.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b3365f4ed641c5d0e615ed2c579d8227 SRR3724584.fastq.gz
+      - 188e742605eb9cb35d86e3e6a59fd558 SRR3724585.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP077467
+    srr: 
+      - SRR3724584
+      - SRR3724585
+    srr_info: 
+      SRR3724584: 
+        base_count: 710.13M
+        read_count: 14600431
+      SRR3724585: 
+        base_count: 700.2M
+        read_count: 14396266
+    srs: SRS1528172
+    srx: SRX1881705
+GSM2218934: 
+  SRX1881706: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/006/SRR3724586/SRR3724586.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/007/SRR3724587/SRR3724587.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - abf1aab06975584209cf4af5e58df1ce SRR3724586.fastq.gz
+      - 511725f86f5780297a4cc3982b5ea229 SRR3724587.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP077467
+    srr: 
+      - SRR3724586
+      - SRR3724587
+    srr_info: 
+      SRR3724586: 
+        base_count: 726.45M
+        read_count: 14936140
+      SRR3724587: 
+        base_count: 714.14M
+        read_count: 14683017
+    srs: SRS1528173
+    srx: SRX1881706
+GSM2218935: 
+  SRX1881707: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/008/SRR3724588/SRR3724588.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/009/SRR3724589/SRR3724589.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - d10f4343e0f92fb618fbd1409a1796b9 SRR3724588.fastq.gz
+      - 1fb2959a3a3c841ef58701c5e81dbea1 SRR3724589.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP077467
+    srr: 
+      - SRR3724588
+      - SRR3724589
+    srr_info: 
+      SRR3724588: 
+        base_count: 689.55M
+        read_count: 14177273
+      SRR3724589: 
+        base_count: 676.77M
+        read_count: 13914680
+    srs: SRS1528174
+    srx: SRX1881707
+GSM2218936: 
+  SRX1881708: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/000/SRR3724590/SRR3724590.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/001/SRR3724591/SRR3724591.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - a6e6fd66ff833e12991cf39441acdae5 SRR3724590.fastq.gz
+      - d4efea4b643bafa3632b9cf73bc9471d SRR3724591.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP077467
+    srr: 
+      - SRR3724590
+      - SRR3724591
+    srr_info: 
+      SRR3724590: 
+        base_count: 721.18M
+        read_count: 14827720
+      SRR3724591: 
+        base_count: 709.74M
+        read_count: 14592474
+    srs: SRS1528175
+    srx: SRX1881708
+GSM2218937: 
+  SRX1881709: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/002/SRR3724592/SRR3724592.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/003/SRR3724593/SRR3724593.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - da9be9e3d86ccd996b530ed2f23305f6 SRR3724592.fastq.gz
+      - 7226e54564ed52c57a9be622ba936100 SRR3724593.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP077467
+    srr: 
+      - SRR3724592
+      - SRR3724593
+    srr_info: 
+      SRR3724592: 
+        base_count: 845.23M
+        read_count: 17378166
+      SRR3724593: 
+        base_count: 829.85M
+        read_count: 17061883
+    srs: SRS1528176
+    srx: SRX1881709
+GSM2218938: 
+  SRX1881710: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/004/SRR3724594/SRR3724594.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR372/005/SRR3724595/SRR3724595.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - bec2d84972ebbe1bfee5c87ddabca3c1 SRR3724594.fastq.gz
+      - 93acecba82409b70b1bf064ff4b09fce SRR3724595.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP077467
+    srr: 
+      - SRR3724594
+      - SRR3724595
+    srr_info: 
+      SRR3724594: 
+        base_count: 792.44M
+        read_count: 16292790
+      SRR3724595: 
+        base_count: 779M
+        read_count: 16016396
+    srs: SRS1528177
+    srx: SRX1881710
+GSM2257315: 
+  SRX1993701: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/004/SRR3992484/SRR3992484.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - ffe8fdabe7d3f33949edac111f4e1f59 SRR3992484.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992484
+    srr_info: 
+      SRR3992484: 
+        base_count: 996.93M
+        read_count: 20907134
+    srs: SRS1596408
+    srx: SRX1993701
+GSM2257316: 
+  SRX1993702: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/005/SRR3992485/SRR3992485.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 1b91a7d1ebbfb1a63fd4e8d797c392e0 SRR3992485.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992485
+    srr_info: 
+      SRR3992485: 
+        base_count: 1.13G
+        read_count: 24218800
+    srs: SRS1596409
+    srx: SRX1993702
+GSM2257317: 
+  SRX1993703: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/006/SRR3992486/SRR3992486.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 3c082bc7d57591a672460a80ad4e0064 SRR3992486.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992486
+    srr_info: 
+      SRR3992486: 
+        base_count: 1.09G
+        read_count: 23493744
+    srs: SRS1596410
+    srx: SRX1993703
+GSM2257318: 
+  SRX1993704: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/007/SRR3992487/SRR3992487.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e0a6e113b8787003adaaa956fdcc297c SRR3992487.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992487
+    srr_info: 
+      SRR3992487: 
+        base_count: 1.06G
+        read_count: 22682238
+    srs: SRS1596411
+    srx: SRX1993704
+GSM2257319: 
+  SRX1993705: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/008/SRR3992488/SRR3992488.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 7a1a5a55c12659c7b26c1d1d4069d2ac SRR3992488.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992488
+    srr_info: 
+      SRR3992488: 
+        base_count: 1.05G
+        read_count: 22604285
+    srs: SRS1596412
+    srx: SRX1993705
+GSM2257320: 
+  SRX1993706: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/009/SRR3992489/SRR3992489.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 092d239f41f4faef93c88a9600d5d7d0 SRR3992489.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992489
+    srr_info: 
+      SRR3992489: 
+        base_count: 1.05G
+        read_count: 22650462
+    srs: SRS1596413
+    srx: SRX1993706
+GSM2257321: 
+  SRX1993707: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/000/SRR3992490/SRR3992490.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 07398cdd7a9882d709723065f3108440 SRR3992490.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992490
+    srr_info: 
+      SRR3992490: 
+        base_count: 996.06M
+        read_count: 20888941
+    srs: SRS1596414
+    srx: SRX1993707
+GSM2257322: 
+  SRX1993708: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/001/SRR3992491/SRR3992491.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - fe922f868f5b5c337a0dfcbfeff10982 SRR3992491.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992491
+    srr_info: 
+      SRR3992491: 
+        base_count: 1.07G
+        read_count: 22881318
+    srs: SRS1596415
+    srx: SRX1993708
+GSM2257323: 
+  SRX1993709: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/002/SRR3992492/SRR3992492.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e3319e7fa40bc349c95ebd6419c3b2ea SRR3992492.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992492
+    srr_info: 
+      SRR3992492: 
+        base_count: 1.23G
+        read_count: 26443668
+    srs: SRS1596416
+    srx: SRX1993709
+GSM2257324: 
+  SRX1993710: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/003/SRR3992493/SRR3992493.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 71d94ecb2e94926cb2e127537f60f58d SRR3992493.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992493
+    srr_info: 
+      SRR3992493: 
+        base_count: 1.07G
+        read_count: 22901539
+    srs: SRS1596417
+    srx: SRX1993710
+GSM2257325: 
+  SRX1993711: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/004/SRR3992494/SRR3992494.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 9fda9ba804dd77b7b636a8df2ac987d5 SRR3992494.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992494
+    srr_info: 
+      SRR3992494: 
+        base_count: 1.08G
+        read_count: 23229140
+    srs: SRS1596418
+    srx: SRX1993711
+GSM2257326: 
+  SRX1993712: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR399/005/SRR3992495/SRR3992495.fastq.gz
+    instrument_model: Illumina HiSeq 2000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b8677cc380cb135ab320fa767cfa3080 SRR3992495.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP080772
+    srr: 
+      - SRR3992495
+    srr_info: 
+      SRR3992495: 
+        base_count: 958.19M
+        read_count: 20094766
+    srs: SRS1596419
+    srx: SRX1993712
+GSM2283944: 
+  SRX2030874: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/007/SRR4039757/SRR4039757.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 15c204005a19a8353a01f79be2539dfb SRR4039757.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039757
+    srr_info: 
+      SRR4039757: 
+        base_count: 885.05M
+        read_count: 18196826
+    srs: SRS1624934
+    srx: SRX2030874
+GSM2283945: 
+  SRX2030875: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/008/SRR4039758/SRR4039758.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b8c26ad1ab809c78665f5d129f2d3bab SRR4039758.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039758
+    srr_info: 
+      SRR4039758: 
+        base_count: 1.02G
+        read_count: 21506381
+    srs: SRS1624935
+    srx: SRX2030875
+GSM2283946: 
+  SRX2030876: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/009/SRR4039759/SRR4039759.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - eb67345d12d279ca8c6877500b8209d5 SRR4039759.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039759
+    srr_info: 
+      SRR4039759: 
+        base_count: 836.44M
+        read_count: 17197387
+    srs: SRS1624936
+    srx: SRX2030876
+GSM2283947: 
+  SRX2030877: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/000/SRR4039760/SRR4039760.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 1d5390e6124626346f820b0e2cae3aba SRR4039760.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039760
+    srr_info: 
+      SRR4039760: 
+        base_count: 1.03G
+        read_count: 21648550
+    srs: SRS1624937
+    srx: SRX2030877
+GSM2283948: 
+  SRX2030878: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/001/SRR4039761/SRR4039761.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 9ce1a7af9fbc54de6ea2cd24d3edf569 SRR4039761.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039761
+    srr_info: 
+      SRR4039761: 
+        base_count: 902.93M
+        read_count: 18564512
+    srs: SRS1624938
+    srx: SRX2030878
+GSM2283949: 
+  SRX2030879: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/002/SRR4039762/SRR4039762.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 6dc607e32f391b2f5c6f31416902f933 SRR4039762.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039762
+    srr_info: 
+      SRR4039762: 
+        base_count: 1.12G
+        read_count: 23609887
+    srs: SRS1624939
+    srx: SRX2030879
+GSM2283950: 
+  SRX2030880: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/003/SRR4039763/SRR4039763.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c7534652d5948f2ae9a27859b47058c8 SRR4039763.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039763
+    srr_info: 
+      SRR4039763: 
+        base_count: 824.31M
+        read_count: 16948017
+    srs: SRS1624940
+    srx: SRX2030880
+GSM2283951: 
+  SRX2030881: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/004/SRR4039764/SRR4039764.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c2a1dc0e0e4f324198aec2024fbbbc19 SRR4039764.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039764
+    srr_info: 
+      SRR4039764: 
+        base_count: 662.19M
+        read_count: 13614816
+    srs: SRS1624941
+    srx: SRX2030881
+GSM2283952: 
+  SRX2030882: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/005/SRR4039765/SRR4039765.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 75437be50e19120b5ee18a89d24e9e42 SRR4039765.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039765
+    srr_info: 
+      SRR4039765: 
+        base_count: 1,009.63M
+        read_count: 20758389
+    srs: SRS1624942
+    srx: SRX2030882
+GSM2283953: 
+  SRX2030883: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/006/SRR4039766/SRR4039766.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 4df103679327358fb120de9f7e30bada SRR4039766.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039766
+    srr_info: 
+      SRR4039766: 
+        base_count: 1.11G
+        read_count: 23392977
+    srs: SRS1624943
+    srx: SRX2030883
+GSM2283954: 
+  SRX2030884: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR403/007/SRR4039767/SRR4039767.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - a8a821ac06c54d8234341c57387ebf63 SRR4039767.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP082301
+    srr: 
+      - SRR4039767
+    srr_info: 
+      SRR4039767: 
+        base_count: 1G
+        read_count: 21149475
+    srs: SRS1624945
+    srx: SRX2030884
+GSM2371466: 
+  SRX2319997: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR483/001/SRR4831941/SRR4831941.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b6bcf3299c1a575f8609e9c6734cf901 SRR4831941.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP092447
+    srr: 
+      - SRR4831941
+    srr_info: 
+      SRR4831941: 
+        base_count: 233.3M
+        read_count: 10871256
+    srs: SRS1776215
+    srx: SRX2319997
+GSM2371467: 
+  SRX2319998: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR483/002/SRR4831942/SRR4831942.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c11ed403a8b3e5f1b7313f6b22d35fbb SRR4831942.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP092447
+    srr: 
+      - SRR4831942
+    srr_info: 
+      SRR4831942: 
+        base_count: 248.65M
+        read_count: 11509004
+    srs: SRS1776218
+    srx: SRX2319998
+GSM2371468: 
+  SRX2319999: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR483/003/SRR4831943/SRR4831943.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - be37f49959c27e14179b878015fbac8d SRR4831943.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP092447
+    srr: 
+      - SRR4831943
+    srr_info: 
+      SRR4831943: 
+        base_count: 245.85M
+        read_count: 11467578
+    srs: SRS1776217
+    srx: SRX2319999
+GSM2449065: 
+  SRX2469198: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/008/SRR5151108/SRR5151108.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/009/SRR5151109/SRR5151109.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 6ff7f6e8c365f846e09c996327282c8e SRR5151108.fastq.gz
+      - 1b932e8c073b377905c8ab0a5ca180c2 SRR5151109.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP096188
+    srr: 
+      - SRR5151108
+      - SRR5151109
+    srr_info: 
+      SRR5151108: 
+        base_count: 639.38M
+        read_count: 10990825
+      SRR5151109: 
+        base_count: 682.42M
+        read_count: 11730658
+    srs: SRS1901488
+    srx: SRX2469198
+GSM2449066: 
+  SRX2469199: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/000/SRR5151110/SRR5151110.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/001/SRR5151111/SRR5151111.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - ccea26cf430a3163d012fbc40f90da4e SRR5151110.fastq.gz
+      - 13f2f2bfc1522b2894422b2fb7914626 SRR5151111.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP096188
+    srr: 
+      - SRR5151110
+      - SRR5151111
+    srr_info: 
+      SRR5151110: 
+        base_count: 650.59M
+        read_count: 11183413
+      SRR5151111: 
+        base_count: 699.5M
+        read_count: 12024321
+    srs: SRS1901489
+    srx: SRX2469199
+GSM2449067: 
+  SRX2469200: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/002/SRR5151112/SRR5151112.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/003/SRR5151113/SRR5151113.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 0618fae7fd058bc3a60c940e53ada897 SRR5151112.fastq.gz
+      - 1039345cb0e803f7d79cd38347987c72 SRR5151113.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP096188
+    srr: 
+      - SRR5151112
+      - SRR5151113
+    srr_info: 
+      SRR5151112: 
+        base_count: 755.62M
+        read_count: 12988925
+      SRR5151113: 
+        base_count: 780.78M
+        read_count: 13421503
+    srs: SRS1901490
+    srx: SRX2469200
+GSM2449068: 
+  SRX2469201: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/004/SRR5151114/SRR5151114.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/005/SRR5151115/SRR5151115.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c74c48be455c9674470c7ad74312b837 SRR5151114.fastq.gz
+      - 7e33b7ccafc4289ad4b594eb0710a560 SRR5151115.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP096188
+    srr: 
+      - SRR5151114
+      - SRR5151115
+    srr_info: 
+      SRR5151114: 
+        base_count: 720.71M
+        read_count: 12388876
+      SRR5151115: 
+        base_count: 757.68M
+        read_count: 13024299
+    srs: SRS1901491
+    srx: SRX2469201
+GSM2449069: 
+  SRX2469202: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/006/SRR5151116/SRR5151116.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/007/SRR5151117/SRR5151117.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c9fcf1dcd111656a004203a5de5fd824 SRR5151116.fastq.gz
+      - 05cb2501fbc87477fae910e6fd5f6d9c SRR5151117.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP096188
+    srr: 
+      - SRR5151116
+      - SRR5151117
+    srr_info: 
+      SRR5151116: 
+        base_count: 682.97M
+        read_count: 11740038
+      SRR5151117: 
+        base_count: 728.11M
+        read_count: 12516057
+    srs: SRS1901492
+    srx: SRX2469202
+GSM2449070: 
+  SRX2469203: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/008/SRR5151118/SRR5151118.fastq.gz
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR515/009/SRR5151119/SRR5151119.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 3cbe4fc6d95afb9b33d3849d7725942d SRR5151118.fastq.gz
+      - f29cffca6e4daa520e43e827a716877b SRR5151119.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP096188
+    srr: 
+      - SRR5151118
+      - SRR5151119
+    srr_info: 
+      SRR5151118: 
+        base_count: 637.46M
+        read_count: 10957760
+      SRR5151119: 
+        base_count: 668.98M
+        read_count: 11499546
+    srs: SRS1901493
+    srx: SRX2469203
+GSM2476091: 
+  SRX2536533: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/008/SRR5227418/SRR5227418.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 2128766226002e92cae780a31f16485f SRR5227418.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227418
+    srr_info: 
+      SRR5227418: 
+        base_count: 1.03G
+        read_count: 21686317
+    srs: SRS1956473
+    srx: SRX2536533
+GSM2476092: 
+  SRX2536534: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/009/SRR5227419/SRR5227419.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 75428f97c4b996359fc191d86b2074dd SRR5227419.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227419
+    srr_info: 
+      SRR5227419: 
+        base_count: 1G
+        read_count: 21108423
+    srs: SRS1956474
+    srx: SRX2536534
+GSM2476093: 
+  SRX2536535: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/000/SRR5227420/SRR5227420.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 6b91dc286f11d67863ad6545d6c26536 SRR5227420.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227420
+    srr_info: 
+      SRR5227420: 
+        base_count: 1.08G
+        read_count: 22823192
+    srs: SRS1956475
+    srx: SRX2536535
+GSM2476094: 
+  SRX2536536: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/001/SRR5227421/SRR5227421.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 0bdf11c301a5959266ee6d2e2890ba12 SRR5227421.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227421
+    srr_info: 
+      SRR5227421: 
+        base_count: 932.67M
+        read_count: 19176063
+    srs: SRS1956476
+    srx: SRX2536536
+GSM2476095: 
+  SRX2536537: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/002/SRR5227422/SRR5227422.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - d2c1fe5806f1887dc57b7018c4009f25 SRR5227422.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227422
+    srr_info: 
+      SRR5227422: 
+        base_count: 2.11G
+        read_count: 44506464
+    srs: SRS1956477
+    srx: SRX2536537
+GSM2476096: 
+  SRX2536538: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/003/SRR5227423/SRR5227423.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 231739a4859bc646c05a9135a37bae58 SRR5227423.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227423
+    srr_info: 
+      SRR5227423: 
+        base_count: 2.38G
+        read_count: 50107384
+    srs: SRS1956478
+    srx: SRX2536538
+GSM2476097: 
+  SRX2536539: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/004/SRR5227424/SRR5227424.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 9b7d6543df8f25ac75222041e38d9bd0 SRR5227424.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227424
+    srr_info: 
+      SRR5227424: 
+        base_count: 1.16G
+        read_count: 24481198
+    srs: SRS1956479
+    srx: SRX2536539
+GSM2476098: 
+  SRX2536540: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/005/SRR5227425/SRR5227425.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - bc36037aef12944ad28813709842b6d8 SRR5227425.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227425
+    srr_info: 
+      SRR5227425: 
+        base_count: 555.48M
+        read_count: 11420904
+    srs: SRS1956480
+    srx: SRX2536540
+GSM2476099: 
+  SRX2536541: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/006/SRR5227426/SRR5227426.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c80e620e6b656bcf00aa589fd6efd735 SRR5227426.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227426
+    srr_info: 
+      SRR5227426: 
+        base_count: 972.87M
+        read_count: 20002472
+    srs: SRS1956481
+    srx: SRX2536541
+GSM2476100: 
+  SRX2536542: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/007/SRR5227427/SRR5227427.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - ed68d17add84380aa5b14a30adc8d5d8 SRR5227427.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227427
+    srr_info: 
+      SRR5227427: 
+        base_count: 1.95G
+        read_count: 41134102
+    srs: SRS1956482
+    srx: SRX2536542
+GSM2476101: 
+  SRX2536543: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/008/SRR5227428/SRR5227428.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 0ec2fc074a1868c14d714696d3ff3dd7 SRR5227428.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227428
+    srr_info: 
+      SRR5227428: 
+        base_count: 1.45G
+        read_count: 30480842
+    srs: SRS1956483
+    srx: SRX2536543
+GSM2476102: 
+  SRX2536544: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/009/SRR5227429/SRR5227429.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 53c52dcf6c34fc651dac389e9a6afdbf SRR5227429.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227429
+    srr_info: 
+      SRR5227429: 
+        base_count: 1.74G
+        read_count: 36653703
+    srs: SRS1956484
+    srx: SRX2536544
+GSM2476103: 
+  SRX2536545: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/000/SRR5227430/SRR5227430.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 9d2b1b0ea3173bb0ad6225ace43b47ed SRR5227430.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227430
+    srr_info: 
+      SRR5227430: 
+        base_count: 2.68G
+        read_count: 56424474
+    srs: SRS1956485
+    srx: SRX2536545
+GSM2476104: 
+  SRX2536546: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/001/SRR5227431/SRR5227431.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 4cf3fb329ed6ddf9aa803d0ebe5320aa SRR5227431.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227431
+    srr_info: 
+      SRR5227431: 
+        base_count: 218.27M
+        read_count: 4487766
+    srs: SRS1956486
+    srx: SRX2536546
+GSM2476105: 
+  SRX2536547: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/002/SRR5227432/SRR5227432.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 142aea0ec2c6a163f4205be417ff1181 SRR5227432.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227432
+    srr_info: 
+      SRR5227432: 
+        base_count: 269.56M
+        read_count: 5542276
+    srs: SRS1956487
+    srx: SRX2536547
+GSM2476106: 
+  SRX2536548: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/003/SRR5227433/SRR5227433.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 509c2e063c7d0bb3f62c49801b4cd1be SRR5227433.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227433
+    srr_info: 
+      SRR5227433: 
+        base_count: 187.77M
+        read_count: 3860519
+    srs: SRS1956488
+    srx: SRX2536548
+GSM2476107: 
+  SRX2536549: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/004/SRR5227434/SRR5227434.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 329cbe81d9b8ed463d36401ba08e206f SRR5227434.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227434
+    srr_info: 
+      SRR5227434: 
+        base_count: 191.2M
+        read_count: 3931196
+    srs: SRS1956489
+    srx: SRX2536549
+GSM2476108: 
+  SRX2536550: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/005/SRR5227435/SRR5227435.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 9b491427dc9be65501dc5720230df05b SRR5227435.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227435
+    srr_info: 
+      SRR5227435: 
+        base_count: 6.34G
+        read_count: 70933256
+    srs: SRS1956490
+    srx: SRX2536550
+GSM2476109: 
+  SRX2536551: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/006/SRR5227436/SRR5227436.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 9065e83509bdd8d2ea9c273d81304713 SRR5227436.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227436
+    srr_info: 
+      SRR5227436: 
+        base_count: 3.67G
+        read_count: 41032148
+    srs: SRS1956491
+    srx: SRX2536551
+GSM2476110: 
+  SRX2536552: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/007/SRR5227437/SRR5227437.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 317715b5542cb0aba7e618ad57d88a4e SRR5227437.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227437
+    srr_info: 
+      SRR5227437: 
+        base_count: 1.88G
+        read_count: 39678017
+    srs: SRS1956492
+    srx: SRX2536552
+GSM2476111: 
+  SRX2536553: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/008/SRR5227438/SRR5227438.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 94593e0e7df07847a9e14cd33eb231ad SRR5227438.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227438
+    srr_info: 
+      SRR5227438: 
+        base_count: 866.36M
+        read_count: 17812624
+    srs: SRS1956493
+    srx: SRX2536553
+GSM2476112: 
+  SRX2536554: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/009/SRR5227439/SRR5227439.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 2db0ad4253436bcc6082791a414663c0 SRR5227439.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227439
+    srr_info: 
+      SRR5227439: 
+        base_count: 3.63G
+        read_count: 40561438
+    srs: SRS1956494
+    srx: SRX2536554
+GSM2476113: 
+  SRX2536555: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/000/SRR5227440/SRR5227440.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 0ea56df71a183488256b3bfa1ac03638 SRR5227440.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227440
+    srr_info: 
+      SRR5227440: 
+        base_count: 5.09G
+        read_count: 56961259
+    srs: SRS1956495
+    srx: SRX2536555
+GSM2476114: 
+  SRX2536556: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/001/SRR5227441/SRR5227441.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 42d994f6baa319918a0a623568c9690f SRR5227441.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227441
+    srr_info: 
+      SRR5227441: 
+        base_count: 1.25G
+        read_count: 26243724
+    srs: SRS1956496
+    srx: SRX2536556
+GSM2476115: 
+  SRX2536557: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/002/SRR5227442/SRR5227442.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 911857d2e996f4552e2cded65e4c4bb5 SRR5227442.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227442
+    srr_info: 
+      SRR5227442: 
+        base_count: 4.17G
+        read_count: 46687261
+    srs: SRS1956497
+    srx: SRX2536557
+GSM2476116: 
+  SRX2536558: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/003/SRR5227443/SRR5227443.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 519bae7bf7f751f8f7a6191d3d5068b2 SRR5227443.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227443
+    srr_info: 
+      SRR5227443: 
+        base_count: 2.8G
+        read_count: 31271556
+    srs: SRS1956498
+    srx: SRX2536558
+GSM2476117: 
+  SRX2536559: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/004/SRR5227444/SRR5227444.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 65c75ca357d206dc051db27c10a43635 SRR5227444.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227444
+    srr_info: 
+      SRR5227444: 
+        base_count: 4.89G
+        read_count: 54661389
+    srs: SRS1956499
+    srx: SRX2536559
+GSM2476118: 
+  SRX2536560: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/005/SRR5227445/SRR5227445.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 990a1c0a078ee9ab0a8ff6b98e5c16b8 SRR5227445.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227445
+    srr_info: 
+      SRR5227445: 
+        base_count: 2.96G
+        read_count: 33079786
+    srs: SRS1956500
+    srx: SRX2536560
+GSM2476119: 
+  SRX2536561: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/006/SRR5227446/SRR5227446.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 7f46f63564227d4de407ba23fef0fd8d SRR5227446.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227446
+    srr_info: 
+      SRR5227446: 
+        base_count: 3.54G
+        read_count: 39564114
+    srs: SRS1956501
+    srx: SRX2536561
+GSM2476120: 
+  SRX2536562: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/007/SRR5227447/SRR5227447.fastq.gz
+    instrument_model: Illumina HiSeq 1000
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - edc02de88a9528202f41319313aeaa91 SRR5227447.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP098796
+    srr: 
+      - SRR5227447
+    srr_info: 
+      SRR5227447: 
+        base_count: 3.94G
+        read_count: 44059036
+    srs: SRS1956502
+    srx: SRX2536562
+GSM2599097: 
+  SRX2784052: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR550/000/SRR5508380/SRR5508380.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - d2820120244b952d510e903a084603ed SRR5508380.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP106473
+    srr: 
+      - SRR5508380
+    srr_info: 
+      SRR5508380: 
+        base_count: 2.54G
+        read_count: 27233853
+    srs: SRS2166188
+    srx: SRX2784052
+GSM2599098: 
+  SRX2784053: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR550/001/SRR5508381/SRR5508381.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 2f2e7cf18bee16765f3b318cd18873b2 SRR5508381.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP106473
+    srr: 
+      - SRR5508381
+    srr_info: 
+      SRR5508381: 
+        base_count: 2.7G
+        read_count: 28950851
+    srs: SRS2166187
+    srx: SRX2784053
+GSM2599099: 
+  SRX2784054: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR550/002/SRR5508382/SRR5508382.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 704f004c0fbbd2a234e1311b1d1c5c6d SRR5508382.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP106473
+    srr: 
+      - SRR5508382
+    srr_info: 
+      SRR5508382: 
+        base_count: 2.56G
+        read_count: 27541069
+    srs: SRS2166193
+    srx: SRX2784054
+GSM2599100: 
+  SRX2784055: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR550/003/SRR5508383/SRR5508383.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 6258b8d7c7d2d765c7829d87f230e99f SRR5508383.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP106473
+    srr: 
+      - SRR5508383
+    srr_info: 
+      SRR5508383: 
+        base_count: 2.3G
+        read_count: 24723346
+    srs: SRS2166192
+    srx: SRX2784055
+GSM2599101: 
+  SRX2784056: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR550/004/SRR5508384/SRR5508384.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 82d5d16dd9472b53f632af1cbfbfa0f4 SRR5508384.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP106473
+    srr: 
+      - SRR5508384
+    srr_info: 
+      SRR5508384: 
+        base_count: 3.02G
+        read_count: 32435761
+    srs: SRS2166189
+    srx: SRX2784056
+GSM2599102: 
+  SRX2784057: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR550/005/SRR5508385/SRR5508385.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - a88adc504ae3d20c80df618ea0dab3c3 SRR5508385.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP106473
+    srr: 
+      - SRR5508385
+    srr_info: 
+      SRR5508385: 
+        base_count: 3.25G
+        read_count: 34948274
+    srs: SRS2166190
+    srx: SRX2784057
+GSM2808011: 
+  SRX3268756: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR615/004/SRR6156924/SRR6156924.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 3ff69eeee9e8ebf18ac5c9f205c63ae0 SRR6156924.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP119725
+    srr: 
+      - SRR6156924
+    srr_info: 
+      SRR6156924: 
+        base_count: 928.36M
+        read_count: 43279723
+    srs: SRS2580517
+    srx: SRX3268756
+GSM2808012: 
+  SRX3268757: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR615/005/SRR6156925/SRR6156925.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 01590f2f11c631f1577d7b5b97278e9f SRR6156925.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP119725
+    srr: 
+      - SRR6156925
+    srr_info: 
+      SRR6156925: 
+        base_count: 928.16M
+        read_count: 44951890
+    srs: SRS2580518
+    srx: SRX3268757
+GSM2825283: 
+  SRX3302830: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR619/007/SRR6192867/SRR6192867.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - ab2286f6aaa9e207148a3b8fba3b0db1 SRR6192867.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP120564
+    srr: 
+      - SRR6192867
+    srr_info: 
+      SRR6192867: 
+        base_count: 505.85M
+        read_count: 10608354
+    srs: SRS2610340
+    srx: SRX3302830
+GSM2825284: 
+  SRX3302831: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR619/008/SRR6192868/SRR6192868.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 44e8b8697325210f2dd62c66099915ce SRR6192868.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP120564
+    srr: 
+      - SRR6192868
+    srr_info: 
+      SRR6192868: 
+        base_count: 644.43M
+        read_count: 13514601
+    srs: SRS2610341
+    srx: SRX3302831
+GSM2825285: 
+  SRX3302832: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR619/009/SRR6192869/SRR6192869.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 081358dbcf34a31df8e464e427ec9da6 SRR6192869.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP120564
+    srr: 
+      - SRR6192869
+    srr_info: 
+      SRR6192869: 
+        base_count: 433.64M
+        read_count: 9093992
+    srs: SRS2610342
+    srx: SRX3302832
+GSM2825286: 
+  SRX3302833: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR619/000/SRR6192870/SRR6192870.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 6b6cdb9b3b7a9c6be903078fabb6fde6 SRR6192870.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP120564
+    srr: 
+      - SRR6192870
+    srr_info: 
+      SRR6192870: 
+        base_count: 415.99M
+        read_count: 8723861
+    srs: SRS2610343
+    srx: SRX3302833
+GSM2825287: 
+  SRX3302834: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR619/001/SRR6192871/SRR6192871.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - eecfcee9decde5b7517276286a6424fa SRR6192871.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP120564
+    srr: 
+      - SRR6192871
+    srr_info: 
+      SRR6192871: 
+        base_count: 426.44M
+        read_count: 8943178
+    srs: SRS2610344
+    srx: SRX3302834
+GSM2825288: 
+  SRX3302835: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR619/002/SRR6192872/SRR6192872.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 2a284a7edb801884d636e87842c2c5cd SRR6192872.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP120564
+    srr: 
+      - SRR6192872
+    srr_info: 
+      SRR6192872: 
+        base_count: 434.33M
+        read_count: 9108485
+    srs: SRS2610345
+    srx: SRX3302835
+GSM2829912: 
+  SRX3318190: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/002/SRR6208912/SRR6208912.fastq.gz
+    instrument_model: Illumina MiSeq
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e0718687356cf4fa3cd118a80201f6b3 SRR6208912.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121334
+    srr: 
+      - SRR6208912
+    srr_info: 
+      SRR6208912: 
+        base_count: 112.04M
+        read_count: 3263279
+    srs: SRS2623762
+    srx: SRX3318190
+GSM2829913: 
+  SRX3318191: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/003/SRR6208913/SRR6208913.fastq.gz
+    instrument_model: Illumina MiSeq
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - d00a82ed887a54fae75b88858126f87f SRR6208913.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121334
+    srr: 
+      - SRR6208913
+    srr_info: 
+      SRR6208913: 
+        base_count: 186.92M
+        read_count: 5444387
+    srs: SRS2623805
+    srx: SRX3318191
+GSM2829914: 
+  SRX3318192: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/004/SRR6208914/SRR6208914.fastq.gz
+    instrument_model: NextSeq 500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - dd28ff43d5e5e936e6d382968e8f306a SRR6208914.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121334
+    srr: 
+      - SRR6208914
+    srr_info: 
+      SRR6208914: 
+        base_count: 118.52M
+        read_count: 3452004
+    srs: SRS2623765
+    srx: SRX3318192
+GSM2829915: 
+  SRX3318193: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/005/SRR6208915/SRR6208915.fastq.gz
+    instrument_model: NextSeq 500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 05167b2fc0a23d88f01544f806b52743 SRR6208915.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121334
+    srr: 
+      - SRR6208915
+    srr_info: 
+      SRR6208915: 
+        base_count: 141.45M
+        read_count: 4119982
+    srs: SRS2623763
+    srx: SRX3318193
+GSM2829916: 
+  SRX3318194: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/006/SRR6208916/SRR6208916.fastq.gz
+    instrument_model: NextSeq 500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 6c373c406a1372aa2a735518eab02b6d SRR6208916.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121334
+    srr: 
+      - SRR6208916
+    srr_info: 
+      SRR6208916: 
+        base_count: 3.21G
+        read_count: 95805859
+    srs: SRS2623819
+    srx: SRX3318194
+GSM2829917: 
+  SRX3318195: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/007/SRR6208917/SRR6208917.fastq.gz
+    instrument_model: NextSeq 500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 31477f063aea988b4acb7a8bb78fa5a5 SRR6208917.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121334
+    srr: 
+      - SRR6208917
+    srr_info: 
+      SRR6208917: 
+        base_count: 2.48G
+        read_count: 73985040
+    srs: SRS2623768
+    srx: SRX3318195
+GSM2829918: 
+  SRX3318196: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/008/SRR6208918/SRR6208918.fastq.gz
+    instrument_model: NextSeq 500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - fb43bb7dda0f6a020f0d174e7ea7ce72 SRR6208918.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121334
+    srr: 
+      - SRR6208918
+    srr_info: 
+      SRR6208918: 
+        base_count: 2.34G
+        read_count: 69727246
+    srs: SRS2623764
+    srx: SRX3318196
+GSM2829919: 
+  SRX3318197: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/009/SRR6208919/SRR6208919.fastq.gz
+    instrument_model: NextSeq 500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c02a355645166f1065182362aa272949 SRR6208919.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121334
+    srr: 
+      - SRR6208919
+    srr_info: 
+      SRR6208919: 
+        base_count: 1.64G
+        read_count: 48915095
+    srs: SRS2623766
+    srx: SRX3318197
+GSM2829920: 
+  SRX3318198: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/000/SRR6208920/SRR6208920.fastq.gz
+    instrument_model: Illumina MiSeq
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 961135302fb69095f3e9b0ce2e033f57 SRR6208920.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121334
+    srr: 
+      - SRR6208920
+    srr_info: 
+      SRR6208920: 
+        base_count: 138.46M
+        read_count: 4032848
+    srs: SRS2623767
+    srx: SRX3318198
+GSM2829921: 
+  SRX3318199: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/001/SRR6208921/SRR6208921.fastq.gz
+    instrument_model: Illumina MiSeq
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 5070bd8a905b35ec8e080382c21080a2 SRR6208921.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121334
+    srr: 
+      - SRR6208921
+    srr_info: 
+      SRR6208921: 
+        base_count: 118.4M
+        read_count: 3448541
+    srs: SRS2623769
+    srx: SRX3318199
+GSM2829922: 
+  SRX3318200: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/002/SRR6208922/SRR6208922.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e5556dabb58e2f1f1212b6ef88db721d SRR6208922.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121335
+    srr: 
+      - SRR6208922
+    srr_info: 
+      SRR6208922: 
+        base_count: 1.64G
+        read_count: 35290278
+    srs: SRS2623770
+    srx: SRX3318200
+GSM2829923: 
+  SRX3318201: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/003/SRR6208923/SRR6208923.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 3a958bc8b5250445e1e1f513756bb1aa SRR6208923.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121335
+    srr: 
+      - SRR6208923
+    srr_info: 
+      SRR6208923: 
+        base_count: 2.2G
+        read_count: 47239426
+    srs: SRS2623772
+    srx: SRX3318201
+GSM2829924: 
+  SRX3318202: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/004/SRR6208924/SRR6208924.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 13078620e9f810e8a35d4092d7a5e884 SRR6208924.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121335
+    srr: 
+      - SRR6208924
+    srr_info: 
+      SRR6208924: 
+        base_count: 1.36G
+        read_count: 29260370
+    srs: SRS2623771
+    srx: SRX3318202
+GSM2829925: 
+  SRX3318203: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR620/005/SRR6208925/SRR6208925.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 434d8a7cab077f792a31eea1480756c2 SRR6208925.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP121335
+    srr: 
+      - SRR6208925
+    srr_info: 
+      SRR6208925: 
+        base_count: 2.61G
+        read_count: 56039094
+    srs: SRS2623773
+    srx: SRX3318203
+GSM3040101: 
+  SRX3789189: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/009/SRR6833109/SRR6833109.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 93d9239819dc4b4112ac640bcca98d91 SRR6833109.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833109
+    srr_info: 
+      SRR6833109: 
+        base_count: 432.88M
+        read_count: 9078119
+    srs: SRS3041854
+    srx: SRX3789189
+GSM3040102: 
+  SRX3789190: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/000/SRR6833110/SRR6833110.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e591f45b980b24748daa412104e65437 SRR6833110.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833110
+    srr_info: 
+      SRR6833110: 
+        base_count: 280.05M
+        read_count: 5873020
+    srs: SRS3041855
+    srx: SRX3789190
+GSM3040103: 
+  SRX3789191: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/001/SRR6833111/SRR6833111.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 11f6c7ecddb51fe050ddfe3e9d982b78 SRR6833111.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833111
+    srr_info: 
+      SRR6833111: 
+        base_count: 347.13M
+        read_count: 7279859
+    srs: SRS3041856
+    srx: SRX3789191
+GSM3040104: 
+  SRX3789192: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/002/SRR6833112/SRR6833112.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 3bfcd17184482d213aa84894bdf77273 SRR6833112.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833112
+    srr_info: 
+      SRR6833112: 
+        base_count: 255.85M
+        read_count: 5365658
+    srs: SRS3041857
+    srx: SRX3789192
+GSM3040105: 
+  SRX3789193: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/003/SRR6833113/SRR6833113.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - cec2c3d70bdca0fa269e573fd2ec66e6 SRR6833113.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833113
+    srr_info: 
+      SRR6833113: 
+        base_count: 227.35M
+        read_count: 4767771
+    srs: SRS3041858
+    srx: SRX3789193
+GSM3040106: 
+  SRX3789194: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/004/SRR6833114/SRR6833114.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 2073578448ad836f6c91e57ba094dea0 SRR6833114.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833114
+    srr_info: 
+      SRR6833114: 
+        base_count: 276.8M
+        read_count: 5804920
+    srs: SRS3041859
+    srx: SRX3789194
+GSM3040107: 
+  SRX3789195: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/005/SRR6833115/SRR6833115.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 3264bd9eb92a973864921081110d4746 SRR6833115.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833115
+    srr_info: 
+      SRR6833115: 
+        base_count: 235.41M
+        read_count: 4936857
+    srs: SRS3041860
+    srx: SRX3789195
+GSM3040108: 
+  SRX3789196: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/006/SRR6833116/SRR6833116.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 27eaef9ec1b862e770c40abbde5c0533 SRR6833116.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833116
+    srr_info: 
+      SRR6833116: 
+        base_count: 268.85M
+        read_count: 5638149
+    srs: SRS3041861
+    srx: SRX3789196
+GSM3040109: 
+  SRX3789197: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/007/SRR6833117/SRR6833117.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 4abe3ff4ebb37bfbe23f3350dafa8b22 SRR6833117.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833117
+    srr_info: 
+      SRR6833117: 
+        base_count: 294.19M
+        read_count: 6169557
+    srs: SRS3041862
+    srx: SRX3789197
+GSM3040110: 
+  SRX3789198: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/008/SRR6833118/SRR6833118.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 052cc83051c5f10173b04aa3511a4977 SRR6833118.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833118
+    srr_info: 
+      SRR6833118: 
+        base_count: 254.57M
+        read_count: 5338635
+    srs: SRS3041863
+    srx: SRX3789198
+GSM3040111: 
+  SRX3789199: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/009/SRR6833119/SRR6833119.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 1838f735cb8fd5c8c992ce6e83942d71 SRR6833119.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833119
+    srr_info: 
+      SRR6833119: 
+        base_count: 271.45M
+        read_count: 5692698
+    srs: SRS3041865
+    srx: SRX3789199
+GSM3040112: 
+  SRX3789200: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/000/SRR6833120/SRR6833120.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 5b38e1909bf6dad8115e56c87ce8afbd SRR6833120.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833120
+    srr_info: 
+      SRR6833120: 
+        base_count: 281.57M
+        read_count: 5904921
+    srs: SRS3041864
+    srx: SRX3789200
+GSM3040113: 
+  SRX3789201: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/001/SRR6833121/SRR6833121.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e8c5d6832b16f17578d7868fbadb12d7 SRR6833121.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833121
+    srr_info: 
+      SRR6833121: 
+        base_count: 266.93M
+        read_count: 5597905
+    srs: SRS3041866
+    srx: SRX3789201
+GSM3040114: 
+  SRX3789202: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/002/SRR6833122/SRR6833122.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 24d47ac024cb25ec6452ba8fc0e77b98 SRR6833122.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833122
+    srr_info: 
+      SRR6833122: 
+        base_count: 288.49M
+        read_count: 6049987
+    srs: SRS3041867
+    srx: SRX3789202
+GSM3040115: 
+  SRX3789203: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/003/SRR6833123/SRR6833123.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e4a40de76736ecb53f1c1900dfe75d03 SRR6833123.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833123
+    srr_info: 
+      SRR6833123: 
+        base_count: 276.61M
+        read_count: 5800957
+    srs: SRS3041868
+    srx: SRX3789203
+GSM3040116: 
+  SRX3789204: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/004/SRR6833124/SRR6833124.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 83f859765a5a609a2170bb4eccdaec3e SRR6833124.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833124
+    srr_info: 
+      SRR6833124: 
+        base_count: 307.68M
+        read_count: 6452523
+    srs: SRS3041869
+    srx: SRX3789204
+GSM3040117: 
+  SRX3789205: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/005/SRR6833125/SRR6833125.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 9e798de875166607d98e41cdaf693f71 SRR6833125.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833125
+    srr_info: 
+      SRR6833125: 
+        base_count: 254.54M
+        read_count: 5338168
+    srs: SRS3041870
+    srx: SRX3789205
+GSM3040118: 
+  SRX3789206: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/006/SRR6833126/SRR6833126.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 1f6a731d69adb505cfbf50fb2cf95f2d SRR6833126.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833126
+    srr_info: 
+      SRR6833126: 
+        base_count: 302.68M
+        read_count: 6347600
+    srs: SRS3041871
+    srx: SRX3789206
+GSM3040119: 
+  SRX3789207: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/007/SRR6833127/SRR6833127.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 7a15967618bd3a5eeef7e3d06db6e158 SRR6833127.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833127
+    srr_info: 
+      SRR6833127: 
+        base_count: 239.69M
+        read_count: 5026735
+    srs: SRS3041872
+    srx: SRX3789207
+GSM3040120: 
+  SRX3789208: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/008/SRR6833128/SRR6833128.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 174b67a8885d8139f624a284be880505 SRR6833128.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833128
+    srr_info: 
+      SRR6833128: 
+        base_count: 225.38M
+        read_count: 4726488
+    srs: SRS3041874
+    srx: SRX3789208
+GSM3040121: 
+  SRX3789209: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/009/SRR6833129/SRR6833129.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 17e2183d8462f1d82b3ca35f2841ddb3 SRR6833129.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833129
+    srr_info: 
+      SRR6833129: 
+        base_count: 212.26M
+        read_count: 4451482
+    srs: SRS3041873
+    srx: SRX3789209
+GSM3040122: 
+  SRX3789210: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/000/SRR6833130/SRR6833130.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 28b309c27c4b4a9b6c5c8c32dd9ba0ef SRR6833130.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833130
+    srr_info: 
+      SRR6833130: 
+        base_count: 236.44M
+        read_count: 4958556
+    srs: SRS3041875
+    srx: SRX3789210
+GSM3040123: 
+  SRX3789211: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR683/001/SRR6833131/SRR6833131.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 96e481fefd75754f6c4b5e38674f0f78 SRR6833131.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP135666
+    srr: 
+      - SRR6833131
+    srr_info: 
+      SRR6833131: 
+        base_count: 242.73M
+        read_count: 5090379
+    srs: SRS3041876
+    srx: SRX3789211
+GSM3841992: 
+  SRX5951675: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/005/SRR9179035/SRR9179035.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b35b15145089961015ca0f327102f5cf SRR9179035.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179035
+    srr_info: 
+      SRR9179035: 
+        base_count: 1.94G
+        read_count: 41582361
+    srs: SRS4862347
+    srx: SRX5951675
+GSM3841993: 
+  SRX5951676: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/006/SRR9179036/SRR9179036.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 7b993b6ed98df62e6198fc2405f10170 SRR9179036.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179036
+    srr_info: 
+      SRR9179036: 
+        base_count: 1.67G
+        read_count: 35774066
+    srs: SRS4862348
+    srx: SRX5951676
+GSM3841994: 
+  SRX5951677: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/007/SRR9179037/SRR9179037.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e49601497d236e1dc1995cb29de95d05 SRR9179037.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179037
+    srr_info: 
+      SRR9179037: 
+        base_count: 822.47M
+        read_count: 17248510
+    srs: SRS4862349
+    srx: SRX5951677
+GSM3841995: 
+  SRX5951678: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/008/SRR9179038/SRR9179038.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b7c9d85ce89c6f43335adc2bf97900ad SRR9179038.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179038
+    srr_info: 
+      SRR9179038: 
+        base_count: 3.19G
+        read_count: 68454860
+    srs: SRS4862350
+    srx: SRX5951678
+GSM3841996: 
+  SRX5951679: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/009/SRR9179039/SRR9179039.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 0787a970c8616b2ed16e8317cb68f774 SRR9179039.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179039
+    srr_info: 
+      SRR9179039: 
+        base_count: 3.62G
+        read_count: 77820407
+    srs: SRS4862351
+    srx: SRX5951679
+GSM3841997: 
+  SRX5951680: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/000/SRR9179040/SRR9179040.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 649c7739de676c07fbdadd93d662079d SRR9179040.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179040
+    srr_info: 
+      SRR9179040: 
+        base_count: 5.96G
+        read_count: 127914864
+    srs: SRS4862352
+    srx: SRX5951680
+GSM3841998: 
+  SRX5951681: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/001/SRR9179041/SRR9179041.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 330a15641c6d477d11ad4c6f0c4825ee SRR9179041.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179041
+    srr_info: 
+      SRR9179041: 
+        base_count: 890.07M
+        read_count: 18666090
+    srs: SRS4862353
+    srx: SRX5951681
+GSM3841999: 
+  SRX5951682: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/002/SRR9179042/SRR9179042.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 3a2b75bd32d1004f091dd11469dbcf68 SRR9179042.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179042
+    srr_info: 
+      SRR9179042: 
+        base_count: 744.19M
+        read_count: 15606886
+    srs: SRS4862354
+    srx: SRX5951682
+GSM3842000: 
+  SRX5951683: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/003/SRR9179043/SRR9179043.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e5996aabcfe49e29b38b101fcd04b9bd SRR9179043.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179043
+    srr_info: 
+      SRR9179043: 
+        base_count: 710.93M
+        read_count: 14909289
+    srs: SRS4862355
+    srx: SRX5951683
+GSM3842001: 
+  SRX5951684: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/004/SRR9179044/SRR9179044.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - bbf33eb35637047648e5aeceaa75c5dd SRR9179044.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179044
+    srr_info: 
+      SRR9179044: 
+        base_count: 1.31G
+        read_count: 28158688
+    srs: SRS4862356
+    srx: SRX5951684
+GSM3842002: 
+  SRX5951685: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/005/SRR9179045/SRR9179045.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 0ba0269e0228819798b19a773392ebe1 SRR9179045.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179045
+    srr_info: 
+      SRR9179045: 
+        base_count: 1.25G
+        read_count: 26925472
+    srs: SRS4862357
+    srx: SRX5951685
+GSM3842003: 
+  SRX5951686: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/006/SRR9179046/SRR9179046.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - f7b6d854f553176b2cc7066096e09526 SRR9179046.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179046
+    srr_info: 
+      SRR9179046: 
+        base_count: 1.23G
+        read_count: 26393222
+    srs: SRS4862358
+    srx: SRX5951686
+GSM3842004: 
+  SRX5951687: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/007/SRR9179047/SRR9179047.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - a007bc52e9e8beed2f6462a1166084b8 SRR9179047.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179047
+    srr_info: 
+      SRR9179047: 
+        base_count: 1.42G
+        read_count: 30461326
+    srs: SRS4862359
+    srx: SRX5951687
+GSM3842005: 
+  SRX5951688: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/008/SRR9179048/SRR9179048.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 871862b2ea5ef7628cf3330e69cf47d4 SRR9179048.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179048
+    srr_info: 
+      SRR9179048: 
+        base_count: 1.15G
+        read_count: 24756754
+    srs: SRS4862360
+    srx: SRX5951688
+GSM3842006: 
+  SRX5951689: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/009/SRR9179049/SRR9179049.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 227ab7387b19f75b50b216627ae3b684 SRR9179049.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179049
+    srr_info: 
+      SRR9179049: 
+        base_count: 1.2G
+        read_count: 25863314
+    srs: SRS4862361
+    srx: SRX5951689
+GSM3842007: 
+  SRX5951690: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/000/SRR9179050/SRR9179050.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - d40dd714eecf8999b1a43de99742baff SRR9179050.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179050
+    srr_info: 
+      SRR9179050: 
+        base_count: 1.88G
+        read_count: 40302717
+    srs: SRS4862362
+    srx: SRX5951690
+GSM3842008: 
+  SRX5951691: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/001/SRR9179051/SRR9179051.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - f88e246008d64d3f1d5d829c6187ab2a SRR9179051.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179051
+    srr_info: 
+      SRR9179051: 
+        base_count: 2.04G
+        read_count: 43834002
+    srs: SRS4862363
+    srx: SRX5951691
+GSM3842009: 
+  SRX5951692: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/002/SRR9179052/SRR9179052.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 0e0f406126234e114399609eada7692f SRR9179052.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179052
+    srr_info: 
+      SRR9179052: 
+        base_count: 1.78G
+        read_count: 38183113
+    srs: SRS4862364
+    srx: SRX5951692
+GSM3842010: 
+  SRX5951693: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/003/SRR9179053/SRR9179053.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 95d0847fdd00add0507446c3c2a53455 SRR9179053.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179053
+    srr_info: 
+      SRR9179053: 
+        base_count: 1.78G
+        read_count: 38286249
+    srs: SRS4862365
+    srx: SRX5951693
+GSM3842011: 
+  SRX5951694: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/004/SRR9179054/SRR9179054.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 161f637b441095ba02f2c85ffb83aae0 SRR9179054.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179054
+    srr_info: 
+      SRR9179054: 
+        base_count: 1.31G
+        read_count: 28026051
+    srs: SRS4862366
+    srx: SRX5951694
+GSM3842012: 
+  SRX5951695: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/005/SRR9179055/SRR9179055.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 61c88658d399a415db11d464e5519d93 SRR9179055.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179055
+    srr_info: 
+      SRR9179055: 
+        base_count: 1.47G
+        read_count: 31578991
+    srs: SRS4862367
+    srx: SRX5951695
+GSM3842013: 
+  SRX5951696: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/006/SRR9179056/SRR9179056.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 67593f6981745aa7283e694fc7095847 SRR9179056.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179056
+    srr_info: 
+      SRR9179056: 
+        base_count: 2.21G
+        read_count: 47363960
+    srs: SRS4862368
+    srx: SRX5951696
+GSM3842014: 
+  SRX5951697: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/007/SRR9179057/SRR9179057.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - ed3de4613ff2429cbd98c062b2094628 SRR9179057.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179057
+    srr_info: 
+      SRR9179057: 
+        base_count: 1.98G
+        read_count: 42576056
+    srs: SRS4862369
+    srx: SRX5951697
+GSM3842015: 
+  SRX5951698: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/008/SRR9179058/SRR9179058.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 8dee3cb89948e665602d5674951e4f7b SRR9179058.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179058
+    srr_info: 
+      SRR9179058: 
+        base_count: 1.87G
+        read_count: 40187239
+    srs: SRS4862370
+    srx: SRX5951698
+GSM3842016: 
+  SRX5951699: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/009/SRR9179059/SRR9179059.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 980d8b4023450eac3121c4cb1d67cb24 SRR9179059.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179059
+    srr_info: 
+      SRR9179059: 
+        base_count: 3.95G
+        read_count: 84852930
+    srs: SRS4862372
+    srx: SRX5951699
+GSM3842017: 
+  SRX5951700: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/000/SRR9179060/SRR9179060.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 4885655316e547c105bfe27eb5fc19b2 SRR9179060.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179060
+    srr_info: 
+      SRR9179060: 
+        base_count: 3.28G
+        read_count: 70345071
+    srs: SRS4862371
+    srx: SRX5951700
+GSM3842018: 
+  SRX5951701: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/001/SRR9179061/SRR9179061.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - f196197e95c98a33e01ecc578a4f21ce SRR9179061.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179061
+    srr_info: 
+      SRR9179061: 
+        base_count: 4.5G
+        read_count: 96742733
+    srs: SRS4862373
+    srx: SRX5951701
+GSM3842019: 
+  SRX5951702: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/002/SRR9179062/SRR9179062.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 81899f08ea2769fd4b14e6b765512a48 SRR9179062.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179062
+    srr_info: 
+      SRR9179062: 
+        base_count: 1.24G
+        read_count: 26703801
+    srs: SRS4862374
+    srx: SRX5951702
+GSM3842020: 
+  SRX5951703: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/003/SRR9179063/SRR9179063.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - ca7c4e083726dfe9363dc99ea3391fda SRR9179063.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179063
+    srr_info: 
+      SRR9179063: 
+        base_count: 935.15M
+        read_count: 19611510
+    srs: SRS4862375
+    srx: SRX5951703
+GSM3842021: 
+  SRX5951704: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/004/SRR9179064/SRR9179064.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 1fc3098c8ae08f4f3655291e3a217fbd SRR9179064.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179064
+    srr_info: 
+      SRR9179064: 
+        base_count: 730.36M
+        read_count: 15316797
+    srs: SRS4862376
+    srx: SRX5951704
+GSM3842022: 
+  SRX5951705: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/005/SRR9179065/SRR9179065.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e7794e53c9f6ea81d9ce8d59c01f1225 SRR9179065.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179065
+    srr_info: 
+      SRR9179065: 
+        base_count: 734.03M
+        read_count: 15393805
+    srs: SRS4862377
+    srx: SRX5951705
+GSM3842023: 
+  SRX5951706: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/006/SRR9179066/SRR9179066.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - be3a27f24f7309c8f1595952dde3d67b SRR9179066.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179066
+    srr_info: 
+      SRR9179066: 
+        base_count: 644.8M
+        read_count: 13522497
+    srs: SRS4862378
+    srx: SRX5951706
+GSM3842024: 
+  SRX5951707: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/007/SRR9179067/SRR9179067.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 578f0e544a116c760e9de90031f87f79 SRR9179067.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179067
+    srr_info: 
+      SRR9179067: 
+        base_count: 522.03M
+        read_count: 10947692
+    srs: SRS4862379
+    srx: SRX5951707
+GSM3842025: 
+  SRX5951708: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/008/SRR9179068/SRR9179068.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 5772f2da8ca8e3592893282380bffe09 SRR9179068.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179068
+    srr_info: 
+      SRR9179068: 
+        base_count: 1.54G
+        read_count: 33070463
+    srs: SRS4862380
+    srx: SRX5951708
+GSM3842026: 
+  SRX5951709: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/009/SRR9179069/SRR9179069.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 985f7d9936fef407cc4efe484d77ef0d SRR9179069.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179069
+    srr_info: 
+      SRR9179069: 
+        base_count: 1.71G
+        read_count: 36656175
+    srs: SRS4862381
+    srx: SRX5951709
+GSM3842027: 
+  SRX5951710: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/000/SRR9179070/SRR9179070.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e984db8e0397a2b235a50b791c0adaed SRR9179070.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179070
+    srr_info: 
+      SRR9179070: 
+        base_count: 1.82G
+        read_count: 38990168
+    srs: SRS4862382
+    srx: SRX5951710
+GSM3842028: 
+  SRX5951711: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/001/SRR9179071/SRR9179071.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - fc60ba22da66db4ca9dd7ed9f997103e SRR9179071.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179071
+    srr_info: 
+      SRR9179071: 
+        base_count: 1.95G
+        read_count: 41819603
+    srs: SRS4862383
+    srx: SRX5951711
+GSM3842029: 
+  SRX5951712: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/002/SRR9179072/SRR9179072.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b729e093e1eef371c2bc8ac477cc4443 SRR9179072.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179072
+    srr_info: 
+      SRR9179072: 
+        base_count: 1.79G
+        read_count: 38539903
+    srs: SRS4862384
+    srx: SRX5951712
+GSM3842030: 
+  SRX5951713: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/003/SRR9179073/SRR9179073.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 68b8dc4e2a48dea00ba6e027180d1f27 SRR9179073.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179073
+    srr_info: 
+      SRR9179073: 
+        base_count: 1.41G
+        read_count: 30281594
+    srs: SRS4862385
+    srx: SRX5951713
+GSM3842031: 
+  SRX5951714: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/004/SRR9179074/SRR9179074.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 3da5a9f74f269de9b5b2dec7f754dabb SRR9179074.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179074
+    srr_info: 
+      SRR9179074: 
+        base_count: 1.17G
+        read_count: 25020635
+    srs: SRS4862386
+    srx: SRX5951714
+GSM3842032: 
+  SRX5951715: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/005/SRR9179075/SRR9179075.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 3d68279f281b560d7b9920c0e8557661 SRR9179075.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179075
+    srr_info: 
+      SRR9179075: 
+        base_count: 1.13G
+        read_count: 24368470
+    srs: SRS4862387
+    srx: SRX5951715
+GSM3842033: 
+  SRX5951716: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/006/SRR9179076/SRR9179076.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c2f2c03bea0bd3e770693fd3fc6a7275 SRR9179076.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179076
+    srr_info: 
+      SRR9179076: 
+        base_count: 942.44M
+        read_count: 19764375
+    srs: SRS4862388
+    srx: SRX5951716
+GSM3842034: 
+  SRX5951717: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/007/SRR9179077/SRR9179077.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 8fbaec5682c7f07c5e210531bf0f764c SRR9179077.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179077
+    srr_info: 
+      SRR9179077: 
+        base_count: 968.56M
+        read_count: 20312209
+    srs: SRS4862389
+    srx: SRX5951717
+GSM3842035: 
+  SRX5951718: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/008/SRR9179078/SRR9179078.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 0c549f9be65368133ec6d4607baa9868 SRR9179078.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179078
+    srr_info: 
+      SRR9179078: 
+        base_count: 1.2G
+        read_count: 25819791
+    srs: SRS4862390
+    srx: SRX5951718
+GSM3842036: 
+  SRX5951719: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/009/SRR9179079/SRR9179079.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 2ea1ee434426297648073ff8adec1730 SRR9179079.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179079
+    srr_info: 
+      SRR9179079: 
+        base_count: 840.2M
+        read_count: 17620202
+    srs: SRS4862391
+    srx: SRX5951719
+GSM3842037: 
+  SRX5951720: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/000/SRR9179080/SRR9179080.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - ee7c6a2109154922a9255d09794a4e84 SRR9179080.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179080
+    srr_info: 
+      SRR9179080: 
+        base_count: 839.16M
+        read_count: 17598562
+    srs: SRS4862392
+    srx: SRX5951720
+GSM3842038: 
+  SRX5951721: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/001/SRR9179081/SRR9179081.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 219d84cf7b5269d2d052c1d66cb71a85 SRR9179081.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179081
+    srr_info: 
+      SRR9179081: 
+        base_count: 1.17G
+        read_count: 25142698
+    srs: SRS4862393
+    srx: SRX5951721
+GSM3842039: 
+  SRX5951722: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/002/SRR9179082/SRR9179082.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 87f9130726c743fcb000778faf0aad4e SRR9179082.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179082
+    srr_info: 
+      SRR9179082: 
+        base_count: 1.03G
+        read_count: 22145783
+    srs: SRS4862394
+    srx: SRX5951722
+GSM3842040: 
+  SRX5951723: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/003/SRR9179083/SRR9179083.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 644544d21dff9e516d5902cf28100a38 SRR9179083.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179083
+    srr_info: 
+      SRR9179083: 
+        base_count: 1.02G
+        read_count: 21975000
+    srs: SRS4862395
+    srx: SRX5951723
+GSM3842041: 
+  SRX5951724: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/004/SRR9179084/SRR9179084.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c788ab897b434e49c2e400f72f0844b2 SRR9179084.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179084
+    srr_info: 
+      SRR9179084: 
+        base_count: 710.42M
+        read_count: 14898672
+    srs: SRS4862396
+    srx: SRX5951724
+GSM3842042: 
+  SRX5951725: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/005/SRR9179085/SRR9179085.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - b5a0e44c92758057a2778bb6529a0fd5 SRR9179085.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179085
+    srr_info: 
+      SRR9179085: 
+        base_count: 1.1G
+        read_count: 23523213
+    srs: SRS4862397
+    srx: SRX5951725
+GSM3842043: 
+  SRX5951726: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/006/SRR9179086/SRR9179086.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 677846406a6481802cd0d2a6be60c96f SRR9179086.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179086
+    srr_info: 
+      SRR9179086: 
+        base_count: 800.04M
+        read_count: 16778135
+    srs: SRS4862398
+    srx: SRX5951726
+GSM3842044: 
+  SRX5951727: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/007/SRR9179087/SRR9179087.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 2330870d0ec62c1a150515779aed0ac3 SRR9179087.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179087
+    srr_info: 
+      SRR9179087: 
+        base_count: 894.27M
+        read_count: 18754227
+    srs: SRS4862399
+    srx: SRX5951727
+GSM3842045: 
+  SRX5951728: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/008/SRR9179088/SRR9179088.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 25dfb75a92dbd92eb8281a0f4ee29024 SRR9179088.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179088
+    srr_info: 
+      SRR9179088: 
+        base_count: 2.08G
+        read_count: 44590061
+    srs: SRS4862401
+    srx: SRX5951728
+GSM3842046: 
+  SRX5951729: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/009/SRR9179089/SRR9179089.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - fd7702c68f6f6a8474f069c298605b54 SRR9179089.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179089
+    srr_info: 
+      SRR9179089: 
+        base_count: 1.04G
+        read_count: 22234038
+    srs: SRS4862400
+    srx: SRX5951729
+GSM3842047: 
+  SRX5951730: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/000/SRR9179090/SRR9179090.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e4a8ee712ea4f32ae929365f4ca528c7 SRR9179090.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179090
+    srr_info: 
+      SRR9179090: 
+        base_count: 1.03G
+        read_count: 22052879
+    srs: SRS4862402
+    srx: SRX5951730
+GSM3842048: 
+  SRX5951731: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/001/SRR9179091/SRR9179091.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 495f1f34400b7b0b057d1dfee7560b92 SRR9179091.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179091
+    srr_info: 
+      SRR9179091: 
+        base_count: 864.6M
+        read_count: 18132075
+    srs: SRS4862403
+    srx: SRX5951731
+GSM3842049: 
+  SRX5951732: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/002/SRR9179092/SRR9179092.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 384ca30fe5e167fee30b04e1decc7e9b SRR9179092.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179092
+    srr_info: 
+      SRR9179092: 
+        base_count: 1.82G
+        read_count: 39071688
+    srs: SRS4862404
+    srx: SRX5951732
+GSM3842050: 
+  SRX5951733: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/003/SRR9179093/SRR9179093.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e2cb0951988a8b3b1ba5572f6d8e4d36 SRR9179093.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179093
+    srr_info: 
+      SRR9179093: 
+        base_count: 1.94G
+        read_count: 41653534
+    srs: SRS4862405
+    srx: SRX5951733
+GSM3842051: 
+  SRX5951734: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/004/SRR9179094/SRR9179094.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - fdea22d738f9a9191d5471ffccc3d12e SRR9179094.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179094
+    srr_info: 
+      SRR9179094: 
+        base_count: 2.36G
+        read_count: 50640759
+    srs: SRS4862406
+    srx: SRX5951734
+GSM3842052: 
+  SRX5951735: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/005/SRR9179095/SRR9179095.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 1335ee00367f45936230a8a2bd87ec9e SRR9179095.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179095
+    srr_info: 
+      SRR9179095: 
+        base_count: 1,015.29M
+        read_count: 21292126
+    srs: SRS4862407
+    srx: SRX5951735
+GSM3842053: 
+  SRX5951736: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/006/SRR9179096/SRR9179096.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c843e80a5d8e42723597bebe180e652d SRR9179096.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179096
+    srr_info: 
+      SRR9179096: 
+        base_count: 948.62M
+        read_count: 19893972
+    srs: SRS4862408
+    srx: SRX5951736
+GSM3842054: 
+  SRX5951737: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/007/SRR9179097/SRR9179097.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 0940eac90545764a3cba6a2eb7b82c02 SRR9179097.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179097
+    srr_info: 
+      SRR9179097: 
+        base_count: 667.26M
+        read_count: 13993436
+    srs: SRS4862409
+    srx: SRX5951737
+GSM3842055: 
+  SRX5951738: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/008/SRR9179098/SRR9179098.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e271207853a708d39e22a8aec10f239f SRR9179098.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179098
+    srr_info: 
+      SRR9179098: 
+        base_count: 942.01M
+        read_count: 19755283
+    srs: SRS4862410
+    srx: SRX5951738
+GSM3842056: 
+  SRX5951739: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/009/SRR9179099/SRR9179099.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 6cde7694f7a2bc9ac0cfa11af1ee67ab SRR9179099.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179099
+    srr_info: 
+      SRR9179099: 
+        base_count: 582.23M
+        read_count: 12210309
+    srs: SRS4862411
+    srx: SRX5951739
+GSM3842057: 
+  SRX5951740: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/000/SRR9179100/SRR9179100.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: ''
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 301dbb6e53e49d70c7df6f2d509474b3 SRR9179100.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP200108
+    srr: 
+      - SRR9179100
+    srr_info: 
+      SRR9179100: 
+        base_count: 679.28M
+        read_count: 14245521
+    srs: SRS4862412
+    srx: SRX5951740
+MSH1 +/+ WT segregant, Rep 1 (small RNA-seq): 
+  SRX2839570: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/006/SRR5581466/SRR5581466.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: wtseg_sRNA_1
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - eb5b462334cacd6b8a6ff62851b232ba SRR5581466.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581466
+    srr_info: 
+      SRR5581466: 
+        base_count: 672.62M
+        read_count: 14393717
+    srs: SRS2213025
+    srx: SRX2839570
+MSH1 +/+ WT segregant, Rep 2 (small RNA-seq): 
+  SRX2839569: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/007/SRR5581467/SRR5581467.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: wtseg_sRNA_2
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - a6873a7d3a38974808bec18a94e7e200 SRR5581467.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581467
+    srr_info: 
+      SRR5581467: 
+        base_count: 863.73M
+        read_count: 18483477
+    srs: SRS2213024
+    srx: SRX2839569
+hyl1-2-replicates_1: 
+  SRX6783829: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR100/062/SRR10049362/SRR10049362.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: hyl1-2-replicates_1
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 5eb1052eb2c93bee1d6c90a3c02e25b8 SRR10049362.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP219944
+    srr: 
+      - SRR10049362
+    srr_info: 
+      SRR10049362: 
+        base_count: 469.74M
+        read_count: 21367594
+    srs: SRS5329998
+    srx: SRX6783829
+hyl1-2-replicates_2: 
+  SRX6783830: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR100/061/SRR10049361/SRR10049361.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: hyl1-2-replicates_2
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - e1bc5d87da147965ac748ab1e27efcbd SRR10049361.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP219944
+    srr: 
+      - SRR10049361
+    srr_info: 
+      SRR10049361: 
+        base_count: 484.18M
+        read_count: 22440941
+    srs: SRS5329999
+    srx: SRX6783830
+hyl1-2_hen2-4-replicates_1: 
+  SRX6783835: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR100/056/SRR10049356/SRR10049356.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: hyl1-2_hen2-4-replicates_1
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c39d7dd3412e2b42c5fdd98269884c92 SRR10049356.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP219944
+    srr: 
+      - SRR10049356
+    srr_info: 
+      SRR10049356: 
+        base_count: 511.3M
+        read_count: 23442987
+    srs: SRS5330004
+    srx: SRX6783835
+hyl1-2_hen2-4-replicates_2: 
+  SRX6783836: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR100/055/SRR10049355/SRR10049355.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: hyl1-2_hen2-4-replicates_2
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 9447d5cb16456e462486c6157f31ecd3 SRR10049355.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP219944
+    srr: 
+      - SRR10049355
+    srr_info: 
+      SRR10049355: 
+        base_count: 521.26M
+        read_count: 23960250
+    srs: SRS5330005
+    srx: SRX6783836
+hyl1-2_sop1-5-replicates_1: 
+  SRX6783833: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR100/058/SRR10049358/SRR10049358.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: hyl1-2_sop1-5-replicates_1
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - a7173a3dbc00105439ca2ea89777835d SRR10049358.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP219944
+    srr: 
+      - SRR10049358
+    srr_info: 
+      SRR10049358: 
+        base_count: 503.09M
+        read_count: 22972677
+    srs: SRS5330002
+    srx: SRX6783833
+hyl1-2_sop1-5-replicates_2: 
+  SRX6783834: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR100/057/SRR10049357/SRR10049357.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: hyl1-2_sop1-5-replicates_2
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 817639909cfde358a43521379d118ad5 SRR10049357.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP219944
+    srr: 
+      - SRR10049357
+    srr_info: 
+      SRR10049357: 
+        base_count: 481.38M
+        read_count: 22222769
+    srs: SRS5330003
+    srx: SRX6783834
+msh1 -/- S1, Rep 1 (small RNA-seq): 
+  SRX2839568: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/008/SRR5581468/SRR5581468.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: msh1_S1_sRNA_1
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 12df72f7e9e4a0fe28df6749339f0210 SRR5581468.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581468
+    srr_info: 
+      SRR5581468: 
+        base_count: 960.67M
+        read_count: 20557764
+    srs: SRS2213023
+    srx: SRX2839568
+msh1 -/- S1, Rep 2 (small RNA-seq): 
+  SRX2839567: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/009/SRR5581469/SRR5581469.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: msh1_S1_sRNA_2
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - f53cb537cc38dddbf9ce39feab70b5b9 SRR5581469.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581469
+    srr_info: 
+      SRR5581469: 
+        base_count: 904.42M
+        read_count: 19354149
+    srs: SRS2213022
+    srx: SRX2839567
+msh1 -/- S1, Rep 3 (small RNA-seq): 
+  SRX2839566: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/000/SRR5581470/SRR5581470.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: msh1_S1_sRNA_3
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 3cf7ed68c5dcc8658b472eaef3ef03f9 SRR5581470.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581470
+    srr_info: 
+      SRR5581470: 
+        base_count: 1.08G
+        read_count: 23670864
+    srs: SRS2213020
+    srx: SRX2839566
+msh1 -/- S2 Variegated and Dwarfed, Rep 1 (small RNA-seq): 
+  SRX2839572: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/004/SRR5581464/SRR5581464.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: msh1_S2dwf_sRNA_1
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 18b3f657f462c64310d025dacc6a2658 SRR5581464.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581464
+    srr_info: 
+      SRR5581464: 
+        base_count: 913.14M
+        read_count: 19540855
+    srs: SRS2213028
+    srx: SRX2839572
+msh1 -/- S2 Variegated and Dwarfed, Rep 2 (small RNA-seq): 
+  SRX2839571: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/005/SRR5581465/SRR5581465.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: msh1_S2dwf_sRNA_2
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c300b1c01e843270e2d8a35c939a9ae6 SRR5581465.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581465
+    srr_info: 
+      SRR5581465: 
+        base_count: 847.05M
+        read_count: 18126491
+    srs: SRS2213026
+    srx: SRX2839571
+msh1 -/- S2 Variegated and Dwarfed, Rep 3 (small RNA-seq): 
+  SRX2839576: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/000/SRR5581460/SRR5581460.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: msh1_S2dwf_sRNA_3
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 9a0427fa2914a51eaf6da8a17f493fe5 SRR5581460.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581460
+    srr_info: 
+      SRR5581460: 
+        base_count: 846.17M
+        read_count: 18107657
+    srs: SRS2213031
+    srx: SRX2839576
+msh1 -/- S2 Variegated, Rep 1 (small RNA-seq): 
+  SRX2839565: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/001/SRR5581471/SRR5581471.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: msh1_S2var_sRNA_1
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 09258f2f9be93c7c08556777a80be422 SRR5581471.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581471
+    srr_info: 
+      SRR5581471: 
+        base_count: 761.04M
+        read_count: 16285850
+    srs: SRS2213021
+    srx: SRX2839565
+msh1 -/- S2 Variegated, Rep 2 (small RNA-seq): 
+  SRX2839564: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/002/SRR5581472/SRR5581472.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: msh1_S2var_sRNA_2
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c9ee8feea277f2dd9e3282c2bfcc1139 SRR5581472.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581472
+    srr_info: 
+      SRR5581472: 
+        base_count: 781.98M
+        read_count: 16734054
+    srs: SRS2213019
+    srx: SRX2839564
+msh1 -/- S2 Variegated, Rep 3 (small RNA-seq): 
+  SRX2839563: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR558/003/SRR5581473/SRR5581473.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: msh1_S2var_sRNA_3
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - c1e3dd10dff0982cdf4d8a76289ea25f SRR5581473.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP107701
+    srr: 
+      - SRR5581473
+    srr_info: 
+      SRR5581473: 
+        base_count: 839.65M
+        read_count: 17968172
+    srs: SRS2213018
+    srx: SRX2839563
+shy43-replicates_1: 
+  SRX6783831: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR100/060/SRR10049360/SRR10049360.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: shy43-replicates_1
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 30abc0ea0d0d4823a1c4777a056c1b33 SRR10049360.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP219944
+    srr: 
+      - SRR10049360
+    srr_info: 
+      SRR10049360: 
+        base_count: 501.35M
+        read_count: 23111045
+    srs: SRS5330000
+    srx: SRX6783831
+shy43-replicates_2: 
+  SRX6783832: 
+    downloads: 
+      - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR100/059/SRR10049359/SRR10049359.fastq.gz
+    instrument_model: Illumina HiSeq 2500
+    instrument_platform: ILLUMINA
+    library_layout: SINGLE
+    library_name: shy43-replicates_2
+    library_selection: size fractionation
+    library_source: TRANSCRIPTOMIC
+    md5s: 
+      - 97028ad5f48efb1ee7c7792dbfdc7310 SRR10049359.fastq.gz
+    nominal_length: ''
+    scientific_name: Arabidopsis thaliana
+    srp: SRP219944
+    srr: 
+      - SRR10049359
+    srr_info: 
+      SRR10049359: 
+        base_count: 498.13M
+        read_count: 22948555
+    srs: SRS5330001
+    srx: SRX6783832
