@@ -115,16 +115,6 @@ brew install mosdepth
 
 ##  Getting sRNA-seq data
 
-###  Converting .sra to .fastq (not recommended)
-
-Using fastq-dump in SRAtoolkit to convert sra files to fastq files.
-
-```bash
-cd /mnt/e/project/srna/srr
-parallel -j 12 "fastq-dump {}" ::: $(ls *.sra)
-rm *.sra
-```
-
 ###  Download fastq from NCBI
 
 Using anchr for downloading fastq, which could avoid using fastq-dump (time-wasted).
@@ -174,10 +164,10 @@ All sRNA-seq files using *A. thaliana* were added up to 244 files.
 Use fastqc to check the quality of sequencing for each fastq file.
 
  ```bash
-mkdir -p /mnt/e/project/srna/output/fastqc/raw
+mkdir -p /mnt/e/project/srna/fastqc/raw
 cd /mnt/e/project/srna/ena/thale
 
-fastqc -t 12 --quiet -o ../../output/fastqc/raw *.gz
+fastqc -t 12 --quiet -o ../../fastqc/raw *.gz
 # -t: threads number
  ```
 
@@ -188,7 +178,7 @@ cd /mnt/e/project/srna/ena/thale
 
 parallel -j 4 " \
 trim_galore --phred33 -j 3 \
---length 18 --output_dir ../../trim {} \
+--length 17 --output_dir ../../trim {} \
 " ::: $(ls *.fastq.gz)
 # --small_rna: automatically remove adapters for small rna sequencing. If using this, trim_galore would only trim small RNA adapters
 ```
@@ -196,13 +186,13 @@ trim_galore --phred33 -j 3 \
 Check the quality of sequencing files after trim.
 
 ```bash
-mkdir -p /mnt/e/project/srna/output/fastqc/after_trim
+mkdir -p /mnt/e/project/srna/fastqc/after_trim
 cd /mnt/e/project/srna/trim
 
-fastqc -t 12 --quiet -o ../output/fastqc/after_trim *.gz
+fastqc -t 12 --quiet -o ../fastqc/after_trim *.gz
 ```
 
-After I used fastqc, there were few fail in per base sequence content. It was common in this item during fastqc because of fastqc not applicable for the task. But we could see that adapters were all removed perfectly after trimming. Now we could use sequencing files for analyze.
+After I used fastqc, there were few fail in per base sequence content. It was common in this item because of fastqc not applicable for the sRNA-seq task in this step. But we could see that adapters were all removed perfectly after trimming. Now we could use sequencing files for analyze.
 
  
 
@@ -231,6 +221,7 @@ bowtie2-build --threads 12 --quiet Atha.fna Atha
 	> Meanwhile, I ignored the files transmission step using rsync. So the directory path were used as my own computer. You could substitute /mnt/e to ~.
 
 ```bash
+mkdir -p /mnt/e/project/srna/output/bam/plant
 cd /mnt/e/project/srna/trim
 ```
 
@@ -298,6 +289,7 @@ bowtie2-build --threads 12 --quiet bacteria.fna bacteria
 ####  Aligning
 
 ```bash
+mkdir -p /mnt/e/project/srna/output/bam/bacteria
 cd /mnt/e/project/srna/output/fastq
 ```
 
@@ -308,12 +300,12 @@ Aligning unaligned reads to bacteria species.
 ```bash
 parallel -j 3 " \
 bowtie2 -q {}_plantunali.fq.gz \
--x ../../genome/bacteria/bacteria --threads 4 -S ../bam/{}_unali.sam \
+-x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_unali.sam \
 " ::: $(ls SRR*_plantunali.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
 
 ```bash
-bsub -q mpi -n 24 -J all -o .. "bash unali.sh"
+bsub -q mpi -n 24 -J ali -o .. "bash unali.sh"
 ```
 
 Aligning 1 mismatch allowed reads to bacteria species.
@@ -323,7 +315,7 @@ Aligning 1 mismatch allowed reads to bacteria species.
 ```bash
 parallel -j 3 " \
 bowtie2 -q {}_plant1mis.fq.gz \
--x ../../genome/bacteria/bacteria --threads 4 -S ../bam/{}_1mis.sam \
+-x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_1mis.sam \
 " ::: $(ls SRR*_plant1mis.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
 
@@ -338,7 +330,7 @@ Aligning perfectly matched reads to bacteria species.
 ```bash
 parallel -j 3 " \
 bowtie2 -q {}_plantaliall.fq.gz \
--x ../../genome/bacteria/bacteria --threads 4 -S ../bam/{}_aliall.sam \
+-x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_aliall.sam \
 " ::: $(ls SRR*_plantaliall.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
 
@@ -349,16 +341,17 @@ bsub -q mpi -n 24 -J unali -o .. "bash all.sh"
 Convert sam to bam file for minimum storage stress.
 
 ```bash
-cd /mnt/e/project/srna/output/bam
+cd /mnt/e/project/srna/output/bam/bacteria
 
 parallel -j 3 " 
 samtools sort -@ 4 {1}.sam > {1}.sort.bam 
-samtools index {1}.sort.bam
+samtools index {1}.sort.bam 
 " ::: $(ls *.sam | perl -p -e 's/\.sam$//')
+```
 
+```bash
 rm *.sam
-mkdir bacteria
-mv *.sort.bam* bacteria
+# clear all sam, bam files could be read by samtools view
 ```
 
 
@@ -412,8 +405,8 @@ bsub -q mpi -n 24 -o .. -J count "bash read_count.sh | tee ../../count/read_coun
 library(ggplot2)
 library(readr)
 
-stat <- read.csv("read_count.csv")
-s <- ggplot (data = stat, aes(x = group, y = num)) +
+count <- read.csv("read_count.csv")
+s <- ggplot (data = count, aes(x = group, y = num)) +
 geom_boxplot() + 
 geom_jitter(aes(color = name)) +
 theme(legend.position = 'none')
@@ -424,6 +417,8 @@ theme(legend.position = 'none')
 I classified bacteria into four different types according to bacteria-plant(host) relations. The ratio might reflect different tRNA regions from bacteria causing plant response.
 
 ```bash
+mkdir -p /mnt/e/project/srna/output/count/trna
+mkdir -p /mnt/e/project/srna/output/count/rrna
 cd /mnt/e/project/srna/output/bam/bacteria
 
 parallel -j 4 " \
@@ -444,6 +439,8 @@ tsv-summarize --group-by 3 --sum 2 \
 ```
 
 ```bash
+cd /mnt/e/project/srna/output/bam/bacteria
+
 parallel -j 4 " \
 samtools view -bh -L ../../../annotation/bacteria/bac_trna.bed \
 {}.sort.bam > ../rna/{}.trna.bam \
@@ -463,7 +460,7 @@ samtools index {1}.sort.bam
 
 parallel -j 3 " \
 rm {}.bam \
-" ::: $(ls *sort.bam | perl -p -e 's/\.sort\.bam$//')
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
 
 ```bash
@@ -512,9 +509,10 @@ done
 ```
 
 ```bash
-bash ../../../script/count.sh | tee name_count.tsv
+bash ../../../script/count.sh | tee ../name_count.trna.tsv
+cd ..
 
-cat name_count.tsv | perl -n -e 'while(<>){chomp;
+cat name_count.trna.tsv | perl -n -e 'while(<>){chomp;
 @a=split/\t/,$_;
 $b=$a[3]*100/$a[2];
 print"$a[0]\t$a[1]\t$b\t$a[4]\n";
@@ -527,18 +525,18 @@ cp result.trna.tsv /mnt/c/Users/59717/Documents/
 library(ggplot2)
 library(readr)
 
-stat <- read_tsv("result.trna.tsv")
+trna <- read_tsv("result.trna.tsv")
 
-stat$group <- as.character(stat$group)
+trna$group <- as.character(trna$group)
 
-s <- ggplot (data = stat, aes(x = group, y = ratio, group = group, fill = group)) +
+ptrna1 <- ggplot (data = trna, aes(x = group, y = ratio, group = group, fill = group)) +
 geom_boxplot() + 
 geom_jitter(color = 'black', alpha = 0.1, show.legend = FALSE) +
 facet_wrap(~catgry) +
 theme(legend.position = 'none') +
 labs(x = "bacterial group", y = "tRNA/all_RNA percent")
 
-s2 <- ggplot (data = stat, aes(x = catgry, y = ratio, fill = catgry)) +
+ptrna2 <- ggplot (data = trna, aes(x = catgry, y = ratio, fill = catgry)) +
 geom_boxplot() +
 theme(legend.position = 'none') +
 labs(x = "reads group", y = "tRNA/all_RNA percent")
@@ -572,9 +570,10 @@ rm *.name.tsv *.rrna.tsv
 ```
 
 ```bash
-bash ../../../script/count.sh | tee name_count.tsv
+bash ../../../script/count.sh | tee ../name_count.rrna.tsv
+cd ..
 
-cat name_count.tsv | perl -n -e 'while(<>){chomp;
+cat name_count.rrna.tsv | perl -n -e 'while(<>){chomp;
 @a=split/\t/,$_;
 $b=$a[3]*100/$a[2];
 print"$a[0]\t$a[1]\t$b\t$a[4]\n";
@@ -587,18 +586,18 @@ cp result.rrna.tsv /mnt/c/Users/59717/Documents/
 library(ggplot2)
 library(readr)
 
-statrr <- read_tsv("result.rrna.tsv")
+rrna <- read_tsv("result.rrna.tsv")
 
-statrr$group <- as.character(statrr$group)
+rrna$group <- as.character(rrna$group)
 
-s3 <- ggplot (data = statrr, aes(x = group, y = ratio, group = group, fill = group)) +
+prrna1 <- ggplot (data = rrna, aes(x = group, y = ratio, group = group, fill = group)) +
 geom_boxplot() + 
 geom_jitter(color = 'black', alpha = 0.1, show.legend = FALSE) +
 facet_wrap(~catgry) +
 theme(legend.position = 'none') +
 labs(x = "bacterial group", y = "rRNA/all_RNA percent")
 
-s4 <- ggplot (data = statrr, aes(x = catgry, y = ratio, fill = catgry)) +
+prrna2 <- ggplot (data = rrna, aes(x = catgry, y = ratio, fill = catgry)) +
 geom_boxplot() +
 theme(legend.position = 'none') +
 labs(x = "reads group", y = "rRNA/all_RNA percent")
@@ -621,13 +620,15 @@ tsv-select -f 1,3 \
 >> ../1mis_tRNA.name.tsv
 done
 
+cd ..
+
 cat 1mis_tRNA.name.tsv | tsv-summarize --group-by 1 --sum 2 | \
 sort -r -nk2 | tsv-join --filter-file ../../name.tsv --key-fields 1 --append-fields 2 \
-> tRNA_bac.count.tsv
+> bac_count.trna.tsv
 
-cat tRNA_bac.count.tsv | head -n 50 | sed '1i\name\tcount\tgroup'> top50.tsv
+cat bac_count.trna.tsv | head -n 50 | sed '1i\name\tcount\tgroup'> top50.trna.tsv
 
-cp top50.tsv /mnt/c/Users/59717/Documents/
+cp top50.trna.tsv /mnt/c/Users/59717/Documents/
 ```
 
 ```R
@@ -635,12 +636,13 @@ library(ggplot2)
 library(readr)
 library(dplyr)
 library(forcats)
+library(ggforce)
 
-t50 <- read_tsv("top50.tsv")
+t50t <- read_tsv("top50.trna.tsv")
 
-t50$group <- as.character(t50$group)
+t50t$group <- as.character(t50t$group)
 
-tplot <- t50 %>%
+tplot <- t50t %>%
 mutate(name = fct_reorder(name, desc(count))) %>%
 ggplot(aes(x = name, y = count, fill = group)) +
 geom_bar(stat="identity") +
@@ -650,6 +652,7 @@ facet_zoom(ylim = c(0, 30000))
 # as.character could change the numeric variables to character variables
 # mutate in forcats could sort for the bar plot, desc could sort reversely
 # facet_zoom could seperate the bar plot into 2 different y axis resolution
+# facet_zoom function was from ggforce
 ```
 
 ### Mosdepth
@@ -1134,8 +1137,11 @@ labs(x = '', y = '', title = '') +
 
 
 ```bash
+cd /mnt/e/project/srna/output/bam/rna
+
 parallel -j 3 " \
-samtools depth -@ 4 {}.trna.sort.bam > ../../depth/{}.txt \
+samtools depth -@ 4 -b ../../../annotation/bacteria/bac_trna.bed \
+{}.trna.sort.bam > ../../depth/trna/{}.trna.txt \
 " ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+?bam$//')
 ```
 
@@ -1153,5 +1159,20 @@ $p=1;
 print"$a[0]\t$p\t$a[2]\n";
 }
 ' > chr.count
+```
+
+```R
+library(readr)
+library(ggplot2)
+
+trnad <- read_tsv("1mis.trna.depth")
+names(trnad) = c("bac", "pos", "depth")
+
+depth <- ggplot(data = trnad, aes(x = pos, y = depth, group = bac))+
+geom_point()+
+geom_line()+
+theme(legend.position = 'none')
+
+plot(depth)
 ```
 
