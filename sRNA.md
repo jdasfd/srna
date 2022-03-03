@@ -2,6 +2,8 @@
 
 Here we use *Arabidopsis thaliana* genome as an example to prepare potential tRFs screening protocol.
 
+**Attention: I have mounted WSL2 to drive E, so all the ~ will be replaced by /mnt/e. Restricted by the hardware,  : |**
+
 ##  Prepare
 
 ### *Arabidopsis thaliana*
@@ -225,6 +227,56 @@ mkdir -p /mnt/e/project/srna/output/bam/plant
 cd /mnt/e/project/srna/trim
 ```
 
+```bash
+parallel -j 3 " \
+bowtie2 -q {}_trimmed.fq.gz -N 0 \
+-x ../genome/plant/Atha/Atha \
+--al-gz ../output/fastq/{}_plantaliall.fq.gz \
+--un-gz ../output/fastq/{}_plantunali.fq.gz \
+--threads 4 -S ../output/bam/plant/{}_plantall.sam \
+" ::: $(ls SRR*.fq.gz | perl -p -e 's/_trimmed.+gz$//')
+```
+
+```bash
+bsub -q mpi -n 24 -J ali2plant -o nm   op "bash alignall.sh"
+```
+
+Convert sam to bam for reducing storage stress
+
+```bash
+cd /mnt/e/project/srna/output/bam/plant
+
+parallel -j 3 " 
+samtools sort -@ 4 {1}.sam > {1}.sort.bam 
+samtools index {1}.sort.bam 
+" ::: $(ls *.sam | perl -p -e 's/\.sam$//')
+```
+
+
+
+###  Aligning different reads to bacterial genomes
+
+We chose 365 bacterial genomes from 191 species as our target bacteria. From the previous step, we split reads to 3 types: matched without any mistake, 1 mismatch allowed and unaligned reads (without any match on plant genome). 
+
+####  Indexing
+
+```bash
+cd /mnt/e/project/srna/genome/bacteria
+
+bowtie2-build --threads 12 --quiet bacteria.fna bacteria
+```
+
+####  Aligning
+
+```bash
+mkdir -p /mnt/e/project/srna/output/bam/bacteria
+cd /mnt/e/project/srna/output/fastq
+```
+
+Aligning unaligned reads to bacteria species.
+
+---
+
 *alignall.sh:*
 
 ```bash
@@ -259,7 +311,11 @@ bowtie2 -q {}_trimmed.fq.gz -N 1 \
 bsub -q mpi -n 24 -J ali1mis -o .. "bash align1mis.sh"
 ```
 
-#### Extract sequences of only 1 mismatch.
+---
+
+#### Extract sequences of only 1 mismatch (optional).
+
+**This process may be unnecessary**
 
 ```bash
 cd /mnt/e/project/srna/output/fastq
@@ -273,6 +329,8 @@ seqkit grep -j 2 --quiet -n -v \
 
 rm *_plantali1mis.fq.gz
 ```
+
+---
 
 ###  Aligning different reads to bacterial genomes
 
@@ -356,9 +414,9 @@ rm *.sam
 
 
 
-## Count aligned reads ratio
+## Count the ratio of bacterial sources in all samples
 
-### Ratio of aligned reads / all reads in different type of alignment
+### Ratio of aligned reads to bacteria / all reads
 
 Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. I wrote a shell script to reach the goal.
 
@@ -416,6 +474,8 @@ theme(legend.position = 'none')
 
 I classified bacteria into four different types according to bacteria-plant(host) relations. The ratio might reflect different tRNA regions from bacteria causing plant response.
 
+---
+
 ```bash
 mkdir -p /mnt/e/project/srna/output/count/trna
 mkdir -p /mnt/e/project/srna/output/count/rrna
@@ -437,6 +497,8 @@ tsv-summarize --group-by 3 --sum 2 \
 > ../../count/rrna/{}.name.tsv \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
+
+---
 
 ```bash
 cd /mnt/e/project/srna/output/bam/bacteria
@@ -500,6 +562,7 @@ cat ${file}.tsv | \
 tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
 tsv-summarize --group-by 4 --sum 2,3 | sort | \
 tsv-filter --ne 3:0 | \
+tsv-filter --not-empty 1 | \
 awk -v name=$name -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"$3"\t"catgry}'
 done
 
