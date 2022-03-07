@@ -669,25 +669,42 @@ samtools depth -@ 4 -b ../../../annotation/bacteria/bac_trna.bed \
 cd /mnt/e/project/srna/output/depth/trna
 
 cat *_1mis.trna.txt >> ../1mis.trna.txt
+cat *_unali.trna.txt >> ../unali.trna.txt
+cat *_aliall.trna.txt >> ../aliall.trna.txt
 
-cat 1mis.trna.txt | tsv-summarize --group-by 1,2 --sum 3 > 1mis.trna.tsv
+cd ..
 
+for file in `ls *.txt | perl -p -e 's/\.trna\.txt//'`
+do
+cat ${file}.trna.txt | tsv-summarize --group-by 1,2 --sum 3 \
+> ${file}.trna.tsv
+done
+
+parallel -j 3 " \
 perl ../../script/depth.pl -b ../../annotation/bacteria/bac_trna.bed \
--t 1mis.trna.tsv -o 1mis.trna.depth.tsv
+-t {}.trna.tsv -o {}.trna.depth.tsv \
+" ::: $(ls *.trna.tsv | perl -p -e 's/\.trna\.tsv//')
 
-rm 1mis.trna.txt
+rm *.txt
 ```
 
 ```bash
-cat 1mis.trna.depth.tsv | tsv-join --filter-file ../../rawname.tsv --key-fields 1 --append-fields 2 | \
+parallel -j 3 " \
+cat {}.depth.tsv | \
+tsv-join --filter-file ../../rawname.tsv --key-fields 1 --append-fields 2 | \
 tsv-summarize --group-by 1,2,4 --sum 3 | tsv-select -f 3,2,4 | \
 tsv-join --filter-file ../../name.tsv --key-fields 1 --append-fields 2 | \
-sed '1i\name\tpos\tdepth\tgroup' > 1mis.trna.depthsum.tsv
+tsv-summarize --group-by 4,2 --sum 3 | sort -nk 1,1 -nk 2,2 | \
+sed '1i\group\tpos\tdepth' > {}.sum.tsv \
+" ::: $(ls *.depth.tsv | perl -p -e 's/\.dep.+\.tsv$//')
 ```
 
-
-
-
+```bash
+parallel -j 3 " \
+Rscript ../../script/line_cover.r -d {}.sum.tsv \
+-o {}.pdf -t {} \
+" ::: $(ls *.sum.tsv | perl -p -e 's/\.sum\.tsv$//')
+```
 
 
 
