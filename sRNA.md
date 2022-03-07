@@ -238,7 +238,7 @@ bowtie2 -q {}_trimmed.fq.gz -N 0 \
 ```
 
 ```bash
-bsub -q mpi -n 24 -J ali2plant -o nm   op "bash alignall.sh"
+bsub -q mpi -n 24 -J ali2plant -o . "bash alignall.sh"
 ```
 
 Convert sam to bam for reducing storage stress
@@ -246,10 +246,95 @@ Convert sam to bam for reducing storage stress
 ```bash
 cd /mnt/e/project/srna/output/bam/plant
 
-parallel -j 3 " 
+parallel -j 6 " 
 samtools sort -@ 4 {1}.sam > {1}.sort.bam 
 samtools index {1}.sort.bam 
 " ::: $(ls *.sam | perl -p -e 's/\.sam$//')
+```
+
+### Aligning those reads from non-plant sources to bacteria
+
+We chose 365 bacterial genomes from 190 species as our target bacteria.
+
+####  Indexing
+
+```bash
+cd /mnt/e/project/srna/genome/bacteria
+
+bowtie2-build --threads 12 --quiet bacteria.fna bacteria
+```
+
+### Aligning
+
+```bash
+mkdir -p /mnt/e/project/srna/output/bam/bacteria
+```
+
+There will be 2 different files: plant sRNA reads and non-plant sRNA reads. We aligned them to bacteria separately. Their biological information were plant and bacteria homologous reads and non-plant reads directly from bacteria.
+
+```bash
+cd /mnt/e/project/srna/output/fastq
+
+parallel -j 3 " \
+bowtie2 -q {}_plantunali.fq.gz \
+-x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_unali.sam \
+" ::: $(ls SRR*_plantunali.fq.gz | perl -p -e 's/_plant.+gz$//')
+```
+
+```bash
+bsub -q mpi -n 24 -J unali2bac -o . "bash unali2bac.sh"
+```
+
+```bash
+cd /mnt/e/project/srna/output/fastq
+
+parallel -j 3 " \
+bowtie2 -q {}_plantaliall.fq.gz \
+-x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_ali.sam \
+" ::: $(ls SRR*_plantaliall.fq.gz | perl -p -e 's/_plant.+gz$//')
+```
+
+```bash
+bsub -q mpi -n 24 -J ali2bac -o . "bash ali2bac.sh"
+```
+
+
+
+## Reads from bacteria percentages
+
+```bash
+echo "name,unali,alitobac";
+cd /mnt/e/project/srna/output/bam/plant
+for file in `ls SRR*.sort.bam | perl -p -e 's/_.+bam$//'`
+do
+cd ..;
+unalip=`samtools view -c -f 4 -@ 10 ./plant/${file}_plantall.sort.bam`;
+allp=`samtools view -c -@ 10 ./plant/${file}_plantall.sort.bam`;
+alib=`samtools view -c -F 4 -@ 10 ./bacteria/${file}_unali.sort.bam`;
+un=`echo "scale=2;$unalip*100/$allp" | bc | awk '{printf "%.2f", $0}'`;
+alitob=`echo "scale=2;$alib*100/$unalip" | bc | awk '{printf "%.2f", $0}'`;
+echo "${file},${un},${alitob}";
+cd ./plant;
+done
+```
+
+```bash
+bash ../../script/percentage.sh | tee /mnt/e/project/srna/output/bam/percentage.csv
+cd /mnt/e/project/srna/output/bam
+cp percentage.csv /mnt/c/Users/59717/Documents/
+```
+
+
+
+```R
+library(ggplot2)
+library(readr)
+
+count <- read.csv("read_count.csv")
+s <- ggplot (data = count, aes(x = group, y = num)) +
+geom_boxplot() + 
+geom_jitter(aes(color = name)) +
+theme(legend.position = 'none')
 ```
 
 
@@ -581,28 +666,8 @@ $b=$a[3]*100/$a[2];
 print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 }' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.trna.tsv
 
-cp result.trna.tsv /mnt/c/Users/59717/Documents/
-```
-
-```R
-library(ggplot2)
-library(readr)
-
-trna <- read_tsv("result.trna.tsv")
-
-trna$group <- as.character(trna$group)
-
-ptrna1 <- ggplot (data = trna, aes(x = group, y = ratio, group = group, fill = group)) +
-geom_boxplot() + 
-geom_jitter(color = 'black', alpha = 0.1, show.legend = FALSE) +
-facet_wrap(~catgry) +
-theme(legend.position = 'none') +
-labs(x = "bacterial group", y = "tRNA/all_RNA percent")
-
-ptrna2 <- ggplot (data = trna, aes(x = catgry, y = ratio, fill = catgry)) +
-geom_boxplot() +
-theme(legend.position = 'none') +
-labs(x = "reads group", y = "tRNA/all_RNA percent")
+Rscript /mnt/e/project/srna/script/rna_percent.r -f result.trna.tsv \
+-t tRNA -o trna_percent_group.pdf -a trna_percent.pdf
 ```
 
 rRNA: repeating the process above.
@@ -642,28 +707,8 @@ $b=$a[3]*100/$a[2];
 print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 }' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.rrna.tsv
 
-cp result.rrna.tsv /mnt/c/Users/59717/Documents/
-```
-
-```R
-library(ggplot2)
-library(readr)
-
-rrna <- read_tsv("result.rrna.tsv")
-
-rrna$group <- as.character(rrna$group)
-
-prrna1 <- ggplot (data = rrna, aes(x = group, y = ratio, group = group, fill = group)) +
-geom_boxplot() + 
-geom_jitter(color = 'black', alpha = 0.1, show.legend = FALSE) +
-facet_wrap(~catgry) +
-theme(legend.position = 'none') +
-labs(x = "bacterial group", y = "rRNA/all_RNA percent")
-
-prrna2 <- ggplot (data = rrna, aes(x = catgry, y = ratio, fill = catgry)) +
-geom_boxplot() +
-theme(legend.position = 'none') +
-labs(x = "reads group", y = "rRNA/all_RNA percent")
+Rscript /mnt/e/project/srna/script/rna_percent.r -f result.rrna.tsv \
+-t rRNA -o rrna_percent_group.pdf -a rrna_percent.pdf
 ```
 
 
