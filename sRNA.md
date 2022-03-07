@@ -505,33 +505,6 @@ rm *.sam
 
 Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. I wrote a shell script to reach the goal.
 
-*read_count.sh:*
-
-```bash
-echo "name,num,group";
-for file in `ls SRR*.sort.bam | perl -p -e 's/_.+bam$//' | uniq`
-do
-ab=`samtools view -c -F 4 -@ 10 ${file}_aliall.sort.bam`;
-ap=`samtools view -c -@ 10 ${file}_aliall.sort.bam`;
-bb=`samtools view -c -F 4 -@ 10 ${file}_1mis.sort.bam`;
-bp=`samtools view -c -@ 10 ${file}_1mis.sort.bam`;
-cb=`samtools view -c -F 4 -@ 10 ${file}_unali.sort.bam`;
-cp=`samtools view -c -@ 10 ${file}_unali.sort.bam`;
-aliall=`echo "scale=4;$ab*100/$ap" | bc | awk '{printf "%.4f", $0}'`;
-mis=`echo "scale=4;$bb*100/$bp" | bc | awk '{printf "%.4f", $0}'`;
-unali=`echo "scale=4;$cb*100/$cp" | bc | awk '{printf "%.4f", $0}'`;
-echo "${file},${aliall},aliall";
-echo "${file},${mis},mis1";
-echo "${file},${unali},unali";
-done
-
-# bc is the shell caculator for floating-point calculation
-# -c, --count: Print only the count of matching records
-# awk can modify numbers because bc won't show you the 0 before the decimal point
-# *100: percentage
-# output .csv for R to plot
-```
-
 ```bash
 cd /mnt/e/project/srna/output/bam/bacteria
 
@@ -675,7 +648,48 @@ Rscript /mnt/e/project/srna/script/rna_percent.r -f result.rrna.tsv \
 
 
 
-##  Reads coverage in tRNA region
+##  Reads cover depth and  position in different RNA region
+
+### Reads depth and position distribution in different RNA
+
+Divide tRNA regions to 10 separate domains. Every domains reads were counted as relative depth of RNA regions.
+
+```bash
+mkdir -p /mnt/e/project/srna/output/depth/trna
+
+cd /mnt/e/project/srna/output/bam/rna
+
+parallel -j 3 " \
+samtools depth -@ 4 -b ../../../annotation/bacteria/bac_trna.bed \
+{}.trna.sort.bam > ../../depth/trna/{}.trna.txt \
+" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+?bam$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/depth/trna
+
+cat *_1mis.trna.txt >> ../1mis.trna.txt
+
+cat 1mis.trna.txt | tsv-summarize --group-by 1,2 --sum 3 > 1mis.trna.tsv
+
+perl ../../script/depth.pl -b ../../annotation/bacteria/bac_trna.bed \
+-t 1mis.trna.tsv -o 1mis.trna.depth.tsv
+
+rm 1mis.trna.txt
+```
+
+```bash
+cat 1mis.trna.depth.tsv | tsv-join --filter-file ../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 1,2,4 --sum 3 | tsv-select -f 3,2,4 | \
+tsv-join --filter-file ../../name.tsv --key-fields 1 --append-fields 2 | \
+sed '1i\name\tpos\tdepth\tgroup' > 1mis.trna.depthsum.tsv
+```
+
+
+
+
+
+
 
 ### Bacteria with tRNA coverage
 
@@ -1207,12 +1221,7 @@ labs(x = '', y = '', title = '') +
 
 
 ```bash
-cd /mnt/e/project/srna/output/bam/rna
 
-parallel -j 3 " \
-samtools depth -@ 4 -b ../../../annotation/bacteria/bac_trna.bed \
-{}.trna.sort.bam > ../../depth/trna/{}.trna.txt \
-" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+?bam$//')
 ```
 
 ```bash
