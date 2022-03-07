@@ -557,33 +557,14 @@ theme(legend.position = 'none')
 
 ### Ratio of tRNA reads / aligned reads
 
-I classified bacteria into four different types according to bacteria-plant(host) relations. The ratio might reflect different tRNA regions from bacteria causing plant response.
-
----
+I classified bacteria into five different types according to bacteria-plant(host) relations. Five categories are: endo/epiphyte, environment, gut, marine and obligate intracellular bacteria.
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/count/trna
 mkdir -p /mnt/e/project/srna/output/count/rrna
-cd /mnt/e/project/srna/output/bam/bacteria
-
-parallel -j 4 " \
-samtools idxstats {}.sort.bam | \
-tsv-select -f 1,3 | grep -v '*' | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 \
-> ../../count/trna/{}.name.tsv \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools idxstats {}.sort.bam | \
-tsv-select -f 1,3 | grep -v '*' | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 \
-> ../../count/rrna/{}.name.tsv \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
 
----
+Using bed of rna to extract mapping reads from different RNA regions.
 
 ```bash
 cd /mnt/e/project/srna/output/bam/bacteria
@@ -633,32 +614,12 @@ tsv-join --filter-file ${file}.trna.tsv --key-fields 1 --append-fields 2 \
 done
 
 rm *.name.tsv *.trna.tsv
-```
 
-*count.sh*:
-
-```bash
-echo -e "name\tgroup\tall\ttrna\tcatgry";
-for file in `ls *.tsv | perl -p -e 's/\.tsv//'`
-do
-name=${file%%_*};
-catgry=${file#*_};
-cat ${file}.tsv | \
-tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 4 --sum 2,3 | sort | \
-tsv-filter --ne 3:0 | \
-tsv-filter --not-empty 1 | \
-awk -v name=$name -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"$3"\t"catgry}'
-done
-
-# echo -e: characters preceded by a slash will be escaped characters
-# ${%%},${#} were changing variable in shell
-# awk -v: pass external variables to awk command, otherwise there will be mistakes
-```
-
-```bash
 bash ../../../script/count.sh | tee ../name_count.trna.tsv
-cd ..
+```
+
+```bash
+cd /mnt/e/project/srna/output/count
 
 cat name_count.trna.tsv | perl -n -e 'while(<>){chomp;
 @a=split/\t/,$_;
@@ -695,11 +656,12 @@ tsv-join --filter-file ${file}.rrna.tsv --key-fields 1 --append-fields 2 \
 done
 
 rm *.name.tsv *.rrna.tsv
+
+bash ../../../script/count.sh | tee ../name_count.rrna.tsv
 ```
 
 ```bash
-bash ../../../script/count.sh | tee ../name_count.rrna.tsv
-cd ..
+cd /mnt/e/project/srna/output/count
 
 cat name_count.rrna.tsv | perl -n -e 'while(<>){chomp;
 @a=split/\t/,$_;
