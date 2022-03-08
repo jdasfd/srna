@@ -4,6 +4,8 @@ Here we use *Arabidopsis thaliana* genome as an example to prepare potential tRF
 
 **Attention: I have mounted WSL2 to drive E, so all the ~ will be replaced by /mnt/e. Restricted by the hardware,  : |**
 
+
+
 ##  Prepare
 
 ### *Arabidopsis thaliana*
@@ -27,7 +29,7 @@ mv GCF_000001735.4_TAIR10.1_genomic.fna Atha.fna
 # rename it for better using
 ```
 
-#### *A. thaliana* gff
+#### *A. thaliana* annotation
 
 Download gff3 format annotation.
 
@@ -45,6 +47,24 @@ mv GCF_000001735.4_TAIR10.1_genomic.gff Atha.gff
 ### Bacteria
 
 I used ASSEMBLY in [bacteria_ar.md](https://github.com/wang-q/withncbi/blob/master/pop/bacteria_ar.md). Please go check the markdown to get the database.
+
+#### Bacteria annotation
+
+There is a demand that separating RNA GFF from annotation. tRNA, rRNA and mRNA regions were three different types.
+
+```bash
+cat bacteria.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:tRNA > bac_trna.gff
+cat bacteria.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:rRNA > bac_rrna.gff
+cat bacteria.gff | grep -v '#' | tsv-filter --str-eq 3:CDS --not-iregex 9:tRNA --not-iregex 9:rRNA > bac_mrna.gff
+
+# All CDS contain tRNAs and rRNAs, which should be removed 
+```
+
+```bash
+cat bac_trna.gff | convert2bed --input=gff --output=bed > trna.bed
+cat bac_rrna.gff | convert2bed --input=gff --output=bed > rrna.bed
+cat bac_mrna.gff | convert2bed --input=gff --output=bed > mrna.bed
+```
 
 ###  Biotools in protocol
 
@@ -111,6 +131,12 @@ brew install seqkit
 
 ```bash
 brew install mosdepth
+```
+
+#### convert2bed in bedops
+
+```bash
+brew install bedops
 ```
 
 
@@ -227,142 +253,7 @@ mkdir -p /mnt/e/project/srna/output/bam/plant
 cd /mnt/e/project/srna/trim
 ```
 
-```bash
-parallel -j 3 " \
-bowtie2 -q {}_trimmed.fq.gz -N 0 \
--x ../genome/plant/Atha/Atha \
---al-gz ../output/fastq/{}_plantaliall.fq.gz \
---un-gz ../output/fastq/{}_plantunali.fq.gz \
---threads 4 -S ../output/bam/plant/{}_plantall.sam \
-" ::: $(ls SRR*.fq.gz | perl -p -e 's/_trimmed.+gz$//')
-```
-
-```bash
-bsub -q mpi -n 24 -J ali2plant -o . "bash alignall.sh"
-```
-
-Convert sam to bam for reducing storage stress
-
-```bash
-cd /mnt/e/project/srna/output/bam/plant
-
-parallel -j 6 " 
-samtools sort -@ 4 {1}.sam > {1}.sort.bam 
-samtools index {1}.sort.bam 
-" ::: $(ls *.sam | perl -p -e 's/\.sam$//')
-```
-
-### Aligning those reads from non-plant sources to bacteria
-
-We chose 365 bacterial genomes from 190 species as our target bacteria.
-
-####  Indexing
-
-```bash
-cd /mnt/e/project/srna/genome/bacteria
-
-bowtie2-build --threads 12 --quiet bacteria.fna bacteria
-```
-
-### Aligning
-
-```bash
-mkdir -p /mnt/e/project/srna/output/bam/bacteria
-```
-
-There will be 2 different files: plant sRNA reads and non-plant sRNA reads. We aligned them to bacteria separately. Their biological information were plant and bacteria homologous reads and non-plant reads directly from bacteria.
-
-```bash
-cd /mnt/e/project/srna/output/fastq
-
-parallel -j 3 " \
-bowtie2 -q {}_plantunali.fq.gz \
--x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_unali.sam \
-" ::: $(ls SRR*_plantunali.fq.gz | perl -p -e 's/_plant.+gz$//')
-```
-
-```bash
-bsub -q mpi -n 24 -J unali2bac -o . "bash unali2bac.sh"
-```
-
-```bash
-cd /mnt/e/project/srna/output/fastq
-
-parallel -j 3 " \
-bowtie2 -q {}_plantaliall.fq.gz \
--x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_ali.sam \
-" ::: $(ls SRR*_plantaliall.fq.gz | perl -p -e 's/_plant.+gz$//')
-```
-
-```bash
-bsub -q mpi -n 24 -J ali2bac -o . "bash ali2bac.sh"
-```
-
-
-
-## Reads from bacteria percentages
-
-```bash
-echo "name,unali,alitobac";
-cd /mnt/e/project/srna/output/bam/plant
-for file in `ls SRR*.sort.bam | perl -p -e 's/_.+bam$//'`
-do
-cd ..;
-unalip=`samtools view -c -f 4 -@ 10 ./plant/${file}_plantall.sort.bam`;
-allp=`samtools view -c -@ 10 ./plant/${file}_plantall.sort.bam`;
-alib=`samtools view -c -F 4 -@ 10 ./bacteria/${file}_unali.sort.bam`;
-un=`echo "scale=2;$unalip*100/$allp" | bc | awk '{printf "%.2f", $0}'`;
-alitob=`echo "scale=2;$alib*100/$unalip" | bc | awk '{printf "%.2f", $0}'`;
-echo "${file},${un},${alitob}";
-cd ./plant;
-done
-```
-
-```bash
-bash ../../script/percentage.sh | tee /mnt/e/project/srna/output/bam/percentage.csv
-cd /mnt/e/project/srna/output/bam
-cp percentage.csv /mnt/c/Users/59717/Documents/
-```
-
-
-
-```R
-library(ggplot2)
-library(readr)
-
-count <- read.csv("read_count.csv")
-s <- ggplot (data = count, aes(x = group, y = num)) +
-geom_boxplot() + 
-geom_jitter(aes(color = name)) +
-theme(legend.position = 'none')
-```
-
-
-
-###  Aligning different reads to bacterial genomes
-
-We chose 365 bacterial genomes from 191 species as our target bacteria. From the previous step, we split reads to 3 types: matched without any mistake, 1 mismatch allowed and unaligned reads (without any match on plant genome). 
-
-####  Indexing
-
-```bash
-cd /mnt/e/project/srna/genome/bacteria
-
-bowtie2-build --threads 12 --quiet bacteria.fna bacteria
-```
-
-####  Aligning
-
-```bash
-mkdir -p /mnt/e/project/srna/output/bam/bacteria
-cd /mnt/e/project/srna/output/fastq
-```
-
-Aligning unaligned reads to bacteria species.
-
----
-
-*alignall.sh:*
+alignall.sh:
 
 ```bash
 parallel -j 3 " \
@@ -381,7 +272,7 @@ bsub -q mpi -n 24 -J aliall -o .. "bash alignall.sh"
 
 Then we need another mapping round for the 1 mismatch allowed.
 
-*align1mis.sh:*
+align1mis.sh:
 
 ```bash
 parallel -j 3 " \
@@ -396,11 +287,7 @@ bowtie2 -q {}_trimmed.fq.gz -N 1 \
 bsub -q mpi -n 24 -J ali1mis -o .. "bash align1mis.sh"
 ```
 
----
-
-#### Extract sequences of only 1 mismatch (optional).
-
-**This process may be unnecessary**
+Extract sequences of only 1 mismatch.
 
 ```bash
 cd /mnt/e/project/srna/output/fastq
@@ -414,8 +301,6 @@ seqkit grep -j 2 --quiet -n -v \
 
 rm *_plantali1mis.fq.gz
 ```
-
----
 
 ###  Aligning different reads to bacterial genomes
 
@@ -438,7 +323,7 @@ cd /mnt/e/project/srna/output/fastq
 
 Aligning unaligned reads to bacteria species.
 
-*unali.sh:*
+unali.sh:
 
 ```bash
 parallel -j 3 " \
@@ -453,7 +338,7 @@ bsub -q mpi -n 24 -J ali -o .. "bash unali.sh"
 
 Aligning 1 mismatch allowed reads to bacteria species.
 
-*1mis.sh:*
+1mis.sh:
 
 ```bash
 parallel -j 3 " \
@@ -468,7 +353,7 @@ bsub -q mpi -n 24 -J 1mis -o .. "bash 1mis.sh"
 
 Aligning perfectly matched reads to bacteria species.
 
-*all.sh:*
+all.sh:
 
 ```bash
 parallel -j 3 " \
@@ -501,7 +386,7 @@ rm *.sam
 
 ## Count the ratio of bacterial sources in all samples
 
-### Ratio of aligned reads to bacteria / all reads
+### Ratio of reads aligned to bacteria / all non-plant reads
 
 Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. I wrote a shell script to reach the goal.
 
@@ -513,8 +398,20 @@ bash ../../../script/read_count.sh | tee ../../count/read_count.csv
 
 ```bash
 bsub -q mpi -n 24 -o .. -J count "bash read_count.sh | tee ../../count/read_count.csv"
-
 # tee will output results into *.out because of -o in bsub command
+
+cd ../../count
+
+Rscript read_count.csv -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+count <- read.csv(args[1])
+s <- ggplot (data = count, aes(x = group, y = num)) +
+geom_boxplot() + 
+theme(legend.position = 'none')
+ggsave(s, file = "read_count.pdf", width = 7, height = 4)
+'
 ```
 
 ```R
@@ -525,7 +422,8 @@ count <- read.csv("read_count.csv")
 s <- ggplot (data = count, aes(x = group, y = num)) +
 geom_boxplot() + 
 geom_jitter(aes(color = name)) +
-theme(legend.position = 'none')
+theme(legend.position = 'none') +
+labs(x = "", y = "bacterial reads / all reads")
 ```
 
 ### Ratio of tRNA reads / aligned reads
