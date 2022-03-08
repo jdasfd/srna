@@ -32,8 +32,8 @@ facet_wrap(~catgry) +
 ggtitle(opt$title) +
 labs(x = "bacterial group", y = "RNA/all_RNA percent") +
 scale_fill_discrete(name="Category", 
-                    breaks = c("1","2","3","4","5"),
-                    labels = c("endo/epiphyte", "environment", "gut", "marine", "intracellular"))
+                    breaks = c("1","2","3","4"),
+                    labels = c("endo/epiphyte", "environment", "gut", "marine"))
 
 alltitle <- paste0(opt$title,"_all")
 

@@ -402,37 +402,27 @@ bsub -q mpi -n 24 -o .. -J count "bash read_count.sh | tee ../../count/read_coun
 
 cd ../../count
 
-Rscript read_count.csv -e '
+Rscript -e '
 library(ggplot2)
 library(readr)
 args <- commandArgs(T)
 count <- read.csv(args[1])
 s <- ggplot (data = count, aes(x = group, y = num)) +
-geom_boxplot() + 
-theme(legend.position = 'none')
-ggsave(s, file = "read_count.pdf", width = 7, height = 4)
-'
-```
-
-```R
-library(ggplot2)
-library(readr)
-
-count <- read.csv("read_count.csv")
-s <- ggplot (data = count, aes(x = group, y = num)) +
-geom_boxplot() + 
+geom_boxplot() +
 geom_jitter(aes(color = name)) +
-theme(legend.position = 'none') +
-labs(x = "", y = "bacterial reads / all reads")
+theme(legend.position = "none") +
+labs(x = " ", y = "bacterial reads / all reads")
+ggsave(s, file = "read_count.pdf", width = 7, height = 4)
+' read_count.csv
 ```
 
-### Ratio of tRNA reads / aligned reads
+### Ratio of tRNA reads / aligned reads for different group
 
-I classified bacteria into five different types according to bacteria-plant(host) relations. Five categories are: endo/epiphyte, environment, gut, marine and obligate intracellular bacteria.
+I classified bacteria into five different types according to bacteria-plant(host) relations. Four categories are: endo/epiphyte, environment, gut and marine.
 
 ```bash
-mkdir -p /mnt/e/project/srna/output/count/trna
-mkdir -p /mnt/e/project/srna/output/count/rrna
+cd /mnt/e/project/srna/output/count
+mkdir trna rrna mrna all
 ```
 
 Using bed of rna to extract mapping reads from different RNA regions.
@@ -441,15 +431,22 @@ Using bed of rna to extract mapping reads from different RNA regions.
 cd /mnt/e/project/srna/output/bam/bacteria
 
 parallel -j 4 " \
-samtools view -bh -L ../../../annotation/bacteria/bac_trna.bed \
+samtools view -bh -L ../../../annotation/bacteria/trna.bed \
 {}.sort.bam > ../rna/{}.trna.bam \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
-samtools view -bh -L ../../../annotation/bacteria/bac_rrna.bed \
+samtools view -bh -L ../../../annotation/bacteria/rrna.bed \
 {}.sort.bam > ../rna/{}.rrna.bam \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
+parallel -j 4 " \
+samtools view -bh -L ../../../annotation/bacteria/mrna.bed \
+{}.sort.bam > ../rna/{}.mrna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+```
+
+```bash
 cd /mnt/e/project/srna/output/bam/rna
 
 parallel -j 3 " 
@@ -462,9 +459,9 @@ rm {}.bam \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
 
-```bash
-cd /mnt/e/project/srna/output/bam/rna
+Use idxstats to count the different chromosome cover. Because there were 190 bacteria included, so the chromosome numbers should be joined to its own name.
 
+```bash
 parallel -j 4 " \
 samtools idxstats {}.trna.sort.bam | \
 tsv-select -f 1,3 | grep -v '*' | \
@@ -472,21 +469,51 @@ tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
 tsv-summarize --group-by 3 --sum 2 \
 > ../../count/trna/{}.trna.tsv \
 " ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
+
+parallel -j 4 " \
+samtools idxstats {}.rrna.sort.bam | \
+tsv-select -f 1,3 | grep -v '*' | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 \
+> ../../count/rrna/{}.rrna.tsv \
+" ::: $(ls *.rrna.sort.bam | perl -p -e 's/\.rrna.+bam$//')
+
+parallel -j 4 " \
+samtools idxstats {}.mrna.sort.bam | \
+tsv-select -f 1,3 | grep -v '*' | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 \
+> ../../count/mrna/{}.mrna.tsv \
+" ::: $(ls *.mrna.sort.bam | perl -p -e 's/\.mrna.+bam$//')
+```
+
+All aligned reads to different bacteria of all regions.
+
+```bash
+cd /mnt/e/project/srna/output/bam/bacteria
+
+parallel -j 4 " \
+samtools idxstats {}.sort.bam | \
+tsv-select -f 1,3 | grep -v '*' | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 \
+> ../../count/all/{}.aliall.tsv \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
 
 ```bash
 cd /mnt/e/project/srna/output/count/trna
 
-for file in `ls *.name.tsv | perl -p -e 's/\.name\.tsv//'`
+for file in `ls *.trna.tsv | perl -p -e 's/\.trna\.tsv//'`
 do
-cat ${file}.name.tsv | \
-tsv-join --filter-file ${file}.trna.tsv --key-fields 1 --append-fields 2 \
+cat ${file}.trna.tsv | \
+tsv-join --filter-file ../${file}.trna.tsv --key-fields 1 --append-fields 2 \
 > ${file}.tsv
 done
 
 rm *.name.tsv *.trna.tsv
 
-bash ../../../script/count.sh | tee ../name_count.trna.tsv
+bash ../../../script/group_rna_count.sh | tee ../name_count.trna.tsv
 ```
 
 ```bash
