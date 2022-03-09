@@ -416,7 +416,7 @@ ggsave(s, file = "read_count.pdf", width = 7, height = 4)
 ' read_count.csv
 ```
 
-### Ratio of tRNA reads / aligned reads for different group
+### Ratio of tRNA reads / aligned reads for different groups
 
 I classified bacteria into five different types according to bacteria-plant(host) relations. Four categories are: endo/epiphyte, environment, gut and marine.
 
@@ -497,7 +497,7 @@ samtools idxstats {}.sort.bam | \
 tsv-select -f 1,3 | grep -v '*' | \
 tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
 tsv-summarize --group-by 3 --sum 2 \
-> ../../count/all/{}.aliall.tsv \
+> ../../count/all/{}.all.tsv \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
 
@@ -507,13 +507,43 @@ cd /mnt/e/project/srna/output/count/trna
 for file in `ls *.trna.tsv | perl -p -e 's/\.trna\.tsv//'`
 do
 cat ${file}.trna.tsv | \
-tsv-join --filter-file ../${file}.trna.tsv --key-fields 1 --append-fields 2 \
+tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
 > ${file}.tsv
 done
 
-rm *.name.tsv *.trna.tsv
+rm *.trna.tsv
 
 bash ../../../script/group_rna_count.sh | tee ../name_count.trna.tsv
+```
+
+```bash
+cd /mnt/e/project/srna/output/count/rrna
+
+for file in `ls *.rrna.tsv | perl -p -e 's/\.rrna\.tsv//'`
+do
+cat ${file}.rrna.tsv | \
+tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
+> ${file}.tsv
+done
+
+rm *.rrna.tsv
+
+bash ../../../script/group_rna_count.sh | tee ../name_count.rrna.tsv
+```
+
+```bash
+cd /mnt/e/project/srna/output/count/mrna
+
+for file in `ls *.mrna.tsv | perl -p -e 's/\.mrna\.tsv//'`
+do
+cat ${file}.mrna.tsv | \
+tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
+> ${file}.tsv
+done
+
+rm *.mrna.tsv
+
+bash ../../../script/group_rna_count.sh | tee ../name_count.mrna.tsv
 ```
 
 ```bash
@@ -521,54 +551,99 @@ cd /mnt/e/project/srna/output/count
 
 cat name_count.trna.tsv | perl -n -e 'while(<>){chomp;
 @a=split/\t/,$_;
-$b=$a[3]*100/$a[2];
+$b=$a[2]*100/$a[3];
 print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 }' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.trna.tsv
 
-Rscript /mnt/e/project/srna/script/rna_percent.r -f result.trna.tsv \
--t tRNA -o trna_percent_group.pdf -a trna_percent.pdf
-```
-
-rRNA: repeating the process above.
-
-```bash
-cd /mnt/e/project/srna/output/bam/rna
-
-parallel -j 4 " \
-samtools idxstats {}.rrna.sort.bam | \
-tsv-select -f 1,3 | grep -v '*' | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 \
-> ../../count/rrna/{}.rrna.tsv \
-" ::: $(ls *.rrna.sort.bam | perl -p -e 's/\.rrna.+bam$//')
-```
-
-```bash
-cd /mnt/e/project/srna/output/count/rrna
-
-for file in `ls *.name.tsv | perl -p -e 's/\.name\.tsv//'`
-do
-cat ${file}.name.tsv | \
-tsv-join --filter-file ${file}.rrna.tsv --key-fields 1 --append-fields 2 \
-> ${file}.tsv
-done
-
-rm *.name.tsv *.rrna.tsv
-
-bash ../../../script/count.sh | tee ../name_count.rrna.tsv
-```
-
-```bash
-cd /mnt/e/project/srna/output/count
-
 cat name_count.rrna.tsv | perl -n -e 'while(<>){chomp;
 @a=split/\t/,$_;
-$b=$a[3]*100/$a[2];
+$b=$a[2]*100/$a[3];
 print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 }' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.rrna.tsv
 
+cat name_count.mrna.tsv | perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[3];
+print"$a[0]\t$a[1]\t$b\t$a[4]\n";
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.mrna.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r -f result.trna.tsv \
+-t tRNA -o trna_percent_group.pdf -a trna_percent.pdf
+
 Rscript /mnt/e/project/srna/script/rna_percent.r -f result.rrna.tsv \
 -t rRNA -o rrna_percent_group.pdf -a rrna_percent.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r -f result.mrna.tsv \
+-t mRNA -o mrna_percent_group.pdf -a mrna_percent.pdf
+```
+
+
+
+## Frequencies of bacteria among different groups
+
+```bash
+mkdir -p /mnt/e/project/srna/output/occurrence
+```
+
+```bash
+for file in `ls`
+do
+if [ -d "$file" ]
+then
+if [[ "$file" = "all" ]]
+then
+continue
+else
+cd ${file};
+cat *_1mis.tsv >> ../../occurrence/${file}/1mis.tsv;
+cat *_unali.tsv >> ../../occurrence/${file}/unali.tsv;
+cat *_aliall.tsv >> ../../occurrence/${file}/aliall.tsv;
+cd ..;
+fi
+fi
+done
+```
+
+```bash
+cd /mnt/e/project/srna/output/occurrence/
+
+for file in `ls`
+do
+if [[ -d "$file" ]]
+then
+cd $file;
+parallel -j 3 " \
+perl ../../../script/occurrence.pl -f {}.tsv -o {}.num.tsv \
+" ::: $(ls *.tsv | perl -p -e 's/\.tsv//');
+cd ..;
+fi
+done
+```
+
+```bash
+for dir in `ls`
+do
+if [[ -d "$dir" ]]
+then
+cd $dir;
+for file in `ls *.num.tsv | perl -p -e 's/\.num\.tsv//'`
+do
+cat ${file}.num.tsv | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+awk -v file=$file '{print $1"\t"$2"\t"$3"\t"file}'
+done | \
+sed '1ispecies\tnum\tgroup\tcatgry'> ../${dir}.num.tsv;
+cd ..;
+fi
+done
+```
+
+```bash
+parallel -j 3 " \
+Rscript /mnt/e/project/srna/script/rna_freq.r -f {}.num.tsv -o {}_freq.pdf \
+" ::: $(ls *.tsv | perl -p -e 's/\.num\.tsv//')
 ```
 
 
