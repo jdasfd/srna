@@ -1,4 +1,4 @@
-echo -e "name\tgroup\tall\trna\tcatgry";
+echo -e "name\tgroup\trna\tall\tcatgry";
 # echo -e: characters preceded by a slash will be escaped characters
 for file in `ls *.tsv | perl -p -e 's/\.tsv//'`
 do

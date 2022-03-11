@@ -399,7 +399,9 @@ bash ../../../script/read_count.sh | tee ../../count/read_count.csv
 ```bash
 bsub -q mpi -n 24 -o .. -J count "bash read_count.sh | tee ../../count/read_count.csv"
 # tee will output results into *.out because of -o in bsub command
+```
 
+```bash
 cd ../../count
 
 Rscript -e '
@@ -462,7 +464,7 @@ rm {}.bam \
 Use idxstats to count the different chromosome cover. Because there were 190 bacteria included, so the chromosome numbers should be joined to its own name.
 
 ```bash
-parallel -j 4 " \
+parallel -j 6 " \
 samtools idxstats {}.trna.sort.bam | \
 tsv-select -f 1,3 | grep -v '*' | \
 tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
@@ -470,7 +472,7 @@ tsv-summarize --group-by 3 --sum 2 \
 > ../../count/trna/{}.trna.tsv \
 " ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
 
-parallel -j 4 " \
+parallel -j 6 " \
 samtools idxstats {}.rrna.sort.bam | \
 tsv-select -f 1,3 | grep -v '*' | \
 tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
@@ -478,7 +480,7 @@ tsv-summarize --group-by 3 --sum 2 \
 > ../../count/rrna/{}.rrna.tsv \
 " ::: $(ls *.rrna.sort.bam | perl -p -e 's/\.rrna.+bam$//')
 
-parallel -j 4 " \
+parallel -j 6 " \
 samtools idxstats {}.mrna.sort.bam | \
 tsv-select -f 1,3 | grep -v '*' | \
 tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
@@ -513,7 +515,7 @@ done
 
 rm *.trna.tsv
 
-bash ../../../script/group_rna_count.sh | tee ../name_count.trna.tsv
+bash ../../../script/group_rna_count.sh > ../name_count.trna.tsv
 ```
 
 ```bash
@@ -528,7 +530,7 @@ done
 
 rm *.rrna.tsv
 
-bash ../../../script/group_rna_count.sh | tee ../name_count.rrna.tsv
+bash ../../../script/group_rna_count.sh > ../name_count.rrna.tsv
 ```
 
 ```bash
@@ -543,7 +545,7 @@ done
 
 rm *.mrna.tsv
 
-bash ../../../script/group_rna_count.sh | tee ../name_count.mrna.tsv
+bash ../../../script/group_rna_count.sh > ../name_count.mrna.tsv
 ```
 
 ```bash
@@ -569,14 +571,14 @@ print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 ```
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r -f result.trna.tsv \
--t tRNA -o trna_percent_group.pdf -a trna_percent.pdf
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.trna.tsv -t tRNA -o trna_percent_group.pdf -a trna_percent.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r -f result.rrna.tsv \
--t rRNA -o rrna_percent_group.pdf -a rrna_percent.pdf
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.rrna.tsv -t rRNA -o rrna_percent_group.pdf -a rrna_percent.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r -f result.mrna.tsv \
--t mRNA -o mrna_percent_group.pdf -a mrna_percent.pdf
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.mrna.tsv -t mRNA -o mrna_percent_group.pdf -a mrna_percent.pdf
 ```
 
 
@@ -585,6 +587,7 @@ Rscript /mnt/e/project/srna/script/rna_percent.r -f result.mrna.tsv \
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/occurrence
+cd /mnt/e/project/srna/output/count
 ```
 
 ```bash
@@ -642,8 +645,116 @@ done
 
 ```bash
 parallel -j 3 " \
-Rscript /mnt/e/project/srna/script/rna_freq.r -f {}.num.tsv -o {}_freq.pdf \
+Rscript /mnt/e/project/srna/script/rna_plot.r -f {}.num.tsv -o {}_freq.pdf -t {} -y frequencies \
 " ::: $(ls *.tsv | perl -p -e 's/\.num\.tsv//')
+```
+
+
+
+## Reads TPM among different groups
+
+The coverage of each bed region and the mean depth using coverage/RNA region length were calculated and compared among groups.
+
+```bash
+mkdir -p /mnt/e/project/srna/output/cover
+cd /mnt/e/project/srna/output/cover
+mkdir mrna rrna trna
+```
+
+```bash
+cd /mnt/e/project/srna/annotation/bacteria
+
+cat trna.bed | \
+perl -e 'my $sum = 0;
+while(<>){chomp;@a = split/\t/,$_;
+$length = $a[2]-$a[1];
+$sum = $sum+$length;
+}
+print "$sum";
+' | awk '{print $1"\ttrna"}'> ../../output/cover/length.tsv
+
+cat rrna.bed | \
+perl -e 'my $sum = 0;
+while(<>){chomp;@a = split/\t/,$_;
+$length = $a[2]-$a[1];
+$sum = $sum+$length;
+}
+print "$sum";
+' | awk '{print $1"\trrna"}'>> ../../output/cover/length.tsv
+
+cat mrna.bed | \
+perl -e 'my $sum = 0;
+while(<>){chomp;@a = split/\t/,$_;
+$length = $a[2]-$a[1];
+$sum = $sum+$length;
+}
+print "$sum";
+' | awk '{print $1"\tmrna"}'>> ../../output/cover/length.tsv
+```
+
+```bash
+cd /mnt/e/project/srna/output/cover
+
+perl ../../script/tpm.pl | sed '1ifile\tgroup\tcatgry\tttpm\trtpm\tmtpm' > tpm.tsv
+
+Rscript /mnt/e/project/srna/script/rna_plot.r -f ttpm.tsv -o ttpm.pdf -t trna -y TPM
+Rscript /mnt/e/project/srna/script/rna_plot.r -f rtpm.tsv -o rtpm.pdf -t rrna -y TPM
+Rscript /mnt/e/project/srna/script/rna_plot.r -f mtpm.tsv -o mtpm.pdf -t mrna -y TPM
+
+tsv-select -H -f file,group,catgry,ttpm tpm.tsv | sed '1d' | sed '1ifile\tgroup\tcatgry\tnum' > ttpm.tsv
+tsv-select -H -f file,group,catgry,rtpm tpm.tsv | sed '1d' | sed '1ifile\tgroup\tcatgry\tnum' > rtpm.tsv
+tsv-select -H -f file,group,catgry,mtpm tpm.tsv | sed '1d' | sed '1ifile\tgroup\tcatgry\tnum' > mtpm.tsv
+```
+
+
+
+Because of the mosdepth cannot decide output directory. So it was better using mosdepth in the directory you want to save the results.
+
+```bash
+cd /mnt/e/project/srna/output/cover/trna
+
+parallel -j 3 " \
+mosdepth -t 4 -b ../../../annotation/bacteria/trna.bed \
+{} ../../bam/bacteria/{}.sort.bam \
+" ::: $(ls ../../bam/bacteria/*.sort.bam | \
+perl -p -e 's/\.sort\.bam//' | perl -p -e 's/^.+?\/S/S/')
+```
+
+```bash
+cd /mnt/e/project/srna/output/cover/rrna
+
+parallel -j 3 " \
+mosdepth -t 4 -b ../../../annotation/bacteria/rrna.bed \
+{} ../../bam/bacteria/{}.sort.bam \
+" ::: $(ls ../../bam/bacteria/*.sort.bam | \
+perl -p -e 's/\.sort\.bam//' | perl -p -e 's/^.+?\/S/S/')
+```
+
+```bash
+cd /mnt/e/project/srna/output/cover/mrna
+
+parallel -j 3 " \
+mosdepth -t 4 -b ../../../annotation/bacteria/mrna.bed \
+{} ../../bam/bacteria/{}.sort.bam \
+" ::: $(ls ../../bam/bacteria/*.sort.bam | \
+perl -p -e 's/\.sort\.bam//' | perl -p -e 's/^.+?\/S/S/')
+```
+
+```bash
+cd /mnt/e/project/srna/output/cover
+
+for dir in `ls`
+do
+if [[ -d "$dir" ]]
+then
+cd $dir;
+for file in `ls *.per-base.bed.gz`
+do
+gzip -d ${file}
+done
+cd ..
+fi
+done
 ```
 
 
@@ -653,17 +764,6 @@ Rscript /mnt/e/project/srna/script/rna_freq.r -f {}.num.tsv -o {}_freq.pdf \
 ### Reads depth and position distribution in different RNA
 
 Divide tRNA regions to 10 separate domains. Every domains reads were counted as relative depth of RNA regions.
-
-```bash
-mkdir -p /mnt/e/project/srna/output/depth/trna
-
-cd /mnt/e/project/srna/output/bam/rna
-
-parallel -j 3 " \
-samtools depth -@ 4 -b ../../../annotation/bacteria/bac_trna.bed \
-{}.trna.sort.bam > ../../depth/trna/{}.trna.txt \
-" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+?bam$//')
-```
 
 ```bash
 cd /mnt/e/project/srna/output/depth/trna
