@@ -708,6 +708,26 @@ tsv-select -H -f file,group,catgry,mtpm tpm.tsv | sed '1d' | sed '1ifile\tgroup\
 
 
 
+## Proportion of different tRF to total
+
+tRF has four major group: tRF-5, tRF-3, tRF-1 and tRH (tRF-halves, there were other names for the same meaning). The proportion of tRF could be separated among those tRNA region mapping reads. 
+
+```bash
+mkdir -p /mnt/e/project/srna/output/proportion
+```
+
+```bash
+cd /mnt/e/project/srna/output/bam/rna
+
+parallel -j 3 " \
+samtools view -@ 3 {}.trna.sort.bam | tsv-select -f 1,2,3,4,10 | \
+tsv-filter --ne 2:4 \
+> ../../proportion/{}.trna.tsv \
+" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
+```
+
+
+
 Because of the mosdepth cannot decide output directory. So it was better using mosdepth in the directory you want to save the results.
 
 ```bash
@@ -1338,10 +1358,6 @@ labs(x = '', y = '', title = '') +
 
 
 ```bash
-
-```
-
-```bash
 cat plot.count | perl -n -e 'chomp;
 my $p,$chr;
 @a=split(/\t/,$_);
@@ -1370,5 +1386,275 @@ geom_line()+
 theme(legend.position = 'none')
 
 plot(depth)
+```
+
+
+
+## tRF region
+
+```bash
+cat trna.bed | perl -e 'while(<>){
+    chomp;
+    @a = split/\t/,$_;
+    if($a[5] eq "+"){
+        $end = $a[1] + 25;
+        print"$a[0]\t$a[1]\t$end\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
+    }
+    else{
+        $end = $a[2] - 25;
+        print"$a[0]\t$end\t$a[2]\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
+    }
+}' > trf5.bed
+```
+
+```bash
+cat trna.bed | perl -e 'while(<>){
+    chomp;
+    @a = split/\t/,$_;
+    if($a[5] eq "+"){
+        $end = $a[2] - 25;
+        print"$a[0]\t$end\t$a[2]\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
+    }
+    else{
+        $end = $a[1] + 25;
+        print"$a[0]\t$a[1]\t$end\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
+    }
+}' > trf3.bed
+```
+
+```bash
+cat trna.bed | perl -e 'while(<>){
+    chomp;
+    @a = split/\t/,$_;
+    if($a[5] eq "+"){
+        $end = $a[2] + 50;
+        print"$a[0]\t$a[2]\t$end\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
+    }
+    else{
+        $end = $a[1] - 50;
+        print"$a[0]\t$end\t$a[1]\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
+    }
+}' > trf1.bed
+```
+
+```bash
+cat trna.bed | perl -e 'while(<>){
+    chomp;
+    @a = split/\t/,$_;
+    if($a[5] eq "+"){
+        $start = $a[1] + 25;
+        $end = $a[2] - 25;
+        $start <= $end && print"$a[0]\t$start\t$end\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
+    }
+    else{
+        $start = $a[2] - 25;
+        $end = $a[1] + 25;
+        $end <= $start && print"$a[0]\t$end\t$start\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n"
+    }
+}' > other_trf.bed
+```
+
+```bash
+mkdir -p /mnt/e/project/srna/output/bam/trf
+cd /mnt/e/project/srna/output/bam/rna
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/bacteria/trf5.bed \
+{}.trna.sort.bam > ../trf/{}.trf5.bam \
+" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/bacteria/trf3.bed \
+{}.trna.sort.bam > ../trf/{}.trf3.bam \
+" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/bacteria/other_trf.bed \
+{}.trna.sort.bam > ../trf/{}.other_trf.bam \
+" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
+
+cd /mnt/e/project/srna/output/bam/bacteria
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/bacteria/trf1.bed \
+{}.sort.bam > ../trf/{}.trf1.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+```
+
+``` bash
+cd /mnt/e/project/srna/output/bam/trf
+
+parallel -j 3 " 
+samtools sort -@ 4 {1}.bam > {1}.sort.bam 
+samtools index {1}.sort.bam
+" ::: $(ls *.bam | perl -p -e 's/\.bam$//')
+
+parallel -j 3 " \
+rm {}.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/count
+mkdir trf5 trf3 trf1 other_trf
+cd /mnt/e/project/srna/output/bam/trf
+
+parallel -j 6 " \
+samtools idxstats {}.trf5.sort.bam | \
+tsv-select -f 1,3 | grep -v '*' | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 \
+> ../../count/trf5/{}.trf5.tsv \
+" ::: $(ls *.trf5.sort.bam | perl -p -e 's/\.trf.+bam$//')
+
+parallel -j 6 " \
+samtools idxstats {}.trf3.sort.bam | \
+tsv-select -f 1,3 | grep -v '*' | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 \
+> ../../count/trf3/{}.trf3.tsv \
+" ::: $(ls *.trf3.sort.bam | perl -p -e 's/\.trf.+bam$//')
+
+parallel -j 6 " \
+samtools idxstats {}.trf1.sort.bam | \
+tsv-select -f 1,3 | grep -v '*' | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 \
+> ../../count/trf1/{}.trf1.tsv \
+" ::: $(ls *.trf1.sort.bam | perl -p -e 's/\.trf.+bam$//')
+
+parallel -j 6 " \
+samtools idxstats {}.other_trf.sort.bam | \
+tsv-select -f 1,3 | grep -v '*' | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 \
+> ../../count/other_trf/{}.other_trf.tsv \
+" ::: $(ls *.other_trf.sort.bam | perl -p -e 's/\.other.+bam$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/count/trf5
+
+for file in `ls *.trf5.tsv | perl -p -e 's/\.trf5\.tsv//'`
+do
+cat ${file}.trf5.tsv | \
+tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
+> ${file}.tsv
+done
+
+rm *.trf5.tsv
+
+bash ../../../script/group_rna_count.sh > ../name_count.trf5.tsv
+```
+
+```bash
+cd /mnt/e/project/srna/output/count/trf3
+
+for file in `ls *.trf3.tsv | perl -p -e 's/\.trf3\.tsv//'`
+do
+cat ${file}.trf3.tsv | \
+tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
+> ${file}.tsv
+done
+
+rm *.trf3.tsv
+
+bash ../../../script/group_rna_count.sh > ../name_count.trf3.tsv
+```
+
+```bash
+cd /mnt/e/project/srna/output/count/trf1
+
+for file in `ls *.trf1.tsv | perl -p -e 's/\.trf1\.tsv//'`
+do
+cat ${file}.trf1.tsv | \
+tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
+> ${file}.tsv
+done
+
+rm *.trf1.tsv
+
+bash ../../../script/group_rna_count.sh > ../name_count.trf1.tsv
+```
+
+```bash
+cd /mnt/e/project/srna/output/count/other_trf
+
+for file in `ls *.other_trf.tsv | perl -p -e 's/\.other.+tsv//'`
+do
+cat ${file}.other_trf.tsv | \
+tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
+> ${file}.tsv
+done
+
+rm *.other_trf.tsv
+
+bash ../../../script/group_rna_count.sh > ../name_count.other_trf.tsv
+```
+
+```bash
+cd /mnt/e/project/srna/output/count
+
+cat name_count.trf5.tsv | perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[3];
+print"$a[0]\t$a[1]\t$b\t$a[4]\n";
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.trf5.tsv
+
+cat name_count.trf3.tsv | perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[3];
+print"$a[0]\t$a[1]\t$b\t$a[4]\n";
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.trf3.tsv
+
+cat name_count.other_trf.tsv | perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[3];
+print"$a[0]\t$a[1]\t$b\t$a[4]\n";
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.other_trf.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.trf5.tsv -t tRF-5 -o trf5_percent_group.pdf -a trf5_percent.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.trf3.tsv -t tRF-3 -o trf3_percent_group.pdf -a trf3_percent.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.other_trf.tsv -t other-tRF -o other_trf_percent_group.pdf -a other_trf_percent.pdf
+```
+
+
+
+
+
+
+
+```bash
+mkdir -p /mnt/e/project/srna/output/sequence
+cd /mnt/e/project/srna/output/bam/rna
+
+parallel -j 4 " \
+samtools view {}.trna.sort.bam | perl -e ' \
+while(<>){
+    chomp;
+    @a = split/\t/,$_;
+    my %num;
+    my @sequence;
+    if (grep $a[9] in @c){
+        $num{$a[9]}++;
+    }
+    else{
+        $num{$a[9]}++;
+    }
+}
+END{
+    for my $seq (sort keys %num){
+    print "$seq\t","$num{$seq}\n";
+    }
+}
+'> ../../sequence/{}.trna.tsv \
+" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
 ```
 
