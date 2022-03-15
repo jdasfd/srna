@@ -393,7 +393,7 @@ Count all reads numbers from sort.bam files. The goal of this step is to acquire
 ```bash
 cd /mnt/e/project/srna/output/bam/bacteria
 
-bash ../../../script/read_count.sh | tee ../../count/read_count.csv
+bash ../../../script/read_count.sh > ../../count/read_count.csv
 ```
 
 ```bash
@@ -1645,6 +1645,11 @@ Rscript /mnt/e/project/srna/script/rna_plot.r -f {}.num.tsv -o {}_freq.pdf -t {}
 " ::: $(ls *.tsv | perl -p -e 's/\.num\.tsv//')
 ```
 
+```bash
+cat all.tsv | tsv-summarize --group-by 1 --count | tsv-filter --ge 2:120 | tsv-select -f 1 > tier1.tsv
+cat all.tsv | tsv-summarize --group-by 1 --count | tsv-filter --ge 2:60 --lt 2:120 | tsv-select -f 1 > tier2.tsv
+```
+
 
 
 ```bash
@@ -1655,5 +1660,94 @@ parallel -j 4 " \
 samtools view {}.trna.sort.bam | perl ../../../script/seq.pl \
 > ../../sequence/{}.trna.tsv \
 " ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/bam/rna
+
+parallel -j 6 " \
+samtools view -@ 2 {}.trna.sort.bam | \
+tsv-select -f 3,10 > ../../sequence/bam/{}.bam.tsv \
+" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/bam/bacteria/rna
+
+parallel -j 6 " \
+cat {}.bam.tsv | tsv-summarize --group-by 1 --count \
+tsv-select -f 3,10 > ../../sequence/bam/{}.bam.tsv \
+" ::: $(ls *.bam.tsv | perl -p -e 's/\.bam\.tsv$//')
+```
+
+
+
+
+
+```bash
+cd /mnt/e/project/srna/output/sequence/bam
+
+for file in `ls`
+do
+cat ${file} | perl ../../../script/1.pl > ../1/${file}
+done
+
+parallel -j 12 " \
+cat {} | perl ../../../script/2.pl > ../2/{} \
+" ::: $(ls *.bam.tsv)
+```
+
+```bash
+cd /mnt/e/project/srna/output/sequence/1
+
+parallel -j 6 " \
+cat {}.bam.tsv | \
+tsv-summarize --group-by 1 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-select -f 3,2 | perl ../../../script/filter.pl | \
+tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields 2 \
+> {}.tsv \
+" ::: $(ls *.bam.tsv | perl -p -e 's/\.bam\.tsv$//')
+
+rm *.bam.tsv
+
+bash ../../../script/group_rna_count.sh > ../name_count.tier1.tsv
+```
+
+```bash
+parallel -j 6 " \
+cat {}.bam.tsv | \
+tsv-summarize --group-by 1 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-select -f 3,2 | perl ../../../script/filter.pl | \
+tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields 2 \
+> {}.tsv \
+" ::: $(ls *.bam.tsv | perl -p -e 's/\.bam\.tsv$//')
+
+rm *.bam.tsv
+
+bash ../../../script/group_rna_count.sh > ../name_count.tier2.tsv
+```
+
+```bash
+cat name_count.tier1.tsv | perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[3];
+print"$a[0]\t$a[1]\t$b\t$a[4]\n";
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.tier1.tsv
+
+cat name_count.tier2.tsv | perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[3];
+print"$a[0]\t$a[1]\t$b\t$a[4]\n";
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.tier2.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.tier1.tsv -t tier1 -o tier1_percent_group.pdf -a tier1_percent.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.tier2.tsv -t tier2 -o tier2_percent_group.pdf -a tier2_percent.pdf
 ```
 
