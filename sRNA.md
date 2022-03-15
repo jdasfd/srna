@@ -1442,13 +1442,13 @@ cat trna.bed | perl -e 'while(<>){
     chomp;
     @a = split/\t/,$_;
     if($a[5] eq "+"){
-        $start = $a[1] + 25;
-        $end = $a[2] - 25;
+        $start = $a[1] + 26;
+        $end = $a[2] - 26;
         $start <= $end && print"$a[0]\t$start\t$end\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
     }
     else{
-        $start = $a[2] - 25;
-        $end = $a[1] + 25;
+        $start = $a[2] - 26;
+        $end = $a[1] + 26;
         $end <= $start && print"$a[0]\t$end\t$start\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n"
     }
 }' > other_trf.bed
@@ -1629,6 +1629,22 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 
 
 
+## Sequence among all files
+
+So the main reason I do this step is to select those frequently occurred among all sequence files, that is, the most likely sRNA appeared among *A. tha* sRNA-seq files.
+
+```bash
+SRR10049355_1mis.trna.sort.bam
+```
+
+
+
+```bash
+parallel -j 3 " \
+Rscript /mnt/e/project/srna/script/rna_plot.r -f {}.num.tsv -o {}_freq.pdf -t {} -y frequencies \
+" ::: $(ls *.tsv | perl -p -e 's/\.num\.tsv//')
+```
+
 
 
 ```bash
@@ -1636,25 +1652,8 @@ mkdir -p /mnt/e/project/srna/output/sequence
 cd /mnt/e/project/srna/output/bam/rna
 
 parallel -j 4 " \
-samtools view {}.trna.sort.bam | perl -e ' \
-while(<>){
-    chomp;
-    @a = split/\t/,$_;
-    my %num;
-    my @sequence;
-    if (grep $a[9] in @c){
-        $num{$a[9]}++;
-    }
-    else{
-        $num{$a[9]}++;
-    }
-}
-END{
-    for my $seq (sort keys %num){
-    print "$seq\t","$num{$seq}\n";
-    }
-}
-'> ../../sequence/{}.trna.tsv \
+samtools view {}.trna.sort.bam | perl ../../../script/seq.pl \
+> ../../sequence/{}.trna.tsv \
 " ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
 ```
 
