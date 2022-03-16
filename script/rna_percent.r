@@ -3,14 +3,13 @@
 library(ggplot2)
 library(readr)
 library("optparse")
+library(gridExtra)
 
 option_list = list(
     make_option(c("-f","--file"), type = "character", default = NULL,
     help = "tsv file name", metavar = "character"),
     make_option(c("-o","--out"), type = "character", default = "output.pdf",
     help = "output pdf script in category name [default = %default]", metavar = "character"),
-    make_option(c("-a","--outall"), type = "character", default = "outputall.pdf",
-    help = "output pdf script name [default = %default]", metavar = "cahracter"),
     make_option(c("-t","--title"), type = "character", default = NULL,
     help = "output script RNA for maintitle", metavar = "character")
 );
@@ -43,5 +42,6 @@ theme(legend.position = 'none') +
 ggtitle(alltitle)
 labs(x = "reads group", y = "RNA/all_RNA percent")
 
-ggsave(plot1, file = opt$out, width = 8, height = 4)
-ggsave(plot2, file = opt$outall, width = 4, height = 4)
+pdf(opt$out, width = 12, height = 5)
+grid.arrange(plot1, plot2, ncol = 2, layout_matrix = rbind(c(1,1,1,2)))
+dev.off()
