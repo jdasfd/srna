@@ -1745,9 +1745,9 @@ print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 
 ```bash
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.tier1.tsv -t tier1 -o tier1_percent_group.pdf -a tier1_percent.pdf
+-f result.tier1.tsv -t tier1 -o ../figure/tier1_percent.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.tier2.tsv -t tier2 -o tier2_percent_group.pdf -a tier2_percent.pdf
+-f result.tier2.tsv -t tier2 -o ../figure/tier2_percent.pdf
 ```
 
