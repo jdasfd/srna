@@ -388,7 +388,7 @@ rm *.sam
 
 ```bash
 cd /mnt/e/project/srna/output/bam
-bash ../../script/all_file_count.sh | tee all_file.csv
+bash ../../script/all_file_count.sh > ../count/all_file.csv
 
 Rscript -e '
 library(ggplot2)
@@ -399,7 +399,7 @@ p <- ggplot(data = count, aes(x = name, y = count, group = group, fill = group))
 geom_bar(stat = "identity", position = "fill") +
 labs(x = NULL) +
 theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-ggsave(p, file = "all_file.pdf", width = 9, height = 4)
+ggsave(p, file = "../figure/all_file.pdf", width = 9, height = 4)
 ' all_file.csv
 ```
 
@@ -413,24 +413,16 @@ All the habitat information of bacteria selected were acquired from references.
 
 
 
-## Read counts among different bacteria categories
-
-
-
-
-
-## Count the ratio of bacterial sources in all samples
-
-### Ratio of reads aligned to bacteria / all non-plant reads
+## Ratio of reads aligned to bacteria / all non-plant reads
 
 Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. I wrote a shell script to reach the goal.
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/count
-cd /mnt/e/project/srna/output/bam/bacteria
 cd /mnt/e/project/srna/output/count
 mkdir trna rrna mrna all
 
+cd /mnt/e/project/srna/output/bam/bacteria
 bash ../../../script/read_count.sh > ../../count/read_count.csv
 ```
 
@@ -452,9 +444,41 @@ geom_boxplot() +
 geom_jitter(aes(color = name)) +
 theme(legend.position = "none") +
 labs(x = " ", y = "bacterial reads / all reads")
-ggsave(s, file = "read_count.pdf", width = 7, height = 4)
+ggsave(s, file = "../figure/read_count.pdf", width = 7, height = 4)
 ' read_count.csv
 ```
+
+
+
+## Ratio of reads aligned to bacteria / all non-plant reads among categories
+
+### Convert bam files to tsv for better using (optional, waiting for updated)
+
+```bash
+mkdir -p /mnt/e/project/srna/output/bam/tsv
+cd /mnt/e/project/srna/output/bam/bacteria
+
+parallel -j 3 " \
+samtools view -@ 3 {}.sort.bam | \
+tsv-select -f 1,2,3,4,10 > ../tsv/{}.bam.tsv \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+```
+
+### Count ratio of reads between categories
+
+```bash
+cd /mnt/e/project/srna/output/bam/bacteria
+
+parallel -j 4 " \
+samtools idxstats {}.sort.bam | \
+tsv-select -f 1,3 | grep -v '*' | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 \
+> ../../count/all/{}.all.tsv \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+```
+
+
 
 ### Ratio of tRNA reads / aligned reads for different groups
 
@@ -521,18 +545,6 @@ tsv-summarize --group-by 3 --sum 2 \
 ```
 
 All aligned reads to different bacteria of all regions.
-
-```bash
-cd /mnt/e/project/srna/output/bam/bacteria
-
-parallel -j 4 " \
-samtools idxstats {}.sort.bam | \
-tsv-select -f 1,3 | grep -v '*' | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 \
-> ../../count/all/{}.all.tsv \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-```
 
 ```bash
 cd /mnt/e/project/srna/output/count/trna

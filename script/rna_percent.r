@@ -39,9 +39,10 @@ alltitle <- paste0(opt$title,"_all")
 plot2 <- ggplot (data = rna, aes(x = catgry, y = ratio, fill = catgry)) +
 geom_boxplot() +
 theme(legend.position = 'none') +
-ggtitle(alltitle)
-labs(x = "reads group", y = "RNA/all_RNA percent")
+ggtitle(alltitle) +
+labs(x = "reads group", y = "RNA/all_RNA percent") +
+scale_fill_manual(values = colors()[6:8])
 
-pdf(opt$out, width = 12, height = 5)
+pdf(opt$out, width = 12, height = 3)
 grid.arrange(plot1, plot2, ncol = 2, layout_matrix = rbind(c(1,1,1,2)))
 dev.off()
