@@ -42,29 +42,3 @@
 
 **PRJNA563040 | SRR10049355-64**  Using small RNA deep sequencing analysis to obtain miRNA profiling of each sample. For UMI-sRNA-seq, a 10-bp unique molecular identifier (UMI)-labeled primer was used for first strand synthesis.
 
-
-
-
-
-
-
-**Bioproject: PRJNA704712: SRX10166363-66** mRNA breakage linked to active translation triggers innate silencing of an invasive transposon (thale cress)
-
-**Bioproject: PRJNA695075: SRX9945492-517/SRX10048430**An siRNA-guided AGO protein recruits Polymerase V to initiate RNA-directed DNA methylation (smallRNA-seq dataset) (thale cress)
-
-**Bioproject: PRJNA473576:** SRR7231496-SRR7231501 ILLUMINA NextSeq 500
-
-**sRNA-seq datasets of OsRDR3 transgenic plants:** Rice transgenic lines over-expressing RDR3 were showing vigrous growth phenotype.
-
-**Bioproject: PRJNA632508:** SRR11783478-SRR11783489 ILLUMINA HiSeq 2500
-
-**Linking Key Steps of MicroRNA Biogenesis by TREX-2 and the Nuclear Pore Complex in Arabidopsis [miRNA-Seq]:**  Non-coding RNA profiling by high throughput sequencing. Here, we show that the plant TREX-2 complex promotes multiple steps in miRNA biogenesis, including transcription, processing and nuclear export. 
-
-**Bioproject PRJNA635281:** Sequencing of polysome-associated sRNAs and 3' cleavage fragments in maize and rice
-
-**Bioproject PRJNA534164:** Reinforcement of DNA methylation in CHH context through RNA-directed DNA methylation ensures sexual reproduction in rice
-
-**Bioproject  PRJNA437123:** Rice domestication-associated miRNA 397 targets laccases to facilitate lignin biosynthesis and yield-related traits
-
-**Bioproject PRJNA595924:** Identification and integrated analysis of glyphosate stress-responsive microRNAs, lncRNAs, and mRNAs in rice using genome-wide high-throughput sequencing [miRNA-Seq] (rice)
-
