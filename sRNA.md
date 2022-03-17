@@ -226,7 +226,9 @@ After I used fastqc, there were few fail in per base sequence content. It was co
 
 ##  Using Bowtie2 for reads alignment
 
-Because of Bowtie has been outdated and has problem in downloading it. I decided to adopt Bowtie2, though Bowtie has advantages in mapping short reads.
+Because of the problem of downloading Bowtie. I decided to adopt Bowtie2, though Bowtie has advantages in mapping short reads.
+
+It was relatively fast and convenient in using Bowtie2. The only 1 mismatch allowed in genome alignment cannot be ignored though, especially analyzing sRNA.
 
 ###  Aligning sRNA-seq data to plant genome
 
@@ -366,7 +368,7 @@ bowtie2 -q {}_plantaliall.fq.gz \
 bsub -q mpi -n 24 -J unali -o .. "bash all.sh"
 ```
 
-Convert sam to bam file for minimum storage stress.
+#### Convert sam to bam file for minimum storage stress.
 
 ```bash
 cd /mnt/e/project/srna/output/bam/bacteria
@@ -382,6 +384,39 @@ rm *.sam
 # clear all sam, bam files could be read by samtools view
 ```
 
+#### Basic percentages of reads in plant or bacteria
+
+```bash
+cd /mnt/e/project/srna/output/bam
+bash ../../script/all_file_count.sh | tee all_file.csv
+
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+count <- read.csv(args[1])
+p <- ggplot(data = count, aes(x = name, y = count, group = group, fill = group)) +
+geom_bar(stat = "identity", position = "fill") +
+labs(x = NULL) +
+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+ggsave(p, file = "all_file.pdf", width = 9, height = 4)
+' all_file.csv
+```
+
+
+
+## Classified bacteria in their habitat preference with land plants
+
+I classified bacteria into five different types according to bacteria-plant(host) relations. Four categories are: endo/epiphyte, environment, gut and marine.
+
+All the habitat information of bacteria selected were acquired from references.
+
+
+
+## Read counts among different bacteria categories
+
+
+
 
 
 ## Count the ratio of bacterial sources in all samples
@@ -393,6 +428,8 @@ Count all reads numbers from sort.bam files. The goal of this step is to acquire
 ```bash
 mkdir -p /mnt/e/project/srna/output/count
 cd /mnt/e/project/srna/output/bam/bacteria
+cd /mnt/e/project/srna/output/count
+mkdir trna rrna mrna all
 
 bash ../../../script/read_count.sh > ../../count/read_count.csv
 ```
@@ -420,13 +457,6 @@ ggsave(s, file = "read_count.pdf", width = 7, height = 4)
 ```
 
 ### Ratio of tRNA reads / aligned reads for different groups
-
-I classified bacteria into five different types according to bacteria-plant(host) relations. Four categories are: endo/epiphyte, environment, gut and marine.
-
-```bash
-cd /mnt/e/project/srna/output/count
-mkdir trna rrna mrna all
-```
 
 Using bed of rna to extract mapping reads from different RNA regions.
 
