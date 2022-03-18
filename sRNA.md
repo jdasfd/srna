@@ -452,30 +452,52 @@ ggsave(s, file = "../figure/read_count.pdf", width = 7, height = 4)
 
 ## Ratio of reads aligned to bacteria / all non-plant reads among categories
 
-### Convert bam files to tsv for better using (optional, waiting for updated)
-
-```bash
-mkdir -p /mnt/e/project/srna/output/bam/tsv
-cd /mnt/e/project/srna/output/bam/bacteria
-
-parallel -j 3 " \
-samtools view -@ 3 {}.sort.bam | \
-tsv-select -f 1,2,3,4,10 > ../tsv/{}.bam.tsv \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-```
-
-### Count ratio of reads between categories
-
 ```bash
 cd /mnt/e/project/srna/output/bam/bacteria
 
 parallel -j 4 " \
-samtools idxstats {}.sort.bam | \
-tsv-select -f 1,3 | grep -v '*' | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 \
-> ../../count/all/{}.all.tsv \
+samtools idxstats -@ 3 {}.sort.bam | grep '*' | \
+tsv-select -f 4 > ../../count/bacteria/{}.rest.tsv \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/count/all
+
+parallel -j 6 " \
+cat {}.all.tsv | tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 > ../bacteria/{}.all.tsv \
+" ::: $(ls *.all.tsv | perl -p -e 's/\.all\.tsv$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/count/bacteria
+
+parallel -j 12 " \
+perl ../../../script/count.pl -a {}.all.tsv \
+-r {}.rest.tsv -o {}.tsv \
+" ::: $(ls *.all.tsv | perl -p -e 's/\.all\.tsv$//')
+
+rm *.all.tsv *.rest.tsv
+
+rm ../result.tsv
+# because next step will use >> so clear first
+
+for file in `ls | perl -p -e 's/\.tsv//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+cat ${file}.tsv | awk -v name=$name -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+>> ../result.tsv
+done
+
+cd ..
+sed -i '1i\name\tgroup\tratio\tcatgry' result.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.tsv -t RNA_in_group -o ../figure/all_RNA_group.pdf
 ```
 
 
@@ -1837,5 +1859,17 @@ cd /mnt/e/project/srna/output/bam/bacteria
 parallel -j 3 " \
 samtools view {}.sort.bam | \
 tsv-select -f 1,2,3,4"
+```
+
+### Convert bam files to tsv for better using (optional, waiting for updated)
+
+```bash
+mkdir -p /mnt/e/project/srna/output/bam/tsv
+cd /mnt/e/project/srna/output/bam/bacteria
+
+parallel -j 3 " \
+samtools view -@ 3 {}.sort.bam | \
+tsv-select -f 1,2,3,4,10 > ../tsv/{}.bam.tsv \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
 
