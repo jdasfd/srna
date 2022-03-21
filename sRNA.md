@@ -394,11 +394,15 @@ Rscript -e '
 library(ggplot2)
 library(readr)
 args <- commandArgs(T)
-count <- read.csv(args[1])
-p <- ggplot(data = count, aes(x = name, y = count, group = group, fill = group)) +
+ct <- read.csv(args[1])
+p <- ggplot(ct, aes(x = name, y = count, fill = factor(group, levels = c("unknown","bacteria","plant")))) +
 geom_bar(stat = "identity", position = "fill") +
-labs(x = NULL) +
+labs(x = "Seq files", y = "reads aligned ratio") +
 theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+p <- p + scale_x_discrete(breaks = NULL) +
+scale_fill_manual(name = "reads source",
+labels = c("unknown", "bacteria", "plant"),
+values = c("gray75", "darkgoldenrod", "seagreen3"))
 ggsave(p, file = "../figure/all_file.pdf", width = 9, height = 4)
 ' all_file.csv
 ```
@@ -443,7 +447,7 @@ s <- ggplot (data = count, aes(x = group, y = num)) +
 geom_boxplot() +
 geom_jitter(aes(color = name)) +
 theme(legend.position = "none") +
-labs(x = " ", y = "bacterial reads / all reads")
+labs(x = " ", y = "Bacterial reads / all reads")
 ggsave(s, file = "../figure/read_count.pdf", width = 7, height = 4)
 ' read_count.csv
 ```
@@ -497,7 +501,8 @@ sed -i '1i\name\tgroup\tratio\tcatgry' result.tsv
 
 ```bash
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.tsv -t RNA_in_group -o ../figure/all_RNA_group.pdf
+-f result.tsv -t RNA_in_group -y "Bac-reads" -o ../figure/all_RNA_group.pdf
+# add the scale_y_continuous limits
 ```
 
 
@@ -637,13 +642,13 @@ print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 
 ```bash
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.trna.tsv -t tRNA_region -o ../figure/trna_reads.pdf
+-f result.trna.tsv -t tRNA_region -y "Bacreads in tRNA" -o ../figure/trna_reads.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.rrna.tsv -t rRNA_region -o ../figure/rrna_reads.pdf
+-f result.rrna.tsv -t rRNA_region -y "Bacreads in rRNA" -o ../figure/rrna_reads.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.mrna.tsv -t mRNA_region -o ../figure/mrna_reads.pdf
+-f result.mrna.tsv -t mRNA_region -y "Bacreads in mRNA" -o ../figure/mrna_reads.pdf
 ```
 
 
