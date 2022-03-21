@@ -25,7 +25,7 @@ if (is.null(opt$file)){
 }
 
 rna <- read_tsv(opt$file, col_types = cols(group = col_character()), col_names = T)
-ytitle <- paste(opt$ylab,"Bac-reads percent", sep = "/")
+ytitle <- paste(opt$ylab,"all Bac-reads (%)", sep = "/")
 
 plot1 <- ggplot (data = rna, aes(x = group, y = ratio, group = group, fill = group)) +
 geom_boxplot() + 

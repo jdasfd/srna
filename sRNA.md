@@ -738,18 +738,22 @@ tsv-select -f 3,10 > ../../freq/trna/{}.trna.tsv \
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/freq/among
+mkdir -p /mnt/e/project/srna/output/freq/file
 cd /mnt/e/project/srna/output/freq/trna
 
 parallel -j 6 " \
-cat {}.trna.tsv | tsv-select -f 2 | \
-tsv-summarize --group-by 1 --count > {}.count.tsv \
-" ::: $(ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//')
+cat {}_aliall.trna.tsv {}_1mis.trna.tsv {}_unali.trna.tsv | \
+tsv-summarize --group-by 2 --count > ../file/{}.trna.tsv \
+" ::: $(ls *.trna.tsv | perl -p -e 's/_.+tsv$//' | uniq)
 
-cat *.count.tsv | tsv-select -f 1 >> ../among/all_seq.tsv
+cd ../file
+
+rm ../among/all_seq.tsv # ensure >> will not just output after the old file
+cat *.tsv | tsv-select -f 1 >> ../among/all_seq.tsv
 cd ../among
 cat all_seq.tsv | tsv-summarize --group-by 1 --count > all_seq.count.tsv
 
-cat all_seq.count.tsv
+cat all_seq.count.tsv | tsv-summarize --group-by 2 --count | sed '1inum\tcount'> seq_num.tsv
 ```
 
 ```bash
@@ -762,8 +766,10 @@ count <- read_tsv(args[1])
 s <- ggplot (data = count, aes(x = num, y = count)) +
 geom_bar(stat = "identity") +
 theme(axis.ticks.x = element_blank()) +
-geom_col() +
-facet_zoom(ylim = c(0, 20000))
+labs(x = "file num", y = "frequency") +
+scale_x_continuous(limits = c(0,220)) +
+facet_zoom(ylim = c(0, 2000)) +
+geom_col()
 ggsave(s, file = "../../figure/seq_distri.pdf", width = 10, height = 4)
 ' seq_num.tsv
 ```

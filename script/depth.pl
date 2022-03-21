@@ -3,7 +3,6 @@ use Data::Dumper;
 use strict;
 use warnings;
 use Getopt::Long;
-use List::Util;
 
 =head1 NAME
 retrive_depth.pl - Retrive relative depth information from bed files
