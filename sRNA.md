@@ -642,13 +642,13 @@ print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 
 ```bash
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.trna.tsv -t tRNA_region -y "Bacreads in tRNA" -o ../figure/trna_reads.pdf
+-f result.trna.tsv -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.rrna.tsv -t rRNA_region -y "Bacreads in rRNA" -o ../figure/rrna_reads.pdf
+-f result.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.mrna.tsv -t mRNA_region -y "Bacreads in mRNA" -o ../figure/mrna_reads.pdf
+-f result.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
 ```
 
 
@@ -875,13 +875,13 @@ print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 
 ```bash
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.tier1.tsv -t ">120_files" -o ../figure/tier1_percent.pdf
+-f result.tier1.tsv -t ">120_files" -y "Bac-reads in tRNA (T1)" -o ../figure/tier1_percent.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.tier2.tsv -t "60-120_files" -o ../figure/tier2_percent.pdf
+-f result.tier2.tsv -t "60-120_files" -y "Bac-reads in tRNA (T2)" -o ../figure/tier2_percent.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.tier3.tsv -t "<60_files" -o ../figure/tier3_percent.pdf
+-f result.tier3.tsv -t "<60_files" -y "Bac-reads in tRNA (T3)" -o ../figure/tier3_percent.pdf
 ```
 
 
@@ -1013,10 +1013,10 @@ print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 
 ```bash
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.trf3_5.tsv -t tRF-3/5_region -o ../figure/trf3_5_percent.pdf
+-f result.trf3_5.tsv -t tRF-3/5_region -y "tRF3/5 Bac-reads" -o ../figure/trf3_5_percent.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.other_trf.tsv -t other-tRNA_region -o ../figure/other_trf_percent.pdf
+-f result.other_trf.tsv -t other-tRNA_region -y "other tRNA Bac-reads" -o ../figure/other_trf_percent.pdf
 ```
 
 
@@ -1802,5 +1802,30 @@ tsv-select -H -f file,group,catgry,mtpm tpm.tsv | sed '1d' | sed '1ifile\tgroup\
 Rscript /mnt/e/project/srna/script/rna_plot.r -f ttpm.tsv -o ../figure/ttpm.pdf -t trna -y TPM
 Rscript /mnt/e/project/srna/script/rna_plot.r -f rtpm.tsv -o ../figure/rtpm.pdf -t rrna -y TPM
 Rscript /mnt/e/project/srna/script/rna_plot.r -f mtpm.tsv -o ../figure/mtpm.pdf -t mrna -y TPM
+```
+
+
+
+## Plant sRNA reads distribution
+
+*A. tha* annotation is relatively abundant with full information. Using `.gff` file, it is better using gene to calculate col 3 rather than using directly RNA annotation, such as tRNA *et. al.*. It almost the same using two different methods, though there will be a few lines of difference, *e.g.* miRNA will provide you 5p and 3p,. Because of the existence of transcript splicing, using gene could directly give out the mRNA region to meet my expectations
+
+```bash
+cd /mnt/e/project/srna/annotation/plant/Atha
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=tRNA > Atha_trna.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=rRNA > Atha_rrna.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=miRNA > Atha_mirna.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=snRNA > Atha_snRNA.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=snoRNA > Atha_snoRNA.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=lncRNA > Atha_lncRNA.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=ncRNA > Atha_ncRNA.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --not-iregex 9:gene_biotype=snoRNA \
+--not-iregex 9:gene_biotype=snRNA \
+--not-iregex 9:gene_biotype=miRNA \
+--not-iregex 9:gene_biotype=rRNA \
+--not-iregex 9:gene_biotype=tRNA \
+--not-iregex 9:gene_biotype=lncRNA \
+--not-iregex 9:gene_biotype=ncRNA \
+> Atha_mRNA.gff
 ```
 
