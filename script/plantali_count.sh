@@ -2,8 +2,8 @@ echo "name,count,group";
 cd /mnt/e/project/srna/output/bam/plantrna
 for file in `ls SRR*.bam | perl -p -e 's/\.bam$//'`
 do
-name=${file%%*_};
+name=${file%%_*};
 catgry=${file#*.};
-count=`samtools view ${file}.bam | wc -l`;
+count=`samtools view -@ 10 ${file}.bam | wc -l`;
 echo "${name},${count},${catgry}";
 done

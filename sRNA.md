@@ -1833,9 +1833,6 @@ cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --not-iregex 9:gene_biot
 parallel -j 4 " \
 cat Atha_{}.gff | convert2bed --input=gff --output=bed > Atha_{}.bed \
 " ::: $(ls *_*.gff | perl -p -e 's/^Atha_(.+)\.gff/$1/')
-
-cat Atha_lncrna.bed Atha_mirna.bed \
-Atha_ncrna.bed Atha_snorna.bed Atha_snrna.bed > Atha_allnc.bed
 ```
 
 ```bash
@@ -1848,18 +1845,38 @@ samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_trna.bed \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/bacteria/Atha_rrna.bed \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_rrna.bed \
 {}.sort.bam > ../plantrna/{}.rrna.bam \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/bacteria/Atha_mrna.bed \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_mrna.bed \
 {}.sort.bam > ../plantrna/{}.mrna.bam \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/bacteria/Atha_allnc.bed \
-{}.sort.bam > ../plantrna/{}.allnc.bam \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_mirna.bed \
+{}.sort.bam > ../plantrna/{}.mirna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_snrna.bed \
+{}.sort.bam > ../plantrna/{}.snrna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_snorna.bed \
+{}.sort.bam > ../plantrna/{}.snorna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_lncrna.bed \
+{}.sort.bam > ../plantrna/{}.lncrna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_ncrna.bed \
+{}.sort.bam > ../plantrna/{}.ncrna.bam \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
 
@@ -1872,14 +1889,16 @@ library(ggplot2)
 library(readr)
 args <- commandArgs(T)
 plant <- read.csv(args[1])
-p <- ggplot(plant, aes(x = name, y = count, fill = factor(group, levels = c("mirna","trna","rrna","mrna")))) +
+p <- ggplot(plant, aes(x = name, y = count, 
+fill = factor(group, levels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna")))) +
 geom_bar(stat = "identity", position = "fill") +
 labs(x = "Seq files", y = "reads aligned to plant ratio") +
 theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
 p <- p + scale_x_discrete(breaks = NULL) +
 scale_fill_manual(name = "reads source",
-labels = c("mirna", "trna", "rrna","mrna"))
-ggsave(p, file = "../figure/all_file.pdf", width = 9, height = 4)
+labels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna"),
+values = c("#70ACAB","#FFF18F","#DAC847","#E3842C","#70795E","#3C3F38","#3A571F","#0B1F25"))
+ggsave(p, file = "/mnt/e/project/srna/output/figure/plantali.pdf", width = 9, height = 4)
 ' plantali_count.csv
 ```
 
