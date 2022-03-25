@@ -407,6 +407,12 @@ ggsave(p, file = "../figure/all_file.pdf", width = 9, height = 4)
 ' all_file.csv
 ```
 
+#### Filter by ratio of alignment
+
+```bash
+
+```
+
 
 
 ## Classified bacteria in their habitat preference with land plants
@@ -450,6 +456,106 @@ theme(legend.position = "none") +
 labs(x = " ", y = "Bacterial reads / all reads")
 ggsave(s, file = "../figure/read_count.pdf", width = 7, height = 4)
 ' read_count.csv
+```
+
+
+
+
+
+## Plant sRNA reads distribution
+
+*A. tha* annotation is relatively abundant with full information. Using `.gff` file, it is better using gene to calculate col 3 rather than using directly RNA annotation, such as tRNA *et. al.*. It almost the same using two different methods, though there will be a few lines of difference, *e.g.* miRNA will provide you 5p and 3p, but gene will just give you a region. Because of the existence of transcript splicing, using gene could directly give out the mRNA region to meet my expectations
+
+```bash
+cd /mnt/e/project/srna/annotation/plant/Atha
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=tRNA > Atha_trna.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=rRNA > Atha_rrna.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=miRNA > Atha_mirna.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=snRNA > Atha_snrna.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=snoRNA > Atha_snorna.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=lncRNA > Atha_lncrna.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=ncRNA > Atha_ncrna.gff
+cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --not-iregex 9:gene_biotype=snoRNA \
+--not-iregex 9:gene_biotype=snRNA \
+--not-iregex 9:gene_biotype=miRNA \
+--not-iregex 9:gene_biotype=rRNA \
+--not-iregex 9:gene_biotype=tRNA \
+--not-iregex 9:gene_biotype=lncRNA \
+--not-iregex 9:gene_biotype=ncRNA \
+> Atha_mrna.gff
+```
+
+```bash
+parallel -j 4 " \
+cat Atha_{}.gff | convert2bed --input=gff --output=bed > Atha_{}.bed \
+" ::: $(ls *_*.gff | perl -p -e 's/^Atha_(.+)\.gff/$1/')
+```
+
+```bash
+mkdir -p /mnt/e/project/srna/output/bam/plantrna
+cd /mnt/e/project/srna/output/bam/plant
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_trna.bed \
+{}.sort.bam > ../plantrna/{}.trna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_rrna.bed \
+{}.sort.bam > ../plantrna/{}.rrna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_mrna.bed \
+{}.sort.bam > ../plantrna/{}.mrna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_mirna.bed \
+{}.sort.bam > ../plantrna/{}.mirna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_snrna.bed \
+{}.sort.bam > ../plantrna/{}.snrna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_snorna.bed \
+{}.sort.bam > ../plantrna/{}.snorna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_lncrna.bed \
+{}.sort.bam > ../plantrna/{}.lncrna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 4 " \
+samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_ncrna.bed \
+{}.sort.bam > ../plantrna/{}.ncrna.bam \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/count
+bash ../../script/plantali_count.sh > plantali_count.csv
+
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+plant <- read.csv(args[1])
+p <- ggplot(plant, aes(x = name, y = count, 
+fill = factor(group, levels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna")))) +
+geom_bar(stat = "identity", position = "fill") +
+labs(x = "Seq files", y = "reads aligned to plant ratio") +
+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+p <- p + scale_x_discrete(breaks = NULL) +
+scale_fill_manual(name = "reads source",
+labels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna"),
+values = c("#70ACAB","#FFF18F","#DAC847","#E3842C","#70795E","#3C3F38","#3A571F","#0B1F25"))
+ggsave(p, file = "/mnt/e/project/srna/output/figure/plantali.pdf", width = 9, height = 4)
+' plantali_count.csv
 ```
 
 
@@ -1020,6 +1126,10 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 ```
 
 
+
+## Chi-square test for testing tRNA bacterial reads
+
+It is used to 
 
 ---
 
@@ -1805,100 +1915,4 @@ Rscript /mnt/e/project/srna/script/rna_plot.r -f mtpm.tsv -o ../figure/mtpm.pdf 
 ```
 
 
-
-## Plant sRNA reads distribution
-
-*A. tha* annotation is relatively abundant with full information. Using `.gff` file, it is better using gene to calculate col 3 rather than using directly RNA annotation, such as tRNA *et. al.*. It almost the same using two different methods, though there will be a few lines of difference, *e.g.* miRNA will provide you 5p and 3p, but gene will just give you a region. Because of the existence of transcript splicing, using gene could directly give out the mRNA region to meet my expectations
-
-```bash
-cd /mnt/e/project/srna/annotation/plant/Atha
-cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=tRNA > Atha_trna.gff
-cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=rRNA > Atha_rrna.gff
-cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=miRNA > Atha_mirna.gff
-cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=snRNA > Atha_snrna.gff
-cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=snoRNA > Atha_snorna.gff
-cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=lncRNA > Atha_lncrna.gff
-cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=ncRNA > Atha_ncrna.gff
-cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --not-iregex 9:gene_biotype=snoRNA \
---not-iregex 9:gene_biotype=snRNA \
---not-iregex 9:gene_biotype=miRNA \
---not-iregex 9:gene_biotype=rRNA \
---not-iregex 9:gene_biotype=tRNA \
---not-iregex 9:gene_biotype=lncRNA \
---not-iregex 9:gene_biotype=ncRNA \
-> Atha_mrna.gff
-```
-
-```bash
-parallel -j 4 " \
-cat Atha_{}.gff | convert2bed --input=gff --output=bed > Atha_{}.bed \
-" ::: $(ls *_*.gff | perl -p -e 's/^Atha_(.+)\.gff/$1/')
-```
-
-```bash
-mkdir -p /mnt/e/project/srna/output/bam/plantrna
-cd /mnt/e/project/srna/output/bam/plant
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_trna.bed \
-{}.sort.bam > ../plantrna/{}.trna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_rrna.bed \
-{}.sort.bam > ../plantrna/{}.rrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_mrna.bed \
-{}.sort.bam > ../plantrna/{}.mrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_mirna.bed \
-{}.sort.bam > ../plantrna/{}.mirna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_snrna.bed \
-{}.sort.bam > ../plantrna/{}.snrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_snorna.bed \
-{}.sort.bam > ../plantrna/{}.snorna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_lncrna.bed \
-{}.sort.bam > ../plantrna/{}.lncrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_ncrna.bed \
-{}.sort.bam > ../plantrna/{}.ncrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-```
-
-```bash
-cd /mnt/e/project/srna/output/count
-bash ../../script/plantali_count.sh > plantali_count.csv
-
-Rscript -e '
-library(ggplot2)
-library(readr)
-args <- commandArgs(T)
-plant <- read.csv(args[1])
-p <- ggplot(plant, aes(x = name, y = count, 
-fill = factor(group, levels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna")))) +
-geom_bar(stat = "identity", position = "fill") +
-labs(x = "Seq files", y = "reads aligned to plant ratio") +
-theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-p <- p + scale_x_discrete(breaks = NULL) +
-scale_fill_manual(name = "reads source",
-labels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna"),
-values = c("#70ACAB","#FFF18F","#DAC847","#E3842C","#70795E","#3C3F38","#3A571F","#0B1F25"))
-ggsave(p, file = "/mnt/e/project/srna/output/figure/plantali.pdf", width = 9, height = 4)
-' plantali_count.csv
-```
 
