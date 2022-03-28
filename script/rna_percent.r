@@ -13,7 +13,9 @@ option_list = list(
     make_option(c("-t","--title"), type = "character", default = NULL,
     help = "output script RNA for maintitle", metavar = "character"),
     make_option(c("-y","--ylab"), type = "character", default = NULL,
-    help = "character using in ylab representing numerator", metavar = "character")
+    help = "character using in ylab representing numerator", metavar = "character"),
+    make_option(c("-n","--num"), type = "integer", default = 100,
+    help = "ylab length", metavar = "number")
 );
 
 opt_parser = OptionParser(option_list=option_list);
@@ -33,7 +35,7 @@ geom_jitter(color = 'black', alpha = 0.1, show.legend = FALSE) +
 facet_wrap(~catgry) +
 ggtitle(opt$title) +
 labs(x = "Bacterial group", y = ytitle) +
-# scale_y_continuous(limits = c(0, 5)) +
+scale_y_continuous(limits = c(0, opt$num)) +
 scale_fill_discrete(name="Category", 
                     breaks = c("1","2","3","4"),
                     labels = c("endo/epiphyte", "environment", "gut", "marine"))

@@ -410,7 +410,39 @@ ggsave(p, file = "../figure/all_file.pdf", width = 9, height = 4)
 #### Filter by ratio of alignment
 
 ```bash
+for file in `ls *.sort.bam | perl -p -e s/_.+bam$//`
+do
+unknown=`samtools view --count -@ 10 -f 4 ${file}_plantall.sort.bam`;
+all=`samtools view --count -@ 10 ${file}_plantall.sort.bam`;
+ratio=`echo "scale=4;$unknown*100/$all" | bc | awk '{printf "%.4f", $0}'`;
+echo "${file},${ratio}";
+done | tee ../../count/plant.csv
 
+cat plant.csv | mlr --icsv --otsv cat | tsv-filter --le 2:50 > plant_50.tsv
+```
+
+```bash
+cat all_file.csv | mlr --icsv --otsv cat | \
+tsv-join -H --filter-file plant_50.tsv --key-fields 1 | \
+mlr --itsv --ocsv cat > all_file_50.csv
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+ct <- read.csv(args[1])
+p <- ggplot(ct, aes(x = name, y = count, fill = factor(group, levels = c("unknown","bacteria","plant")))) +
+geom_bar(stat = "identity", position = "fill") +
+labs(x = "Seq files", y = "reads aligned ratio") +
+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+p <- p + scale_x_discrete(breaks = NULL) +
+scale_fill_manual(name = "reads source",
+labels = c("unknown", "bacteria", "plant"),
+values = c("gray75", "darkgoldenrod", "seagreen3"))
+ggsave(p, file = "../figure/all_file_50.pdf", width = 9, height = 4)
+' all_file_50.csv
 ```
 
 
@@ -426,6 +458,8 @@ All the habitat information of bacteria selected were acquired from references.
 ## Ratio of reads aligned to bacteria / all non-plant reads
 
 Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. I wrote a shell script to reach the goal.
+
+#### All 244 seq files
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/count
@@ -458,13 +492,36 @@ ggsave(s, file = "../figure/read_count.pdf", width = 7, height = 4)
 ' read_count.csv
 ```
 
+#### Remove those seq files after filter
 
+```bash
+cat read_count.csv | mlr --icsv --otsv cat | \
+tsv-join -H --filter-file plant_50.tsv --key-fields 1 | \
+mlr --itsv --ocsv cat > read_count_50.csv
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+count <- read.csv(args[1])
+s <- ggplot (data = count, aes(x = group, y = num)) +
+geom_boxplot() +
+geom_jitter(aes(color = name)) +
+theme(legend.position = "none") +
+labs(x = " ", y = "Bacterial reads / all reads")
+ggsave(s, file = "../figure/read_count_50.pdf", width = 7, height = 4)
+' read_count_50.csv
+```
 
 
 
 ## Plant sRNA reads distribution
 
 *A. tha* annotation is relatively abundant with full information. Using `.gff` file, it is better using gene to calculate col 3 rather than using directly RNA annotation, such as tRNA *et. al.*. It almost the same using two different methods, though there will be a few lines of difference, *e.g.* miRNA will provide you 5p and 3p, but gene will just give you a region. Because of the existence of transcript splicing, using gene could directly give out the mRNA region to meet my expectations
+
+#### All seq files
 
 ```bash
 cd /mnt/e/project/srna/annotation/plant/Atha
@@ -558,9 +615,38 @@ ggsave(p, file = "/mnt/e/project/srna/output/figure/plantali.pdf", width = 9, he
 ' plantali_count.csv
 ```
 
+#### After filtering
+
+```bash
+cat plantali_count.csv | mlr --icsv --otsv cat | \
+tsv-join -H --filter-file plant_50.tsv --key-fields 1 | \
+mlr --itsv --ocsv cat > plantali_count_50.csv
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+plant <- read.csv(args[1])
+p <- ggplot(plant, aes(x = name, y = count, 
+fill = factor(group, levels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna")))) +
+geom_bar(stat = "identity", position = "fill") +
+labs(x = "Seq files", y = "reads aligned to plant ratio") +
+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+p <- p + scale_x_discrete(breaks = NULL) +
+scale_fill_manual(name = "reads source",
+labels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna"),
+values = c("#70ACAB","#FFF18F","#DAC847","#E3842C","#70795E","#3C3F38","#3A571F","#0B1F25"))
+ggsave(p, file = "/mnt/e/project/srna/output/figure/plantali_50.pdf", width = 9, height = 4)
+' plantali_count_50.csv
+```
+
 
 
 ## Ratio of reads aligned to bacteria / all non-plant reads among categories
+
+#### All seq files
 
 ```bash
 cd /mnt/e/project/srna/output/bam/bacteria
@@ -607,8 +693,19 @@ sed -i '1i\name\tgroup\tratio\tcatgry' result.tsv
 
 ```bash
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.tsv -t RNA_in_group -y "Bac-reads" -o ../figure/all_RNA_group.pdf
+ -n 5 -f result.tsv -t RNA_in_group -y "Bac-reads" -o ../figure/all_RNA_group.pdf
 # add the scale_y_continuous limits
+```
+
+#### After filtering
+
+```bash
+cat result.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-n 5 -f result_50.tsv -t RNA_in_group -y "Bac-reads" -o ../figure/all_RNA_group_50.pdf
 ```
 
 
@@ -616,6 +713,8 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 ## Ratio of sRNA reads / aligned reads from different RNA regions in groups
 
 Using bed of rna to extract mapping reads from different RNA regions.
+
+#### All seq files
 
 ```bash
 cd /mnt/e/project/srna/output/bam/bacteria
@@ -757,6 +856,25 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
 ```
 
+#### After filtering
+
+```bash
+cat result.trna.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.trna.tsv
+cat result.rrna.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.rrna.tsv
+cat result.mrna.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.mrna.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result_50.trna.tsv -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads_50.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result_50.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads_50.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result_50.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads_50.pdf
+```
+
 
 
 ## Bacteria occurred frequencies among different groups (waiting for update)
@@ -831,6 +949,8 @@ Rscript /mnt/e/project/srna/script/rna_plot.r -f {}.num.tsv \
 ## Sequence among all files
 
 So the main reason I do this step is to select those frequently occurred among all sequence files, that is, the most likely sRNA appeared among *A. tha* sRNA-seq files.
+
+#### All seq files
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/freq/trna
@@ -990,11 +1110,32 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result.tier3.tsv -t "<60_files" -y "Bac-reads in tRNA (T3)" -o ../figure/tier3_percent.pdf
 ```
 
+#### After filtering
+
+```bash
+cat result.tier1.tsv | tsv-join -H --filter-file ../count/plant_50.tsv --key-fields 1 > result_50.tier1.tsv
+cat result.tier2.tsv | tsv-join -H --filter-file ../count/plant_50.tsv --key-fields 1 > result_50.tier2.tsv
+cat result.tier3.tsv | tsv-join -H --filter-file ../count/plant_50.tsv --key-fields 1 > result_50.tier3.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result_50.tier1.tsv -t ">120_files" -y "Bac-reads in tRNA (T1)" -o ../figure/tier1_percent_50.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result_50.tier2.tsv -t "60-120_files" -y "Bac-reads in tRNA (T2)" -o ../figure/tier2_percent_50.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result_50.tier3.tsv -t "<60_files" -y "Bac-reads in tRNA (T3)" -o ../figure/tier3_percent_50.pdf
+```
+
 
 
 ## tRF region
 
 tRF3/5 regions and other_tRNA regions were extracted from the tRNA.bed file according to tRF characteristics.
+
+#### All seq files
 
 ```bash
 cd /mnt/e/project/srna/annotation/bacteria
@@ -1125,11 +1266,37 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result.other_trf.tsv -t other-tRNA_region -y "other tRNA Bac-reads" -o ../figure/other_trf_percent.pdf
 ```
 
+#### After filtering
+
+```bash
+cat result.trf3_5.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.trf3_5.tsv
+cat result.other_trf.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.other_trf.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result_50.trf3_5.tsv -t tRF-3/5_region -y "tRF3/5 Bac-reads" -o ../figure/trf3_5_percent_50.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result_50.other_trf.tsv -t other-tRNA_region -n 25 -y "other tRNA Bac-reads" -o ../figure/other_trf_percent_50.pdf
+```
 
 
-## Chi-square test for testing tRNA bacterial reads
 
-It is used to 
+## Chi-square test for testing tRNA reads between plant and bacteria
+
+```bash
+parallel --colsep '\t' -j 1 -k '
+    echo "==> {1}"
+    Rscript -e "
+        x <- matrix(c({2},{4},{3},{5}), nrow=2)
+        x
+        chisq.test(x)
+        "
+'
+```
+
+
 
 ---
 
