@@ -953,19 +953,19 @@ So the main reason I do this step is to select those frequently occurred among a
 #### All seq files
 
 ```bash
-mkdir -p /mnt/e/project/srna/output/freq/trna
+mkdir -p /mnt/e/project/srna/output/tier/trna
 cd /mnt/e/project/srna/output/bam/rna
 
 parallel -j 4 " \
 samtools view -@ 2 {}.trna.sort.bam | \
-tsv-select -f 3,10 > ../../freq/trna/{}.trna.tsv \
+tsv-select -f 3,10 > ../../tier/trna/{}.trna.tsv \
 " ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
 ```
 
 ```bash
-mkdir -p /mnt/e/project/srna/output/freq/among
-mkdir -p /mnt/e/project/srna/output/freq/file
-cd /mnt/e/project/srna/output/freq/trna
+mkdir -p /mnt/e/project/srna/output/tier/among
+mkdir -p /mnt/e/project/srna/output/tier/file
+cd /mnt/e/project/srna/output/tier/trna
 
 parallel -j 6 " \
 cat {}_aliall.trna.tsv {}_1mis.trna.tsv {}_unali.trna.tsv | \
@@ -1008,7 +1008,7 @@ cat all_seq.count.tsv | tsv-filter --lt 2:60 > tier3.tsv
 
 ```bash
 mkdir tier1 tier2 tier3
-cd /mnt/e/project/srna/output/freq/trna
+cd /mnt/e/project/srna/output/tier/trna
 
 parallel -j 10 " \
 perl /mnt/e/project/srna/script/select_seq.pl -i {}.trna.tsv \
@@ -1027,7 +1027,7 @@ perl /mnt/e/project/srna/script/select_seq.pl -i {}.trna.tsv \
 ```
 
 ```bash
-cd /mnt/e/project/srna/output/freq/tier1
+cd /mnt/e/project/srna/output/tier/tier1
 
 parallel -j 6 " \
 cat {}.tier1.tsv | \
@@ -1044,7 +1044,7 @@ bash ../../../script/group_rna_count.sh > ../name_count.tier1.tsv
 ```
 
 ```bash
-cd /mnt/e/project/srna/output/freq/tier2
+cd /mnt/e/project/srna/output/tier/tier2
 
 parallel -j 6 " \
 cat {}.tier2.tsv | \
@@ -1061,7 +1061,7 @@ bash ../../../script/group_rna_count.sh > ../name_count.tier2.tsv
 ```
 
 ```bash
-cd /mnt/e/project/srna/output/freq/tier3
+cd /mnt/e/project/srna/output/tier/tier3
 
 parallel -j 6 " \
 cat {}.tier3.tsv | \
@@ -1294,6 +1294,131 @@ parallel --colsep '\t' -j 1 -k '
         chisq.test(x)
         "
 '
+```
+
+
+
+## Extract sequence from the tRF3/5 region and high frequency sequence
+
+```bash
+mkdir -p /mnt/e/project/srna/output/seq/trf
+cd /mnt/e/project/srna/output/seq/trf
+mkdir 1 2 3
+cd /mnt/e/project/srna/output/bam/trf
+
+parallel -j 3 " \
+samtools view -@ 4 {}.sort.bam | \
+tsv-select -f 3,1,4,10 | \
+tsv-join --key-fields 1 --filter-file ../../../rawname.tsv --append-fields 2 | \
+tsv-select -f 5,1,2,3,4 | \
+tsv-join --key-fields 1 --filter-file ../../../name.tsv --append-fields 2 | \
+tsv-filter --eq 6:1 \
+> ../../seq/trf/1/{}.tsv \
+" ::: $(ls *.trf3_5.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 3 " \
+samtools view -@ 4 {}.sort.bam | \
+tsv-select -f 3,1,4,10 | \
+tsv-join --key-fields 1 --filter-file ../../../rawname.tsv --append-fields 2 | \
+tsv-select -f 5,1,2,3,4 | \
+tsv-join --key-fields 1 --filter-file ../../../name.tsv --append-fields 2 | \
+tsv-filter --eq 6:2 \
+> ../../seq/trf/2/{}.tsv \
+" ::: $(ls *.trf3_5.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 3 " \
+samtools view -@ 4 {}.sort.bam | \
+tsv-select -f 3,1,4,10 | \
+tsv-join --key-fields 1 --filter-file ../../../rawname.tsv --append-fields 2 | \
+tsv-select -f 5,1,2,3,4 | \
+tsv-join --key-fields 1 --filter-file ../../../name.tsv --append-fields 2 | \
+tsv-filter --eq 6:3 \
+> ../../seq/trf/3/{}.tsv \
+" ::: $(ls *.trf3_5.sort.bam | perl -p -e 's/\.sort\.bam$//')
+```
+
+```bash
+mkdir -p /mnt/e/project/srna/output/seq/other
+cd /mnt/e/project/srna/output/seq/other
+mkdir 1 2 3
+cd /mnt/e/project/srna/output/bam/trf
+
+parallel -j 3 " \
+samtools view -@ 4 {}.sort.bam | \
+tsv-select -f 3,1,4,10 | \
+tsv-join --key-fields 1 --filter-file ../../../rawname.tsv --append-fields 2 | \
+tsv-select -f 5,1,2,3,4 | \
+tsv-join --key-fields 1 --filter-file ../../../name.tsv --append-fields 2 | \
+tsv-filter --eq 6:1 \
+> ../../seq/other/1/{}.tsv \
+" ::: $(ls *.other_trf.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 3 " \
+samtools view -@ 4 {}.sort.bam | \
+tsv-select -f 3,1,4,10 | \
+tsv-join --key-fields 1 --filter-file ../../../rawname.tsv --append-fields 2 | \
+tsv-select -f 5,1,2,3,4 | \
+tsv-join --key-fields 1 --filter-file ../../../name.tsv --append-fields 2 | \
+tsv-filter --eq 6:2 \
+> ../../seq/other/2/{}.tsv \
+" ::: $(ls *.other_trf.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+parallel -j 3 " \
+samtools view -@ 4 {}.sort.bam | \
+tsv-select -f 3,1,4,10 | \
+tsv-join --key-fields 1 --filter-file ../../../rawname.tsv --append-fields 2 | \
+tsv-select -f 5,1,2,3,4 | \
+tsv-join --key-fields 1 --filter-file ../../../name.tsv --append-fields 2 | \
+tsv-filter --eq 6:3 \
+> ../../seq/other/3/{}.tsv \
+" ::: $(ls *.other_trf.sort.bam | perl -p -e 's/\.sort\.bam$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/seq/trf/1
+
+cat *_1mis.trf3_5.tsv | tsv-select -f 5 | \
+tsv-summarize --group-by 1 --count | \
+perl -n -e 'chomp;@a = split/\t/,$_;if(defined $s){print">$s\n$a[0]\n";$s++;}else{$s=0;print">$s\n$a[0]\n";$s++;}' \
+> ../1mis.1.fasta
+
+cat *_1mis.trf3_5.tsv | tsv-select -f 5 | \
+tsv-summarize --group-by 1 --count | \
+perl -n -e 'chomp;@a = split/\t/,$_;if(defined $s){print">$s\n$a[0]\n";$s++;}else{$s=0;print">$s\n$a[0]\n";$s++;}' \
+> ../1mis.2.fasta
+
+cat *_1mis.trf3_5.tsv | tsv-select -f 5 | \
+tsv-summarize --group-by 1 --count | \
+perl -n -e 'chomp;@a = split/\t/,$_;if(defined $s){print">$s\n$a[0]\n";$s++;}else{$s=0;print">$s\n$a[0]\n";$s++;}' \
+> ../1mis.1.fasta
+```
+
+
+
+```bash
+for file in `ls *.fasta | perl -p -e 's/\.fasta$//'`
+do
+cat ${file}.fasta | perl -n -e 'chomp;if($_=~s/^>//){print "$_\t";}else{print "$_\n";}' > ${file}.tsv
+done
+```
+
+```bash
+parallel -j 10 " \
+perl /mnt/e/project/srna/script/select_seq.pl -i {}.tsv \
+-t ../../tier/among/tier1.tsv | tsv-select -f 2 | sort | uniq > {}.sequence \
+" ::: $(ls *.tsv | perl -p -e 's/\.tsv$//')
+```
+
+
+
+```bash
+cd /mnt/e/project/srna/genome/plant/Atha
+risearch2.x -c Atha.fna -t 12 -o Atha.suf
+```
+
+```bash
+cd /mnt/e/project/srna/output/seq/trf
+
 ```
 
 
