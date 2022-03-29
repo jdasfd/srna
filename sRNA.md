@@ -1298,7 +1298,18 @@ parallel --colsep '\t' -j 1 -k '
 
 
 
-## Extract sequence from the tRF3/5 region and high frequency sequence
+## Extract tRF sequence from different bacteria
+
+### Get the *A. thaliana* transcripts
+
+```bash
+mkdir -p /mnt/e/project/srna/genome/plant_CDS/Atha
+cd /mnt/e/project/srna/genome/plant_CDS/Atha
+gffread ../../../annotation/plant/Atha/Atha.gff -g ../../plant/Atha/Atha.fna \
+-w Atha_transcript.fa -x Atha_CDS.fa
+```
+
+### Extract sequence from the tRF3/5 region and high frequency sequence
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/seq/trf
@@ -1377,48 +1388,85 @@ tsv-filter --eq 6:3 \
 ```bash
 cd /mnt/e/project/srna/output/seq/trf/1
 
-cat *_1mis.trf3_5.tsv | tsv-select -f 5 | \
-tsv-summarize --group-by 1 --count | \
-perl -n -e 'chomp;@a = split/\t/,$_;if(defined $s){print">$s\n$a[0]\n";$s++;}else{$s=0;print">$s\n$a[0]\n";$s++;}' \
-> ../1mis.1.fasta
-
-cat *_1mis.trf3_5.tsv | tsv-select -f 5 | \
-tsv-summarize --group-by 1 --count | \
-perl -n -e 'chomp;@a = split/\t/,$_;if(defined $s){print">$s\n$a[0]\n";$s++;}else{$s=0;print">$s\n$a[0]\n";$s++;}' \
-> ../1mis.2.fasta
-
-cat *_1mis.trf3_5.tsv | tsv-select -f 5 | \
-tsv-summarize --group-by 1 --count | \
-perl -n -e 'chomp;@a = split/\t/,$_;if(defined $s){print">$s\n$a[0]\n";$s++;}else{$s=0;print">$s\n$a[0]\n";$s++;}' \
+cat *_1mis.trf3_5.tsv | tsv-select -f 2,4,5 | \
+perl -n -e 'chomp;@a=split/\t/,$_;$l=length($a[2]);print"$a[0]\t$a[1]\t$l\t$a[2]\n";' | \
+tsv-summarize --group-by 1,2,3,4 --count | \
+perl -n -e 'chomp;@a = split/\t/,$_;print">$a[0]_$a[1]_$a[2]\n";print"$a[3]\n"' \
 > ../1mis.1.fasta
 ```
 
 
 
+## Using RIsearch2 to  predict RNA-RNA interaction
+
+### Create suffix array
+
 ```bash
-for file in `ls *.fasta | perl -p -e 's/\.fasta$//'`
-do
-cat ${file}.fasta | perl -n -e 'chomp;if($_=~s/^>//){print "$_\t";}else{print "$_\n";}' > ${file}.tsv
-done
+mkdir -p /mnt/e/project/srna/output/risearch
+cd /mnt/e/project/srna/genome/plant_CDS/Atha
+risearch2.x -c Atha_transcript.fa -t 12 -o Atha_transcript.suf
 ```
 
+### Interaction prediction
+
 ```bash
-parallel -j 10 " \
-perl /mnt/e/project/srna/script/select_seq.pl -i {}.tsv \
--t ../../tier/among/tier1.tsv | tsv-select -f 2 | sort | uniq > {}.sequence \
-" ::: $(ls *.tsv | perl -p -e 's/\.tsv$//')
+mkdir -p /mnt/e/project/srna/output/risearch
+cd /mnt/e/project/srna/output/risearch
+risearch2.x -q ../seq/trf/1mis.1.fasta -i ../../genome/plant_CDS/Atha/Atha_transcript.suf -s 7 -e -10
 ```
 
 
 
+## ClusterProfiler for GO and KEGG analysis
+
 ```bash
-cd /mnt/e/project/srna/genome/plant/Atha
-risearch2.x -c Atha.fna -t 12 -o Atha.suf
+cd /mnt/e/project/srna/output/kegg
+
+
 ```
 
-```bash
-cd /mnt/e/project/srna/output/seq/trf
+```R
+library(readr)
+library(clusterProfiler)
+library(org.At.tair.db) #Arabidopsis thaliana annotation for clusterProfiler
+trna <- read_tsv("gene_trna.tsv")
+rrna <- read_tsv("gene_rrna.tsv")
 
+tgo <- enrichGO(gene = tgene$go_id,
+                OrgDb = org.At.tair.db,
+                ont = "ALL",
+                keyType = 'GO',
+                pvalueCutoff = 0.05,
+                readable = TRUE)
+rgo <- enrichGO(gene = rrna$TAIR, OrgDb = org.At.tair.db, ont = "ALL", keyType = 'TAIR', pvalueCutoff = 1)
+
+rrna <- grrna$TAIR
+# extract values from data.frame.
+
+library(biomaRt)
+listMarts(host = "plants.ensembl.org")
+# the default listMarts() connected to ensembl.org for animals, so we used host to connect plant.ensembl.org for our databases
+#             biomart                      version
+# 1       plants_mart      Ensembl Plants Genes 52
+# 2 plants_variations Ensembl Plants Variations 52
+
+mart <- useMart("plants_mart", host = "plants.ensembl.org")
+listDatasets(mart)
+# the first is biomart, we used plants_mart in the previous step (row 1)
+
+mart <- useMart("plants_mart", "athaliana_eg_gene", host = "plants.ensembl.org")
+listAttributes(mart)
+# view all output ID formats
+
+tgene <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id", "go_id", "tair_locus"),
+               filters = 'tair_locus',
+               values = locus,
+               mart = mart)
+rgene <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id", "go_id"), 
+               filters = 'tair_locus',
+               values = rrna$TAIR,
+               mart = mart)
+# attributes: output ID formats, filters: our ID formats, values: our data, mart: chosen mart
 ```
 
 
@@ -1959,67 +2007,6 @@ tsv-join --filter-file ../../rawname.tsv --key-fields 1 --append-fields 2 \
 " ::: $(ls *.tsv | perl -p -e 's/\_.+?tsv$//' | uniq)
 
 rm *_1mis*.tsv
-```
-
-
-
-###  psRNATarget
-
-Use psRNATarget websites for miRNA target prediction. Download files from the website.
-
-
-
-###  ClusterProfiler
-
-```bash
-cd /mnt/e/project/srna/output/kegg
-
-cat psRNATargetJob-trna.txt | sed 1,2d | grep 'Cleavage' | cut -f 2 | cut -d '.' -f 1 | sed 1iTAIR > gene_trna.tsv
-cat psRNATargetJob-rrna.txt | sed 1,2d | grep 'Cleavage' | cut -f 2 | cut -d '.' -f 1 | sed 1iTAIR > gene_rrna.tsv
-```
-
-```R
-library(readr)
-library(clusterProfiler)
-library(org.At.tair.db) #Arabidopsis thaliana annotation for clusterProfiler
-trna <- read_tsv("gene_trna.tsv")
-rrna <- read_tsv("gene_rrna.tsv")
-
-tgo <- enrichGO(gene = tgene$go_id,
-                OrgDb = org.At.tair.db,
-                ont = "ALL",
-                keyType = 'GO',
-                pvalueCutoff = 0.05,
-                readable = TRUE)
-rgo <- enrichGO(gene = rrna$TAIR, OrgDb = org.At.tair.db, ont = "ALL", keyType = 'TAIR', pvalueCutoff = 1)
-
-rrna <- grrna$TAIR
-# extract values from data.frame.
-
-library(biomaRt)
-listMarts(host = "plants.ensembl.org")
-# the default listMarts() connected to ensembl.org for animals, so we used host to connect plant.ensembl.org for our databases
-#             biomart                      version
-# 1       plants_mart      Ensembl Plants Genes 51
-# 2 plants_variations Ensembl Plants Variations 51
-
-mart <- useMart("plants_mart", host = "plants.ensembl.org")
-listDatasets(mart)
-# the first is biomart, we used plants_mart in the previous step (row 1)
-
-mart <- useMart("plants_mart", "athaliana_eg_gene", host = "plants.ensembl.org")
-listAttributes(mart)
-# view all output ID formats
-
-tgene <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id", "go_id", "tair_locus"),
-               filters = 'tair_locus',
-               values = locus,
-               mart = mart)
-rgene <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id", "go_id"), 
-               filters = 'tair_locus',
-               values = rrna$TAIR,
-               mart = mart)
-# attributes: output ID formats, filters: our ID formats, values: our data, mart: chosen mart
 ```
 
 
