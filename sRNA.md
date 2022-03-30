@@ -1397,22 +1397,19 @@ perl -n -e 'chomp;@a = split/\t/,$_;print">$a[0]_$a[1]_$a[2]\n";print"$a[3]\n"' 
 
 
 
-## Using RIsearch2 to  predict RNA-RNA interaction
-
-### Create suffix array
+## Gene list  extraction
 
 ```bash
-mkdir -p /mnt/e/project/srna/output/risearch
-cd /mnt/e/project/srna/genome/plant_CDS/Atha
-risearch2.x -c Atha_transcript.fa -t 12 -o Atha_transcript.suf
+cat Atha_gene.gff | perl -n -e 'chomp;
+@a = split/\t/,$_;
+@b = split/;/,$a[8];
+$b[0] =~ s/^ID=gene-//;
+print "$a[0]\t$b[0]\t$a[3]\t$a[4]\t$a[6]\n";
+'
 ```
 
-### Interaction prediction
-
 ```bash
-mkdir -p /mnt/e/project/srna/output/risearch
-cd /mnt/e/project/srna/output/risearch
-risearch2.x -q ../seq/trf/1mis.1.fasta -i ../../genome/plant_CDS/Atha/Atha_transcript.suf -s 7 -e -10
+cd /mnt/e/project/srna/output/bam/trf
 ```
 
 
@@ -1474,24 +1471,6 @@ rgene <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id", "go_id"),
 ---
 
 # Waiting for update
-
-## Proportion of different tRF to total
-
-tRF has four major group: tRF-5, tRF-3, tRF-1 and tRH (tRF-halves, there were other names for the same meaning). The proportion of tRF could be separated among those tRNA region mapping reads. 
-
-```bash
-mkdir -p /mnt/e/project/srna/output/proportion
-```
-
-```bash
-cd /mnt/e/project/srna/output/bam/rna
-
-parallel -j 3 " \
-samtools view -@ 3 {}.trna.sort.bam | tsv-select -f 1,2,3,4,10 | \
-tsv-filter --ne 2:4 \
-> ../../proportion/{}.trna.tsv \
-" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
-```
 
 
 
@@ -1894,26 +1873,7 @@ cat ${file}.tsv.inter.txt | perl ../../../script/square.pl >> ../result.tsv
 done
 ```
 
-###  Extract tRNA reads
 
-```bash
-mkdir -p /mnt/e/project/srna/output/target/trna
-mkdir -p /mnt/e/project/srna/output/target/rrna
-```
-
-```bash
-cd /mnt/e/project/srna/output/bam/rna
-
-parallel -j 3 " \
-samtools fasta -@ 4 -F 4 {}.trna.sort.bam > ../../target/trna/{}.fasta \
-" ::: $(ls *_1mis.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
-```
-
-```bash
-parallel -j 3 " \
-samtools fasta -@ 4 -F 4 {}.rrna.sort.bam > ../../target/rrna/{}.fasta \
-" ::: $(ls *_1mis.rrna.sort.bam | perl -p -e 's/\.rrna.+bam$//')
-```
 
 ###  tRNA reads statistical information
 
@@ -2096,8 +2056,6 @@ plot(depth)
 
 
 
-
-
 ```bash
 Rscript -e '
 library(readr)
@@ -2116,31 +2074,6 @@ theme(axis.text.x = NULL)
 ggsave(tplot, file = "freq.pdf", width = 7, height = 4)
 '
 ```
-
-
-
-## Waiting for modification
-
-```bash
-cd /mnt/e/project/srna/output/bam/bacteria
-parallel -j 3 " \
-samtools view {}.sort.bam | \
-tsv-select -f 1,2,3,4"
-```
-
-### Convert bam files to tsv for better using (optional, waiting for updated)
-
-```bash
-mkdir -p /mnt/e/project/srna/output/bam/tsv
-cd /mnt/e/project/srna/output/bam/bacteria
-
-parallel -j 3 " \
-samtools view -@ 3 {}.sort.bam | \
-tsv-select -f 1,2,3,4,10 > ../tsv/{}.bam.tsv \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-```
-
-
 
 
 
@@ -2191,6 +2124,26 @@ tsv-select -H -f file,group,catgry,mtpm tpm.tsv | sed '1d' | sed '1ifile\tgroup\
 Rscript /mnt/e/project/srna/script/rna_plot.r -f ttpm.tsv -o ../figure/ttpm.pdf -t trna -y TPM
 Rscript /mnt/e/project/srna/script/rna_plot.r -f rtpm.tsv -o ../figure/rtpm.pdf -t rrna -y TPM
 Rscript /mnt/e/project/srna/script/rna_plot.r -f mtpm.tsv -o ../figure/mtpm.pdf -t mrna -y TPM
+```
+
+
+
+## Using RIsearch2 to  predict RNA-RNA interaction
+
+### Create suffix array
+
+```bash
+mkdir -p /mnt/e/project/srna/output/risearch
+cd /mnt/e/project/srna/genome/plant_CDS/Atha
+risearch2.x -c Atha_transcript.fa -t 12 -o Atha_transcript.suf
+```
+
+### Interaction prediction
+
+```bash
+mkdir -p /mnt/e/project/srna/output/risearch
+cd /mnt/e/project/srna/output/risearch
+risearch2.x -q ../seq/trf/1mis.1.fasta -i ../../genome/plant_CDS/Atha/Atha_transcript.suf -s 7 -e -10
 ```
 
 
