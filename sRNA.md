@@ -239,7 +239,7 @@ First, I aligned sRNA-seq reads to the *A. tha* genome to validate whether there
 ```bash
 cd /mnt/e/project/srna/genome/plant/genome
 
-bowtie2-build --threads 12 --quiet Atha.fna Atha
+bowtie-build --quiet --threads 12 Atha.fna Atha
 ```
 
 #### Aligning
@@ -252,44 +252,60 @@ bowtie2-build --threads 12 --quiet Atha.fna Atha
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/bam/plant
-cd /mnt/e/project/srna/trim
 ```
 
-alignall.sh:
+Align to plant without mismatch.
 
 ```bash
-parallel -j 3 " \
-bowtie2 -q {}_trimmed.fq.gz -N 0 \
--x ../genome/plant/Atha/Atha --al-gz ../output/fastq/{}_plantaliall.fq.gz \
---no-unal --threads 4 -S ../output/bam/plant/{}_plantall.sam \
+cd ~/jyq/project/srna/trim
+
+parallel -j 4 " \
+bowtie -q {}_trimmed.fq.gz -v 0 -x ../genome/plant/Atha/Atha \
+--al ../output/fastq/{}_plantaliall.fq --no-unal \
+--threads 6 -S ../output/bam/plant/{}_plantall.sam \
 " ::: $(ls SRR*.fq.gz | perl -p -e 's/_trimmed.+gz$//')
-
-# --al-gz: alignment fastq.gz extraction
-# --no-unal: do not show unalignment reads in the .sam files
+# -v: the max mismatch allowed
 ```
 
 ```bash
-bsub -q mpi -n 24 -J aliall -o .. "bash alignall.sh"
+bsub -q fat_384 -n 80 -J plantaliall -o . "bash plantall.sh"
+# plantall.sh use above command and bsub
 ```
 
-Then we need another mapping round for the 1 mismatch allowed.
-
-align1mis.sh:
+Align to plant with 1 mismatch.
 
 ```bash
-parallel -j 3 " \
-bowtie2 -q {}_trimmed.fq.gz -N 1 \
--x ../genome/plant/Atha/Atha --al-gz ../output/fastq/{}_plantali1mis.fq.gz \
---un-gz ../output/fastq/{}_plantunali.fq.gz --no-unal --threads 4 \
--S ../output/bam/plant/{}_plant1mis.sam \
+cd ~/jyq/project/srna/trim
+
+parallel -j 4 " \
+bowtie -q {}_trimmed.fq.gz -v 1 -x ../genome/plant/Atha/Atha \
+--al ../output/fastq/{}_plantali1mis.fq --no-unal \
+--threads 6 -S ../output/bam/plant/{}_plant1mis.sam \
 " ::: $(ls SRR*.fq.gz | perl -p -e 's/_trimmed.+gz$//')
 ```
 
 ```bash
-bsub -q mpi -n 24 -J ali1mis -o .. "bash align1mis.sh"
+bsub -q fat_384 -n 80 -J plant1mis -o . "bash plant1mis.sh"
 ```
 
-Extract sequences of only 1 mismatch.
+Align to plant with 2 mismatch.
+
+```bash
+cd ~/jyq/project/srna/trim
+
+parallel -j 4 " \
+bowtie -q {}_trimmed.fq.gz -v 2 -x ../genome/plant/Atha/Atha \
+--al ../output/fastq/{}_plantali2mis.fq \
+--un ../output/fastq/{}_plantunali.fq \
+--threads 6 -S ../output/bam/plant/{}_plant2mis.sam \
+" ::: $(ls SRR*.fq.gz | perl -p -e 's/_trimmed.+gz$//')
+```
+
+```bash
+bsub -q fat_384 -n 80 -J plant2mis -o . "bash plant2mis.sh"
+```
+
+Extract reads with only 1 mismatch to plant from fastq files
 
 ```bash
 cd /mnt/e/project/srna/output/fastq
@@ -303,6 +319,23 @@ seqkit grep -j 2 --quiet -n -v \
 
 rm *_plantali1mis.fq.gz
 ```
+
+Extract reads with 2 mismatches to plant from fastq files
+
+```bash
+cd /mnt/e/project/srna/output/fastq
+
+parallel -j 3 " \
+seqkit grep -j 2 --quiet -n -v \
+-f <(seqkit seq -j 2 -n {}_plantaliall.fq.gz) \
+{}_plantali1mis.fq.gz -o {}_plant1mis.fq.gz \
+" ::: $(ls SRR*.fq.gz | perl -p -e 's/_.+\.gz$//' | uniq)
+# -n, --by-name (default): match by full name instead of just ID
+
+rm *_plantali1mis.fq.gzb
+```
+
+
 
 ###  Aligning different reads to bacterial genomes
 
@@ -329,7 +362,7 @@ unali.sh:
 
 ```bash
 parallel -j 3 " \
-bowtie2 -q {}_plantunali.fq.gz \
+bowtie -q {}_plantunali.fq.gz -N 0 \
 -x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_unali.sam \
 " ::: $(ls SRR*_plantunali.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
@@ -344,7 +377,7 @@ Aligning 1 mismatch allowed reads to bacteria species.
 
 ```bash
 parallel -j 3 " \
-bowtie2 -q {}_plant1mis.fq.gz \
+bowtie2 -q {}_plant1mis.fq.gz -N 0 \
 -x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_1mis.sam \
 " ::: $(ls SRR*_plant1mis.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
@@ -359,7 +392,7 @@ all.sh:
 
 ```bash
 parallel -j 3 " \
-bowtie2 -q {}_plantaliall.fq.gz \
+bowtie2 -q {}_plantaliall.fq.gz -N 0 \
 -x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_aliall.sam \
 " ::: $(ls SRR*_plantaliall.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
@@ -451,7 +484,7 @@ ggsave(p, file = "../figure/all_file_50.pdf", width = 9, height = 4)
 
 I classified bacteria into five different types according to bacteria-plant(host) relations. Four categories are: endo/epiphyte, environment, gut and marine.
 
-All the habitat information of bacteria selected were acquired from references.
+All the habitat information of bacteria selected were acquired from references. Go and check ASSEMBLY.xlsx.
 
 
 
