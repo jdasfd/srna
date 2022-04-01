@@ -305,6 +305,8 @@ bowtie -q {}_trimmed.fq.gz -v 2 -x ../genome/plant/Atha/Atha \
 bsub -q fat_384 -n 80 -J plant2mis -o . "bash plant2mis.sh"
 ```
 
+#### Extracting reads
+
 Extract reads with only 1 mismatch to plant from fastq files
 
 ```bash
@@ -312,12 +314,10 @@ cd /mnt/e/project/srna/output/fastq
 
 parallel -j 3 " \
 seqkit grep -j 2 --quiet -n -v \
--f <(seqkit seq -j 2 -n {}_plantaliall.fq.gz) \
-{}_plantali1mis.fq.gz -o {}_plant1mis.fq.gz \
-" ::: $(ls SRR*.fq.gz | perl -p -e 's/_.+\.gz$//' | uniq)
+-f <(seqkit seq -j 2 -n {}_plantaliall.fq) \
+{}_plantali1mis.fq -o {}_plant1mis.fq \
+" ::: $(ls SRR*.fq | perl -p -e 's/_.+\.fq$//' | uniq)
 # -n, --by-name (default): match by full name instead of just ID
-
-rm *_plantali1mis.fq.gz
 ```
 
 Extract reads with 2 mismatches to plant from fastq files
@@ -327,15 +327,14 @@ cd /mnt/e/project/srna/output/fastq
 
 parallel -j 3 " \
 seqkit grep -j 2 --quiet -n -v \
--f <(seqkit seq -j 2 -n {}_plantaliall.fq.gz) \
-{}_plantali1mis.fq.gz -o {}_plant1mis.fq.gz \
-" ::: $(ls SRR*.fq.gz | perl -p -e 's/_.+\.gz$//' | uniq)
+-f <(seqkit seq -j 2 -n {}_plantali1mis.fq) \
+{}_plantali2mis.fq -o {}_plant2mis.fq \
+" ::: $(ls SRR*.fq | perl -p -e 's/_.+\.fq$//' | uniq)
 # -n, --by-name (default): match by full name instead of just ID
 
-rm *_plantali1mis.fq.gzb
+rm *_plantali1mis.fq
+rm *_plantali2mis.fq
 ```
-
-
 
 ###  Aligning different reads to bacterial genomes
 
