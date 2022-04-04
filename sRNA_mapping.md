@@ -127,7 +127,7 @@ rm *_plantali2mis.fq
 
 ###  Aligning different reads to bacterial genomes
 
-We chose 365 bacterial genomes from 191 species as our target bacteria. From the previous step, we split reads to 3 types: matched without any mistake, 1 mismatch allowed and unaligned reads (without any match on plant genome). 
+We chose 365 bacterial genomes from 191 species as our target bacteria. From the previous step, we split reads to 3 types: matched without any mistake, 1 mismatch allowed and unaligned reads (without any match on plant genome).
 
 ####  Indexing
 
