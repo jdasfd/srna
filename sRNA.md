@@ -312,11 +312,20 @@ Extract reads with only 1 mismatch to plant from fastq files
 ```bash
 cd /mnt/e/project/srna/output/fastq
 
+parallel -j 10 " \
+gzip {} \
+" ::: $(ls SRR*.fq)
+# fq.gz will minimum the storage stress
+```
+
+```bash
+cd /mnt/e/project/srna/output/fastq
+
 parallel -j 3 " \
 seqkit grep -j 2 --quiet -n -v \
--f <(seqkit seq -j 2 -n {}_plantaliall.fq) \
-{}_plantali1mis.fq -o {}_plant1mis.fq \
-" ::: $(ls SRR*.fq | perl -p -e 's/_.+\.fq$//' | uniq)
+-f <(seqkit seq -j 2 -n {}_plantaliall.fq.gz) \
+{}_plantali1mis.fq.gz -o {}_plant1mis.fq.gz \
+" ::: $(ls SRR*.fq.gz | perl -p -e 's/_.+\.gz$//' | uniq)
 # -n, --by-name (default): match by full name instead of just ID
 ```
 
@@ -327,9 +336,9 @@ cd /mnt/e/project/srna/output/fastq
 
 parallel -j 3 " \
 seqkit grep -j 2 --quiet -n -v \
--f <(seqkit seq -j 2 -n {}_plantali1mis.fq) \
-{}_plantali2mis.fq -o {}_plant2mis.fq \
-" ::: $(ls SRR*.fq | perl -p -e 's/_.+\.fq$//' | uniq)
+-f <(seqkit seq -j 2 -n {}_plantali1mis.fq.gz) \
+{}_plantali2mis.fq.gz -o {}_plant2mis.fq.gz \
+" ::: $(ls SRR*.fq.gz | perl -p -e 's/_.+\.gz$//' | uniq)
 # -n, --by-name (default): match by full name instead of just ID
 
 rm *_plantali1mis.fq
@@ -360,14 +369,14 @@ Aligning unaligned reads to bacteria species.
 unali.sh:
 
 ```bash
-parallel -j 3 " \
-bowtie -q {}_plantunali.fq.gz -N 0 \
--x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_unali.sam \
+parallel -j 4 " \
+bowtie -q {}_plantunali.fq.gz -v 0 \
+-x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_unali.sam \
 " ::: $(ls SRR*_plantunali.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
 
 ```bash
-bsub -q mpi -n 24 -J ali -o .. "bash unali.sh"
+bsub -q mpi -n 24 -J ali -o . "bash unali.sh"
 ```
 
 Aligning 1 mismatch allowed reads to bacteria species.
@@ -375,30 +384,41 @@ Aligning 1 mismatch allowed reads to bacteria species.
 1mis.sh:
 
 ```bash
-parallel -j 3 " \
-bowtie2 -q {}_plant1mis.fq.gz -N 0 \
--x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_1mis.sam \
+parallel -j 4 " \
+bowtie2 -q {}_plant1mis.fq.gz -v 0 \
+-x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_1mis.sam \
 " ::: $(ls SRR*_plant1mis.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
 
 ```bash
-bsub -q mpi -n 24 -J 1mis -o .. "bash 1mis.sh"
+bsub -q mpi -n 24 -J 1mis -o . "bash 1mis.sh"
 ```
 
 Aligning perfectly matched reads to bacteria species.
 
-all.sh:
+2mis.sh:
 
 ```bash
-parallel -j 3 " \
-bowtie2 -q {}_plantaliall.fq.gz -N 0 \
--x ../../genome/bacteria/bacteria --threads 4 -S ../bam/bacteria/{}_aliall.sam \
+parallel -j 4 " \
+bowtie2 -q {}_plant2mis.fq.gz -v 0 \
+-x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_2mis.sam \
 " ::: $(ls SRR*_plantaliall.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
 
 ```bash
-bsub -q mpi -n 24 -J unali -o .. "bash all.sh"
+bsub -q mpi -n 24 -J 2mis -o . "bash 2mis.sh"
 ```
+
+aliall.sh:
+
+```bash
+parallel -j 4 " \
+bowtie -q {}_plantaliall.fq.gz -v 0 \
+-x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_aliall.sam \
+" ::: $(ls SRR*_plantaliall.fq.gz | perl -p -e 's/_plant.+gz$//')
+```
+
+
 
 #### Convert sam to bam file for minimum storage stress.
 
@@ -2179,4 +2199,10 @@ risearch2.x -q ../seq/trf/1mis.1.fasta -i ../../genome/plant_CDS/Atha/Atha_trans
 ```
 
 
+
+TEST:
+
+```bash
+cat SRR1042171_plant1mis.tsv | perl -n -e 'chomp;if($_=~/XM:i:1/){print"$_\n";}else{next;}' | tsv-select -f 3,1,4,10 | head -n 5
+```
 
