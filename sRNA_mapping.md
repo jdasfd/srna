@@ -182,7 +182,7 @@ Aligning perfectly matched reads to bacteria species.
 parallel -j 4 " \
 bowtie2 -q {}_plant2mis.fq.gz -v 0 \
 -x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_2mis.sam \
-" ::: $(ls SRR*_plantaliall.fq.gz | perl -p -e 's/_plant.+gz$//')
+" ::: $(ls SRR*_plant2mis.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
 
 ```bash
@@ -198,6 +198,9 @@ bowtie -q {}_plantaliall.fq.gz -v 0 \
 " ::: $(ls SRR*_plantaliall.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
 
+```bash
+bsub -q mpi -n 24 -J aliall -o . "bash aliall.sh"
+```
 
 
 #### Convert sam to bam file for minimum storage stress.

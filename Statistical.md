@@ -1696,11 +1696,3 @@ mkdir -p /mnt/e/project/srna/output/risearch
 cd /mnt/e/project/srna/output/risearch
 risearch2.x -q ../seq/trf/1mis.1.fasta -i ../../genome/plant_CDS/Atha/Atha_transcript.suf -s 7 -e -10
 ```
-
-
-
-TEST:
-
-```bash
-cat SRR1042171_plant1mis.tsv | perl -n -e 'chomp;if($_=~/XM:i:1/){print"$_\n";}else{next;}' | tsv-select -f 3,1,4,10 | head -n 5
-```

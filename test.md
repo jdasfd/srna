@@ -12,3 +12,16 @@ tplot <- ggplot(count, aes(x = length, y = count)) +
 geom_line()
 ggsave(tplot, file = "seq_length_tier1.pdf", width = 7, height = 4)
 ' seq_length_tier1.tsv
+
+# TEST: Extract bam genelist with 1mis hit:
+
+```bash
+cat SRR1042171_plant1mis.tsv | \
+perl -n -e 'chomp;if($_=~/XM:i:1/){print"$_\n";}else{next;}' | \
+tsv-select -f 3,1,2,4,10 > ../SRR1042171_plant1mis.tsv
+```
+
+```bash
+cat ../../../annotation/plant/Atha/Atha.gff | grep -v '#' | \
+tsv-filter --str-eq 3:gene | tsv-select -f 1,4,5,7,9 > ../Atha_genelist.tsv
+```
