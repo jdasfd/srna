@@ -10,7 +10,7 @@ All the habitat information of bacteria selected were acquired from references. 
 
 Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. I wrote a shell script to reach the goal.
 
-#### All 244 seq files
+#### All 240 seq files
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/count
