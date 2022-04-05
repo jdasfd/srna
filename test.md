@@ -19,6 +19,7 @@ ggsave(tplot, file = "seq_length_tier1.pdf", width = 7, height = 4)
 cat SRR1042171_plant1mis.tsv | \
 perl -n -e 'chomp;if($_=~/XM:i:1/){print"$_\n";}else{next;}' | \
 tsv-select -f 3,1,2,4,10 > ../SRR1042171_plant1mis.tsv
+# 'XM:i:1' in sam/bam files represents 1mis alignment
 ```
 
 ```bash

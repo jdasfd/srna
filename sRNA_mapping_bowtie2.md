@@ -84,12 +84,32 @@ bsub -q mpi -n 24 -J ali1mis -o . "bash align1mis.sh"
 ```bash
 cd /mnt/e/project/srna/output/fastq
 
-parallel -j 3 " \
-seqkit grep -j 2 --quiet -n -v \
--f <(seqkit seq -j 2 -n {}_plantaliall.fq.gz) \
+parallel -j 2 " \
+seqkit grep --quiet -n -v \
+-f <(seqkit seq -n {}_plantaliall.fq.gz) \
 {}_plantali1mis.fq.gz -o {}_plant1mis.fq.gz \
 " ::: $(ls SRR*.fq.gz | perl -p -e 's/_.+\.gz$//' | uniq)
 # -n, --by-name (default): match by full name instead of just ID
+# -j 2 could prevent running out of memory
+
+ls SRR*_plant1mis.fq.gz | wc -l
+# Better check file numbers you got
+# I used to get less files than expectation (maybe run out of memory)
+
+rm *_plantali1mis.fq.gz
+```
+
+If the above would cause some error, using the command below (optional)
+
+```bash
+for file in `ls SRR*_plantunali.fq.gz | perl -p -e 's/_.+\.gz$//'`
+do
+seqkit grep --quiet -j 2 -n -v \
+-f <(seqkit seq -j 2 -n ${file}_plantaliall.fq.gz) \
+${file}_plantali1mis.fq.gz -o ${file}_plant1mis.fq.gz
+done
+
+ls SRR*_plant1mis.fq.gz | wc -l
 
 rm *_plantali1mis.fq.gz
 ```
@@ -126,7 +146,7 @@ bowtie2 -q {}_plantunali.fq.gz -N 0 -L 25 \
 ```
 
 ```bash
-bsub -q mpi -n 24 -J ali -o .. "bash unali.sh"
+bsub -q mpi -n 24 -J unali -o . "bash unali.sh"
 ```
 
 Aligning 1 mismatch allowed reads to bacteria species.
@@ -142,7 +162,7 @@ bowtie2 -q {}_plant1mis.fq.gz -N 0 -L 25 \
 ```
 
 ```bash
-bsub -q mpi -n 24 -J 1mis -o .. "bash 1mis.sh"
+bsub -q mpi -n 24 -J 1mis -o . "bash 1mis.sh"
 ```
 
 Aligning perfectly matched reads to bacteria species.
@@ -158,7 +178,7 @@ bowtie2 -q {}_plantaliall.fq.gz -N 0 -L 25 \
 ```
 
 ```bash
-bsub -q mpi -n 24 -J unali -o .. "bash all.sh"
+bsub -q mpi -n 24 -J all -o . "bash all.sh"
 ```
 
 ## Convert sam to bam file for minimum storage stress.
