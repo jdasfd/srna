@@ -11,7 +11,7 @@ mkdir -p /mnt/e/project/srna/output/bam/plant
 cd /mnt/e/project/srna/trim
 ```
 
-*alignall.sh:*
+**alignall.sh**
 
 ```bash
 parallel -j 3 " \
@@ -30,7 +30,7 @@ bsub -q mpi -n 24 -J aliall -o . "bash alignall.sh"
 
 Then we need another mapping round for the 1 mismatch allowed.
 
-*align1mis.sh:*
+**align1mis.sh**
 
 ```bash
 parallel -j 3 " \
@@ -62,7 +62,7 @@ rm *_plantali1mis.fq.gz
 
 ###  Aligning different reads to bacterial genomes
 
-We chose 365 bacterial genomes from 191 species as our target bacteria. From the previous step, we split reads to 3 types: matched without any mistake, 1 mismatch allowed and unaligned reads (without any match on plant genome). 
+We selected bacterial genomes of 191 species from NCBI RefSeq database. From the previous step, we split reads to 3 types: matched seed regions without any mistake, 1 mismatch seed region allowed and unaligned reads. 
 
 ####  Indexing
 
