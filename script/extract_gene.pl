@@ -42,6 +42,7 @@ die ("Please provide a genelist file.") if not defined $glist;
 die ("Please provide a bam.tsv file.") if not defined $tsv;
 
 my %genelist;
+my @for_print;
 
 open my $gene_input, "<", "$glist" or die $!;
 
@@ -66,7 +67,36 @@ END{
 
 open my $bam_input, "<", "$tsv" or die $!;
 
-while(<$tsv>){
+while(<$bam_input>){
     chomp;
     my @tsvarray = split/\t/,$_;
+    for my $gene (keys %genelist){
+        my $chrom = $genelist{$gene}->[0];
+        if($tsvarray[0] eq $chrom){
+            my $start = $genelist{$gene}->[1];
+            my $end = $genelist{$gene}->[2];
+            if($tsvarray[3] <= $end && $tsvarray[3] >= $start){
+                my $for_print = "$gene\t$tsvarray[4]";
+                push @for_print, $for_print;
+            }
+            else{
+                next;
+            }
+        }
+        else{
+            next;
+        }
+    }
 }
+close $bam_input;
+
+my $out_tsv;
+if (lc($output) eq "stdout"){
+    $out_tsv = *STDOUT;
+}
+else{
+    open $out_tsv, ">", $output;
+}
+
+print {$out_tsv} join ("\n", @for_print);
+close $out_tsv;

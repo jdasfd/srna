@@ -1,3 +1,5 @@
+# sRNA alignment using bowtie2
+
 * NOTICE
 
 	> I used HPCC for such a number of files. So the bash script were 12 threads (my own computer), and I changed it into 24 threads when submit to  HPCC.
@@ -23,7 +25,7 @@ bowtie2 -q {}_trimmed.fq.gz -N 0 \
 ```
 
 ```bash
-bsub -q mpi -n 24 -J aliall -o .. "bash alignall.sh"
+bsub -q mpi -n 24 -J aliall -o . "bash alignall.sh"
 ```
 
 Then we need another mapping round for the 1 mismatch allowed.
@@ -40,7 +42,7 @@ bowtie2 -q {}_trimmed.fq.gz -N 1 \
 ```
 
 ```bash
-bsub -q mpi -n 24 -J ali1mis -o .. "bash align1mis.sh"
+bsub -q mpi -n 24 -J ali1mis -o . "bash align1mis.sh"
 ```
 
 #### Extract sequences of only 1 mismatch.
