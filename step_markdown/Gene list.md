@@ -71,5 +71,6 @@ Rscript /mnt/e/project/srna/script/packages.R
 There were tair_locus id we needed to transform them to GO_id and entrez_id for enrichment. The detailed transforming script could be seen in document script/enrichgo_dotplot.r
 
 ```bash
-Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r -f SRR1042171.gene.tsv
+Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r \
+-f SRR1042171.gene.tsv -o SRR1042171_GO.pdf
 ```
