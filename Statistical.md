@@ -1,11 +1,3 @@
-## Classified bacteria in their habitat preference with land plants
-
-I classified bacteria into five different types according to bacteria-plant(host) relations. Four categories are: endo/epiphyte, environment, gut and marine.
-
-All the habitat information of bacteria selected were acquired from references. Go and check ASSEMBLY.xlsx.
-
-
-
 ## Ratio of reads aligned to bacteria / all non-plant reads
 
 Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. I wrote a shell script to reach the goal.

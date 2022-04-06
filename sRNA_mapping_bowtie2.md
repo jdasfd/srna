@@ -140,7 +140,7 @@ Aligning unaligned reads to bacteria species.
 ```bash
 cd ./output/fastq
 parallel -j 4 " \
-bowtie2 -q {}_plantunali.fq.gz -N 0 -L 25 \
+bowtie2 -q {}_plantunali.fq.gz -N 0 \
 -x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_unali.sam \
 " ::: $(ls SRR*_plantunali.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
@@ -156,7 +156,7 @@ Aligning 1 mismatch allowed reads to bacteria species.
 ```bash
 cd ./output/fastq
 parallel -j 4 " \
-bowtie2 -q {}_plant1mis.fq.gz -N 0 -L 25 \
+bowtie2 -q {}_plant1mis.fq.gz -N 0 \
 -x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_1mis.sam \
 " ::: $(ls SRR*_plant1mis.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
@@ -172,7 +172,7 @@ Aligning perfectly matched reads to bacteria species.
 ```bash
 cd ./output/fastq
 parallel -j 4 " \
-bowtie2 -q {}_plantaliall.fq.gz -N 0 -L 25 \
+bowtie2 -q {}_plantaliall.fq.gz -N 0 \
 -x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_aliall.sam \
 " ::: $(ls SRR*_plantaliall.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
