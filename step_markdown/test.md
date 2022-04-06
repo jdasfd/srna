@@ -22,7 +22,12 @@ tsv-select -f 3,1,2,4,10 > ../SRR1042171_plant1mis.tsv
 # 'XM:i:1' in sam/bam files represents 1mis alignment
 ```
 
+
+
 ```bash
-cat ../../../annotation/plant/Atha/Atha.gff | grep -v '#' | \
-tsv-filter --str-eq 3:gene | tsv-select -f 1,4,5,7,9 > ../Atha_genelist.tsv
-```
+parallel -j 6 " \
+perl /mnt/e/project/srna/script/extract_gene.pl \
+-g Atha_genelist.tsv -i SRR1042171_plant1mis.tsv \
+-o {}.genelist.tsv \
+" ::: $(ls )
+
