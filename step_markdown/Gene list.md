@@ -54,8 +54,10 @@ After running this command, we would get tsv files contained gene list targeted 
 mkdir -p /mnt/e/project/srna/output/gene/genelist
 cd /mnt/e/project/srna/output/gene/bam_tsv
 
-cat SRR1042171.gene_seq.tsv | tsv-select -f 1 | sort | uniq | \
-sed '1iTAIR' > ../genelist/SRR1042171.gene.tsv
+parallel -j 6 " \
+cat {}.gene_seq.tsv | tsv-select -f 1 | sort | uniq | \
+sed '1iTAIR' > ../genelist/{}.gene.tsv \
+" ::: $(ls SRR*.gene_seq.tsv | perl -p -e 's/\.gene.+tsv$//')
 ```
 
 ## clusterProfiler for GO enrichment analysis
@@ -71,6 +73,12 @@ Rscript /mnt/e/project/srna/script/packages.R
 There were tair_locus id we needed to transform them to GO_id and entrez_id for enrichment. The detailed transforming script could be seen in document script/enrichgo_dotplot.r
 
 ```bash
+mkdir -p cd /mnt/e/project/srna/output/gene/plant_GO_figure
+cd /mnt/e/project/srna/output/gene/genelist
+
+for file in `ls SRR*.gene.tsv | perl -p -e 's/\.g.+tsv$//'`
+do
 Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r \
--f SRR1042171.gene.tsv -o SRR1042171_GO.pdf
+-f ${file}.gene.tsv -o ../plant_GO_figure/${file}_GO.pdf;
+done
 ```
