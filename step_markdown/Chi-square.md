@@ -34,7 +34,7 @@ Because the genome was way more longer than the tRNA-covered region, so we chang
 
 Test 2:
 
-For different bacterial groups within a sample, we also using chi-square test.
+For different bacterial groups of the same RNA regions within a sample, we also using chi-square test.
 
 <table>
     <tr>
@@ -49,6 +49,20 @@ For different bacterial groups within a sample, we also using chi-square test.
 
 $i != j; i, j = 1,2,3,4$
 
+
+For diffrent RNA regions of the same group within a sample, we also using chi-square test
+
+<table>
+    <tr>
+        <td align="center">group i tRNA_covered length</td>
+        <td align="center">group i rRNA_covered length</td>
+    </tr>
+    <tr>
+        <td align="center">group i tRNA length</td>
+        <td align="center">group i rRNA length</td>
+</table>
+
+$i = 1,2,3,4$
 
 ## Mosdepth
 
@@ -135,15 +149,11 @@ spanr stat ../bacteria.chr.sizes {}.yml -o ../opt/{}.csv \
 ```bash
 cd /mnt/e/project/srna/annotation/bacteria
 
-spanr gff bacteria.gff --tag tRNA > tRNA.yml
-# --tag: selected gene name
+spanr gff bac_trna.gff > tRNA.yml
 
-spanr gff bacteria.gff --tag rRNA > rRNA.yml
+spanr gff bac_rrna.gff > rRNA.yml
 
-spanr gff bacteria.gff --tag CDS > mRNA_all.yml
-spanr compare --op diff mRNA_all.yml tRNA.yml -o mRNA1.yml
-spanr compare --op diff mRNA1.yml rRNA.yml -o mRNA.yml
-rm mRNA_all.yml mRNA1.yml
+spanr gff bac_mrna.gff > mRNA.yml
 # mRNA region without tRNA and rRNA
 # spanr compare could manipulate aggregation, including intersect (default), union, diff or xor
 ```
@@ -267,8 +277,7 @@ tsv-join --filter-file ../../../rawname.tsv \
 --key-fields 1 --append-fields 2 | \
 tsv-summarize --group-by 6 --sum 2 --sum 3 --sum 4 --sum 5 | \
 tsv-join --filter-file ../../../name.tsv \
---key-fields 1 --append-fields 2 | \
-tsv-filter --ne 3:0 --ne 5:0 \
+--key-fields 1 --append-fields 2 \
 > ../result/{}.tRNA.tsv \
 " ::: $(ls *.tRNA.diff.tsv | perl -p -e 's/\.t.+tsv$//')
 
@@ -301,48 +310,148 @@ tsv-join --filter-file ../../../name.tsv \
 
 ##  Chi-square test
 
-* Chi-square tests of Test 1
+### Chi-square tests of Test 1
+
+* Use goodness-of-fit tests performing genome covered length and tRNA covered length consistent with expectation.
+
 
 ```bash
-mkdir -p /mnt/e/project/srna/output/chi/test1
 cd /mnt/e/project/srna/output/chi/result
 
 for tsv in `ls *.tsv`
 do
-cat $tsv | perl ../../script/interspecie.pl | \
-parallel --colsep '\t' -j 1 -k '
-    echo "==> {1}"
-    Rscript -e "
-        x <- matrix(c({2},{4},{3},{5}), nrow=2)
-        x
-        chisq.test(x)
-        "
-' > ../chi/inter/$tsv.inter.txt
+name=${tsv%.*};
+cat ${tsv} | tsv-summarize --sum 2,3,4,5 | \
+awk -v name=$name '{print name"\t"$1"\t"$2"\t"$3"\t"$4}' \
+>> ../test1.all.tsv
 done
-```
 
-Use a simple script for better looking.
-
-```bash
-cd /mnt/e/project/srna/output/chi/inter
-
-for file in `ls *.inter.txt | perl -p -e 's/\.tsv.+txt$//'`
+for tsv in `ls *.tsv`
 do
-echo "${file}" >> ../result.tsv
-cat ${file}.tsv.inter.txt | perl ../../../script/square.pl >> ../result.tsv
+name=${tsv%.*};
+cat ${tsv} | tsv-summarize --group-by 6 --sum 2,3,4,5 | \
+awk -v name=$name '{print name"\t"$1"\t"$2"\t"$3"\t"$4"\t"$5}' \
+>> ../test1.group.tsv
 done
 ```
 
+```bash
+cd ..
 
-## Chi-square test for testing tRNA reads between plant and bacteria
+cat test1.all.tsv | tsv-filter --ne 3:0 --ne 5:0 | \
+parallel --colsep '\t' -j 1 -k '
+        echo "==> {1}"
+        Rscript -e "
+            x <- c({5}, {3})
+            a <- {4}/{2}
+            b <- 1-({4}/{2})
+            old.warn <- options()$warn
+            options(warn = -1)
+            chisq.test(x, p = c(a, b))
+        "
+' > test1.chi.all.txt
+
+cat test1.group.tsv | tsv-filter --ne 4:0 --ne 6:0 | \
+parallel --colsep '\t' -j 1 -k '
+        echo "==> {1} of group {2}"
+        Rscript -e "
+            x <- c({6}, {4})
+            a <- {5}/{3}
+            b <- 1-({5}/{3})
+            old.warn <- options()$warn
+            options(warn = -1)
+            chisq.test(x, p = c(a, b))
+        "
+' > test1.chi.group.txt
+```
+
+### Chi-square tests of Test 2
+
+* Use chi-square tests for the same RNA region
 
 ```bash
+cd /mnt/e/project/srna/output/chi/result
+
+for file in `ls *.tsv | perl -p -e 's/\.tsv//'`
+do
+name=${file%.*};
+rna=${file#*.};
+cat ${file}.tsv | tsv-summarize --group-by 6 --sum 2,3,4,5 | \
+tsv-select -f 1,4,5 | sort -nk 1 | \
+perl -n -e '{chomp;print "$_\t"}' | \
+perl -n -e '{$_=~s/\t$//;print"$_\n";}' | \
+awk -v name=$name -v rna=$rna '{print name"\t"rna"\t"$1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$12}' \
+>> ../test2.rna.tsv;
+done
+```
+
+```bash
+cd ..
+
+cat test2.rna.tsv | \
 parallel --colsep '\t' -j 1 -k '
-    echo "==> {1}"
+    echo "==> {1}_{2} {3}vs{6}"
     Rscript -e "
-        x <- matrix(c({2},{4},{3},{5}), nrow=2)
-        x
+        old.warn <- options()$warn
+        options(warn = -1)
+        x <- matrix(c({5},{4},{8},{7}), nrow=2)
         chisq.test(x)
         "
-'
+    echo "==> {1}_{2} {3}vs{9}"
+    Rscript -e "
+        old.warn <- options()$warn
+        options(warn = -1)
+        x <- matrix(c({5},{4},{11},{10}), nrow=2)
+        chisq.test(x)
+        "
+    echo "==> {1}_{2} {3}vs{12}"
+    Rscript -e "
+        old.warn <- options()$warn
+        options(warn = -1)
+        x <- matrix(c({5},{4},{14},{13}), nrow=2)
+        chisq.test(x)
+        "
+' > test2.chi.rna.txt
+```
+
+* Use chi-square tests for the same bacterial group
+
+```bash
+for file in `ls *.tsv | perl -p -e 's/\.tsv//'`
+do
+name=${file%.*};
+rna=${file#*.};
+cat ${file}.tsv | tsv-summarize --group-by 6 --sum 2,3,4,5 | \
+tsv-select -f 1,4,5 | sort -nk 1 | \
+awk -v name=$name -v rna=$rna \
+'{print name"\t"rna"\t"$1"\t"$2"\t"$3}'>> ../test2.rna_all.tsv;
+done
+
+cd ..
+
+cat test2.rna_all.tsv | \
+perl ../../script/extract_chi_group.pl | \
+sed '1,4d' > test2.group.tsv
+
+rm test2.rna_all.tsv
+```
+
+```bash
+cat test2.group.tsv | \
+parallel --colsep '\t' -j 1 -k '
+    echo "==> {1}_group{2} {3}vs{6}"
+    Rscript -e "
+        old.warn <- options()$warn
+        options(warn = -1)
+        x <- matrix(c({5},{4},{8},{7}), nrow=2)
+        chisq.test(x)
+        "
+    echo "==> {1}_{2} {3}vs{9}"
+    Rscript -e "
+        old.warn <- options()$warn
+        options(warn = -1)
+        x <- matrix(c({5},{4},{11},{10}), nrow=2)
+        chisq.test(x)
+        "
+' > test2.chi.group.txt
 ```
