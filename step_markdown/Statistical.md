@@ -1252,45 +1252,7 @@ rm *_1mis*.tsv
 
 ----------------------------------------------------
 
-Use goodness-of-fit tests performing genome covered length and tRNA covered length consistent with expectation.
 
-```bash
-mkdir -p /mnt/e/project/srna/output/chi/intra
-cd /mnt/e/project/srna/output/result
-
-for tsv in `ls *.tsv`
-do
-cat $tsv | parallel --colsep '\t' -j 1 -k '
-        echo "==> {1}"
-        Rscript -e "
-            x <- c({5}, {3})
-            a <- {4}/{2}
-            b <- 1-({4}/{2})
-            chisq.test(x, p = c(a, b))
-        "
-' > ../chi/intra/$tsv.intra.txt
-done
-```
-
-Use a simple script for getting chi-square results.
-
-```bash
-cd /mnt/e/project/srna/output/chi/inter
-
-parallel -j 3 " \
-cat {}.tsv.chi-square.txt | perl ../../../script/square.pl > {}.chi.tsv \
-" ::: $(ls *.tsv.chi-square.txt | perl -p -e 's/\.tsv.*txt$//')
-```
-
-Join tsv together for better analysis.
-
-```bash
-parallel -j 3 " \
-cat {}.chi.tsv | tsv-join --filter-file name.tsv -k 1 --append-fields 2,3 > {}.tsv \
-" ::: $(ls *.chi.tsv | perl -p -e 's/\.chi\.tsv//')
-
-rm *.chi.tsv
-```
 
 ```R
 bar <- ggplot(data = name, mapping = aes(x = 'category', y = count, fill = cate)) +

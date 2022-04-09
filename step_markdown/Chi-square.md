@@ -345,21 +345,25 @@ parallel --colsep '\t' -j 1 -k '
             x <- c({5}, {3})
             a <- {4}/{2}
             b <- 1-({4}/{2})
+            y <- matrix(c(x, a, b), nrow=2)
             old.warn <- options()$warn
             options(warn = -1)
+            y
             chisq.test(x, p = c(a, b))
         "
 ' > test1.chi.all.txt
 
 cat test1.group.tsv | tsv-filter --ne 4:0 --ne 6:0 | \
 parallel --colsep '\t' -j 1 -k '
-        echo "==> {1} of group {2}"
+        echo "==> {1} of group{2}"
         Rscript -e "
             x <- c({6}, {4})
             a <- {5}/{3}
             b <- 1-({5}/{3})
+            y <- matrix(c(x, a, b), nrow=2)
             old.warn <- options()$warn
             options(warn = -1)
+            y
             chisq.test(x, p = c(a, b))
         "
 ' > test1.chi.group.txt
@@ -390,25 +394,28 @@ cd ..
 
 cat test2.rna.tsv | \
 parallel --colsep '\t' -j 1 -k '
-    echo "==> {1}_{2} {3}vs{6}"
+    echo "==> {1}.{2} {3}vs{6}"
     Rscript -e "
         old.warn <- options()$warn
         options(warn = -1)
         x <- matrix(c({5},{4},{8},{7}), nrow=2)
+        x
         chisq.test(x)
         "
-    echo "==> {1}_{2} {3}vs{9}"
+    echo "==> {1}.{2} {3}vs{9}"
     Rscript -e "
         old.warn <- options()$warn
         options(warn = -1)
         x <- matrix(c({5},{4},{11},{10}), nrow=2)
+        x
         chisq.test(x)
         "
-    echo "==> {1}_{2} {3}vs{12}"
+    echo "==> {1}.{2} {3}vs{12}"
     Rscript -e "
         old.warn <- options()$warn
         options(warn = -1)
         x <- matrix(c({5},{4},{14},{13}), nrow=2)
+        x
         chisq.test(x)
         "
 ' > test2.chi.rna.txt
@@ -439,19 +446,85 @@ rm test2.rna_all.tsv
 ```bash
 cat test2.group.tsv | \
 parallel --colsep '\t' -j 1 -k '
-    echo "==> {1}_group{2} {3}vs{6}"
+    echo "==> {1}.group{2} {9}vs{3}"
+    Rscript -e "
+        old.warn <- options()$warn
+        options(warn = -1)
+        x <- matrix(c({11},{10},{5},{4}), nrow=2)
+        x
+        chisq.test(x)
+        "
+    echo "==> {1}.group{2} {9}vs{6}"
+    Rscript -e "
+        old.warn <- options()$warn
+        options(warn = -1)
+        x <- matrix(c({11},{10},{8},{7}), nrow=2)
+        x
+        chisq.test(x)
+        "
+    echo "==> {1}.group{2} {3}vs{6}"
     Rscript -e "
         old.warn <- options()$warn
         options(warn = -1)
         x <- matrix(c({5},{4},{8},{7}), nrow=2)
+        x
         chisq.test(x)
-        "
-    echo "==> {1}_{2} {3}vs{9}"
-    Rscript -e "
-        old.warn <- options()$warn
-        options(warn = -1)
-        x <- matrix(c({5},{4},{11},{10}), nrow=2)
-        chisq.test(x)
-        "
+        "    
 ' > test2.chi.group.txt
 ```
+
+## Chi-square value extraction and plot
+
+* Use a simple script extracting chi-square value from the results
+
+```bash
+cat test1.chi.all.txt | perl ../../script/chi_square_extraction.pl | \
+sed '1ifile\trna\tchi' > test1.chi.all.tsv
+
+cat test1.chi.group.txt | perl ../../script/chi_square_extraction.pl | 
+perl -n -e 'chomp;
+@a = split/\t/,$_;
+$a[1]=~/^(.+)\sof/;$rna=$1;
+$a[1]=~/\sof(.+)$/;$group=$1;
+print "$a[0]\t$group\t$rna\t$a[2]\n";
+' | sed '1ifile\tgroup\trna\tchi' > test1.chi.group.tsv
+
+cat test2.chi.rna.txt | perl ../../script/chi_square_extraction.pl | \
+perl -n -e 'chomp;
+@a = split/\t/,$_;
+$a[1]=~/^(.+)\s/;$rna=$1;
+$a[1]=~/\s(.+)$/;$group=$1;
+print "$a[0]\t$group\t$rna\t$a[2]\n";
+' | sed '1ifile\tgroup\trna\tchi' > test1.chi.rna.tsv
+
+cat test2.chi.group.txt | perl ../../script/chi_square_extraction.pl | \
+perl -n -e 'chomp;
+@a = split/\t/,$_;
+$a[1]=~/^(.+)\s/;$group=$1;
+$a[1]=~/\s(.+)$/;$rna=$1;
+print "$a[0]\t$rna\t$group\t$a[2]\n";
+' | sed '1ifile\trna\tgroup\tchi' > test2.chi.group.tsv
+```
+
+* Plot
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+
+args <- commandArgs(T)
+
+chi <- read_tsv(args[1], show_col_types = FALSE)
+
+plot1 <- ggplot (data = chi, aes(x = rna, y = chi)) +
+geom_boxplot() + 
+geom_jitter(color = "black", alpha = 0.1, show.legend = FALSE) +
+labs(x = "RNA region", y = "Chi square (RNA/genome)") 
+
+pdf("test1.chi.all.pdf")
+plot(plot1)
+dev.off()
+' test1.chi.all.tsv
+```
+
