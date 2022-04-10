@@ -495,7 +495,7 @@ perl -n -e 'chomp;
 $a[1]=~/^(.+)\s/;$rna=$1;
 $a[1]=~/\s(.+)$/;$group=$1;
 print "$a[0]\t$group\t$rna\t$a[2]\n";
-' | sed '1ifile\tgroup\trna\tchi' > test1.chi.rna.tsv
+' | sed '1ifile\tgroup\trna\tchi' > test2.chi.rna.tsv
 
 cat test2.chi.group.txt | perl ../../script/chi_square_extraction.pl | \
 perl -n -e 'chomp;
@@ -520,7 +520,8 @@ chi <- read_tsv(args[1], show_col_types = FALSE)
 plot1 <- ggplot (data = chi, aes(x = rna, y = chi)) +
 geom_boxplot() + 
 geom_jitter(color = "black", alpha = 0.1, show.legend = FALSE) +
-labs(x = "RNA region", y = "Chi square (RNA/genome)") 
+labs(x = "RNA region", y = "Chi square (RNA/genome)") +
+scale_y_continuous(limits = c(0,5000000))
 
 pdf("test1.chi.all.pdf")
 plot(plot1)
@@ -528,3 +529,68 @@ dev.off()
 ' test1.chi.all.tsv
 ```
 
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+
+args <- commandArgs(T)
+
+chi <- read_tsv(args[1], show_col_types = FALSE)
+
+plot1 <- ggplot (data = chi, aes(x = rna, y = chi, group = rna, fill = rna)) +
+geom_boxplot() + 
+geom_jitter(color = "black", alpha = 0.1, show.legend = FALSE) +
+facet_wrap(~group) +
+labs(x = "RNA region", y = "Chi square (RNA/genome)") +
+scale_y_continuous(limits = c(0,2000000))
+
+pdf("test1.chi.group.pdf")
+plot(plot1)
+dev.off()
+' test1.chi.group.tsv
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+
+args <- commandArgs(T)
+
+chi <- read_tsv(args[1], show_col_types = FALSE)
+
+plot1 <- ggplot (data = chi, aes(x = group, y = chi, group = group, fill = group)) +
+geom_boxplot() + 
+geom_jitter(color = "black", alpha = 0.1, show.legend = FALSE) +
+facet_wrap(~rna) +
+labs(x = "group", y = "Chi square") +
+scale_y_continuous(limits = c(0,5000000))
+
+pdf("test2.chi.group.pdf", width = 10, height = 5)
+plot(plot1)
+dev.off()
+' test2.chi.group.tsv
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+
+args <- commandArgs(T)
+
+chi <- read_tsv(args[1], show_col_types = FALSE)
+
+plot1 <- ggplot (data = chi, aes(x = rna, y = chi, group = rna, fill = rna)) +
+geom_boxplot() + 
+geom_jitter(color = "black", alpha = 0.1, show.legend = FALSE) +
+facet_wrap(~group) +
+labs(x = "RNA region", y = "Chi square") +
+scale_y_continuous(limits = c(0,25000))
+
+pdf("test2.chi.rna.pdf", width = 12, height = 5)
+plot(plot1)
+dev.off()
+' test2.chi.rna.tsv
+```

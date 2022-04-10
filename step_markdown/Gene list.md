@@ -76,9 +76,8 @@ There were tair_locus id we needed to transform them to GO_id and entrez_id for 
 mkdir -p cd /mnt/e/project/srna/output/gene/plant_GO_figure
 cd /mnt/e/project/srna/output/gene/genelist
 
-for file in `ls SRR*.gene.tsv | perl -p -e 's/\.g.+tsv$//'`
-do
+parallel -j 6 " \
 Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r \
--f ${file}.gene.tsv -o ../plant_GO_figure/${file}_GO.pdf;
-done
+-f {}.gene.tsv -o ../plant_GO_figure/{}_GO.pdf \
+" ::: $(ls SRR3*.gene.tsv | perl -p -e 's/\.g.+tsv$//')
 ```
