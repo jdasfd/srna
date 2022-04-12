@@ -22,7 +22,7 @@ if (is.null(opt$file)){
 gene <- read_tsv(opt$file, show_col_types = FALSE)
 tair <- gene$TAIR
 
-pmart <- useMart("plants_mart", "athaliana_eg_gene", host = "plants.ensembl.org")
+pmart <- useMart("plants_mart", "athaliana_eg_gene", host = "https://plants.ensembl.org")
 
 genelist <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id", "go_id", "tair_locus"),
                 filters = 'tair_locus',

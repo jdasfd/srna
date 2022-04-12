@@ -165,7 +165,7 @@ Aligning 1 mismatch allowed reads to bacteria species.
 
 ```bash
 parallel -j 4 " \
-bowtie2 -q {}_plant1mis.fq.gz -v 0 \
+bowtie -q {}_plant1mis.fq.gz -v 0 \
 -x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_1mis.sam \
 " ::: $(ls SRR*_plant1mis.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
@@ -180,7 +180,7 @@ Aligning perfectly matched reads to bacteria species.
 
 ```bash
 parallel -j 4 " \
-bowtie2 -q {}_plant2mis.fq.gz -v 0 \
+bowtie -q {}_plant2mis.fq.gz -v 0 \
 -x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_2mis.sam \
 " ::: $(ls SRR*_plant2mis.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```

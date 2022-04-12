@@ -2,6 +2,69 @@
 
 In this markdown, I recorded all reads aligned to bacteria and their characristics.
 
+
+## Basic percentages of reads in plant or bacteria
+
+```bash
+cd /mnt/e/project/srna/output/bam
+
+bash ../../script/all_file_count.sh > ../count/all_file.csv
+
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+ct <- read.csv(args[1])
+p <- ggplot(ct, aes(x = name, y = count, fill = factor(group, levels = c("unknown","bacteria","plant")))) +
+geom_bar(stat = "identity", position = "fill") +
+labs(x = "Seq files", y = "reads aligned ratio") +
+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+p <- p + scale_x_discrete(breaks = NULL) +
+scale_fill_manual(name = "reads source",
+labels = c("unknown", "bacteria", "plant"),
+values = c("gray75", "darkgoldenrod", "seagreen3"))
+ggsave(p, file = "../figure/all_file.pdf", width = 9, height = 4)
+' all_file.csv
+```
+
+#### Filter by ratio of alignment
+
+```bash
+for file in `ls *.sort.bam | perl -p -e s/_.+bam$//`
+do
+unknown=`samtools view --count -@ 10 -f 4 ${file}_plantall.sort.bam`;
+all=`samtools view --count -@ 10 ${file}_plantall.sort.bam`;
+ratio=`echo "scale=4;$unknown*100/$all" | bc | awk '{printf "%.4f", $0}'`;
+echo "${file},${ratio}";
+done | tee ../../count/plant.csv
+
+cat plant.csv | mlr --icsv --otsv cat | tsv-filter --le 2:50 > plant_50.tsv
+```
+
+```bash
+cat all_file.csv | mlr --icsv --otsv cat | \
+tsv-join -H --filter-file plant_50.tsv --key-fields 1 | \
+mlr --itsv --ocsv cat > all_file_50.csv
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+ct <- read.csv(args[1])
+p <- ggplot(ct, aes(x = name, y = count, fill = factor(group, levels = c("unknown","bacteria","plant")))) +
+geom_bar(stat = "identity", position = "fill") +
+labs(x = "Seq files", y = "reads aligned ratio") +
+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+p <- p + scale_x_discrete(breaks = NULL) +
+scale_fill_manual(name = "reads source",
+labels = c("unknown", "bacteria", "plant"),
+values = c("gray75", "darkgoldenrod", "seagreen3"))
+ggsave(p, file = "../figure/all_file_50.pdf", width = 9, height = 4)
+' all_file_50.csv
+```
+
 ## Plant sRNA reads distribution
 
 *A. tha* annotation is relatively abundant with full information. Using `.gff` file, it is better using gene to calculate col 3 rather than using directly RNA annotation, such as tRNA *et. al.*. It almost the same using two different methods, though there will be a few lines of difference, *e.g.* miRNA will provide you 5p and 3p, but gene will just give you a region. Because of the existence of transcript splicing, extracting annotation of gene could directly give out the different RNA region to reach the goal of deciding region that reads originated. 
@@ -10,6 +73,7 @@ In this markdown, I recorded all reads aligned to bacteria and their characristi
 
 ```bash
 cd /mnt/e/project/srna/annotation/plant/Atha
+
 cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=tRNA > Atha_trna.gff
 cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=rRNA > Atha_rrna.gff
 cat Atha.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:gene_biotype=miRNA > Atha_mirna.gff
@@ -100,7 +164,7 @@ ggsave(p, file = "/mnt/e/project/srna/output/figure/plantali.pdf", width = 9, he
 ' plantali_count.csv
 ```
 
-#### After filtering
+### After filtering
 
 ```bash
 cat plantali_count.csv | mlr --icsv --otsv cat | \
@@ -126,6 +190,7 @@ values = c("#70ACAB","#FFF18F","#DAC847","#E3842C","#70795E","#3C3F38","#3A571F"
 ggsave(p, file = "/mnt/e/project/srna/output/figure/plantali_50.pdf", width = 9, height = 4)
 ' plantali_count_50.csv
 ```
+
 ## Ratio of reads aligned to bacteria / all non-plant reads
 
 Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. A shell script was written to reach the goal.
@@ -935,7 +1000,7 @@ perl -n -e 'chomp;@a = split/\t/,$_;print">$a[0]_$a[1]_$a[2]\n";print"$a[3]\n"' 
 
 ---
 
-##  Reads cover depth and position in different RNA region
+## Reads cover depth and position in different RNA region
 
 ### Reads depth and position distribution in different RNA
 

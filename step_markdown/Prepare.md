@@ -133,13 +133,13 @@ brew install mosdepth
 
 tsv-utils is an really powerful toolbox for manipulating .tsv format files. It is highly recommended that you mastered it.
 
-Make sure you completed software installation [wang-q/dotfiles](https://github.com/wang-q/dotfiles) `wang-q/tap` 
+Make sure you completed software installation [wang-q/dotfiles](https://github.com/wang-q/dotfiles) and `brew tap wang-q/tap` could be adopted. 
 
 ```bash
 brew install wang-q/tap/tsv-utils
 ```
 
-#### convert2bed in bedops (optional)
+#### convert2bed in bedops
 
 ```bash
 brew install bedops
