@@ -110,6 +110,11 @@ There was a problem of dealing with Rscript using parallel, that is the output o
 
 Before this in [Statistical.md](https://github.com/jdasfd/srna/blob/main/step_markdown/Statistical.md), we seperated sequences into 3 tiers, which means the sequences frequently occured over 120 files. After this step, the GO enrichment would tell us gene lists targeted frequently by the 1mis reads (could not aligned to *A. tha* genome).
 
-```bash
+Meanwhile, the sequences from 3 different tiers allowed us using `tsv-join` to filter those uncommon reads.
 
+```bash
+parallel -j 6 " \
+cat {}.gene_seq.tsv | tsv-join --filter-file ../../tier/among/tier1.tsv --key-fields 1 \
+> ../tier/{}.gene_seq.tier1.tsv \
+" ::: $(ls *.gene_seq.tsv | perl -p -e 's/\.ge.+tsv$//')
 ```

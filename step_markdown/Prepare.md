@@ -129,7 +129,17 @@ brew install seqkit
 brew install mosdepth
 ```
 
-#### convert2bed in bedops
+#### tsv-utils
+
+tsv-utils is an really powerful toolbox for manipulating .tsv format files. It is highly recommended that you mastered it.
+
+Make sure you completed software installation [wang-q/dotfiles](https://github.com/wang-q/dotfiles) `wang-q/tap` 
+
+```bash
+brew install wang-q/tap/tsv-utils
+```
+
+#### convert2bed in bedops (optional)
 
 ```bash
 brew install bedops

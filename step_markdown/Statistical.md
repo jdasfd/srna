@@ -1,70 +1,12 @@
-## Ratio of reads aligned to bacteria / all non-plant reads
+# Bacterial related reads statistical information
 
-Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. I wrote a shell script to reach the goal.
-
-#### All 240 seq files
-
-```bash
-mkdir -p /mnt/e/project/srna/output/count
-cd /mnt/e/project/srna/output/count
-mkdir trna rrna mrna all
-
-cd /mnt/e/project/srna/output/bam/bacteria
-bash ../../../script/read_count.sh > ../../count/read_count.csv
-```
-
-```bash
-bsub -q mpi -n 24 -o .. -J count "bash read_count.sh | tee ../../count/read_count.csv"
-# tee will output results into *.out because of -o in bsub command
-```
-
-```bash
-cd ../../count
-
-Rscript -e '
-library(ggplot2)
-library(readr)
-args <- commandArgs(T)
-count <- read.csv(args[1])
-s <- ggplot (data = count, aes(x = group, y = num)) +
-geom_boxplot() +
-geom_jitter(aes(color = name)) +
-theme(legend.position = "none") +
-labs(x = " ", y = "Bacterial reads / all reads")
-ggsave(s, file = "../figure/read_count.pdf", width = 7, height = 4)
-' read_count.csv
-```
-
-#### Remove those seq files after filter
-
-```bash
-cat read_count.csv | mlr --icsv --otsv cat | \
-tsv-join -H --filter-file plant_50.tsv --key-fields 1 | \
-mlr --itsv --ocsv cat > read_count_50.csv
-```
-
-```bash
-Rscript -e '
-library(ggplot2)
-library(readr)
-args <- commandArgs(T)
-count <- read.csv(args[1])
-s <- ggplot (data = count, aes(x = group, y = num)) +
-geom_boxplot() +
-geom_jitter(aes(color = name)) +
-theme(legend.position = "none") +
-labs(x = " ", y = "Bacterial reads / all reads")
-ggsave(s, file = "../figure/read_count_50.pdf", width = 7, height = 4)
-' read_count_50.csv
-```
-
-
+In this markdown, I recorded all reads aligned to bacteria and their characristics.
 
 ## Plant sRNA reads distribution
 
-*A. tha* annotation is relatively abundant with full information. Using `.gff` file, it is better using gene to calculate col 3 rather than using directly RNA annotation, such as tRNA *et. al.*. It almost the same using two different methods, though there will be a few lines of difference, *e.g.* miRNA will provide you 5p and 3p, but gene will just give you a region. Because of the existence of transcript splicing, using gene could directly give out the mRNA region to meet my expectations
+*A. tha* annotation is relatively abundant with full information. Using `.gff` file, it is better using gene to calculate col 3 rather than using directly RNA annotation, such as tRNA *et. al.*. It almost the same using two different methods, though there will be a few lines of difference, *e.g.* miRNA will provide you 5p and 3p, but gene will just give you a region. Because of the existence of transcript splicing, extracting annotation of gene could directly give out the different RNA region to reach the goal of deciding region that reads originated. 
 
-#### All seq files
+### All seq files
 
 ```bash
 cd /mnt/e/project/srna/annotation/plant/Atha
@@ -184,6 +126,70 @@ values = c("#70ACAB","#FFF18F","#DAC847","#E3842C","#70795E","#3C3F38","#3A571F"
 ggsave(p, file = "/mnt/e/project/srna/output/figure/plantali_50.pdf", width = 9, height = 4)
 ' plantali_count_50.csv
 ```
+## Ratio of reads aligned to bacteria / all non-plant reads
+
+Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. A shell script was written to reach the goal.
+
+### All 240 sRNA-seq files
+
+All the 240 plant sRNA-seq was originated from ecotype *A. tha* Col-0. For filtering those 
+
+```bash
+mkdir -p /mnt/e/project/srna/output/count
+cd /mnt/e/project/srna/output/count
+mkdir trna rrna mrna all
+
+cd /mnt/e/project/srna/output/bam/bacteria
+bash ../../../script/read_count.sh > ../../count/read_count.csv
+```
+
+```bash
+bsub -q mpi -n 24 -o .. -J count "bash read_count.sh | tee ../../count/read_count.csv"
+# tee will output results into *.out because of -o in bsub command
+```
+
+```bash
+cd ../../count
+
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+count <- read.csv(args[1])
+s <- ggplot (data = count, aes(x = group, y = num)) +
+geom_boxplot() +
+geom_jitter(aes(color = name)) +
+theme(legend.position = "none") +
+labs(x = " ", y = "Bacterial reads / all reads")
+ggsave(s, file = "../figure/read_count.pdf", width = 7, height = 4)
+' read_count.csv
+```
+
+#### Remove those seq files after filter
+
+```bash
+cat read_count.csv | mlr --icsv --otsv cat | \
+tsv-join -H --filter-file plant_50.tsv --key-fields 1 | \
+mlr --itsv --ocsv cat > read_count_50.csv
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+count <- read.csv(args[1])
+s <- ggplot (data = count, aes(x = group, y = num)) +
+geom_boxplot() +
+geom_jitter(aes(color = name)) +
+theme(legend.position = "none") +
+labs(x = " ", y = "Bacterial reads / all reads")
+ggsave(s, file = "../figure/read_count_50.pdf", width = 7, height = 4)
+' read_count_50.csv
+```
+
+
+
 
 
 
@@ -260,6 +266,7 @@ Using bed of rna to extract mapping reads from different RNA regions.
 #### All seq files
 
 ```bash
+mkdir -p /mnt/e/project/srna/output/bam/rna
 cd /mnt/e/project/srna/output/bam/bacteria
 
 parallel -j 4 " \
