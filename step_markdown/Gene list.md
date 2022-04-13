@@ -118,3 +118,46 @@ cat {}.gene_seq.tsv | tsv-join --filter-file ../../tier/among/tier1.tsv --key-fi
 > ../tier/{}.gene_seq.tier1.tsv \
 " ::: $(ls *.gene_seq.tsv | perl -p -e 's/\.ge.+tsv$//')
 ```
+
+## Gene list information
+
+* Gene number of each file
+
+```bash
+cd /mnt/e/project/srna/output/gene/genelist
+
+echo "file,gene_num" > ../gene_count.csv;
+for file in `ls SRR*.gene.tsv | perl -p -e 's/\.ge.+tsv$//'`
+do
+num=`cat ${file}.gene.tsv | sed '1d' | sort | uniq | wc -l`;
+echo "$file","$num" >> ../gene_count.csv;
+done
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+gene <- read.csv(args[1])
+p <- ggplot(gene, aes(x = file, y = gene_num)) +
+geom_bar(stat = "identity") +
+labs(x = "Seq files", y = "Gene number") +
+theme(axis.text.x = element_text(size = 5, angle = 90))
+ggsave(p, file = "/mnt/e/project/srna/output/figure/gene_count.pdf", width = 9, height = 4)
+' gene_count.csv
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+args <- commandArgs(T)
+gene <- read_tsv(args[1], show_col_types = FALSE)
+p <- ggplot(gene, aes(x = gene, y = gene_num)) +
+geom_bar(stat = "identity") +
+labs(x = "Gene", y = "File count") +
+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+ggsave(p, file = "/mnt/e/project/srna/output/figure/all_gene_count.pdf", width = 9, height = 4)
+' all_gene_count.tsv
+```

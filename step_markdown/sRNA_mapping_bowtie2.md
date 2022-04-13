@@ -46,7 +46,6 @@ rsync -avP /mnt/e/project/srna/annotation wangq@202.119.37.251:jyq/project/srna/
 **alignall.sh**
 
 ```bash
-cd ./output/fastq
 parallel -j 3 " \
 bowtie2 -q {}_trimmed.fq.gz -N 0 \
 -x ../genome/plant/Atha/Atha --al-gz ../output/fastq/{}_plantaliall.fq.gz \

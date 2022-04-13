@@ -1,14 +1,22 @@
+- [Bacterial related reads statistical information](#bacterial-related-reads-statistical-information)
+
+    - [Basic percentages of reads aligned to plant or bacteria](#basic-percentages-of-reads-aligned-to-plant-or-bacteria)
+
+    - 
+
 # Bacterial related reads statistical information
 
 In this markdown, I recorded all reads aligned to bacteria and their characristics.
 
 
-## Basic percentages of reads in plant or bacteria
+## Basic percentages of reads aligned to plant or bacteria
 
 ```bash
 cd /mnt/e/project/srna/output/bam
 
 bash ../../script/all_file_count.sh > ../count/all_file.csv
+
+cd ../count
 
 Rscript -e '
 library(ggplot2)
@@ -27,18 +35,30 @@ ggsave(p, file = "../figure/all_file.pdf", width = 9, height = 4)
 ' all_file.csv
 ```
 
-#### Filter by ratio of alignment
+## Filter by ratio of aligning to plant
+
+From the above results, it is clear that some sRNA-seq files cannot align to plant in relatively high ratio. A cut-off of more than 50% reads that cannot aligned to plant was used to filter those low quality seq files.
+
+* sRNA-seq reads ratio
 
 ```bash
-for file in `ls *.sort.bam | perl -p -e s/_.+bam$//`
-do
-unknown=`samtools view --count -@ 10 -f 4 ${file}_plantall.sort.bam`;
-all=`samtools view --count -@ 10 ${file}_plantall.sort.bam`;
-ratio=`echo "scale=4;$unknown*100/$all" | bc | awk '{printf "%.4f", $0}'`;
-echo "${file},${ratio}";
-done | tee ../../count/plant.csv
+cd /mnt/e/project/srna/output/count
 
-cat plant.csv | mlr --icsv --otsv cat | tsv-filter --le 2:50 > plant_50.tsv
+cat all_file.csv | mlr --icsv --otsv cat | \
+tsv-summarize -H --group-by name --sum count > all_reads_count.tsv
+
+cat all_file.csv | mlr --icsv --otsv cat | \
+tsv-filter -H --str-eq group:unknown | \
+tsv-join -H --filter-file all_reads_count.tsv \
+--key-fields name --append-fields count_sum | \
+tsv-select -H -f name,count,count_sum | sed '1d' | \
+perl -n -e 'chomp;@a = split/\t/,$_; $ratio=$a[1]/$a[2]*100;
+printf("%s\t%.2f\n","$a[0]","$ratio");' > plant_ratio.tsv
+
+cat plant_ratio.tsv | tsv-filter --le 2:50 > plant_50.tsv
+# cut-off 50%
+
+rm all_reads_count.tsv
 ```
 
 ```bash
@@ -69,7 +89,7 @@ ggsave(p, file = "../figure/all_file_50.pdf", width = 9, height = 4)
 
 *A. tha* annotation is relatively abundant with full information. Using `.gff` file, it is better using gene to calculate col 3 rather than using directly RNA annotation, such as tRNA *et. al.*. It almost the same using two different methods, though there will be a few lines of difference, *e.g.* miRNA will provide you 5p and 3p, but gene will just give you a region. Because of the existence of transcript splicing, extracting annotation of gene could directly give out the different RNA region to reach the goal of deciding region that reads originated. 
 
-### All seq files
+* All 240 files
 
 ```bash
 cd /mnt/e/project/srna/annotation/plant/Atha
@@ -144,7 +164,7 @@ samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_ncrna.bed \
 
 ```bash
 cd /mnt/e/project/srna/output/count
-bash ../../script/plantali_count.sh > plantali_count.csv
+bash ../../script/plant_rna_ratio.sh > plant_rna_ratio.csv
 
 Rscript -e '
 library(ggplot2)
@@ -160,8 +180,8 @@ p <- p + scale_x_discrete(breaks = NULL) +
 scale_fill_manual(name = "reads source",
 labels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna"),
 values = c("#70ACAB","#FFF18F","#DAC847","#E3842C","#70795E","#3C3F38","#3A571F","#0B1F25"))
-ggsave(p, file = "/mnt/e/project/srna/output/figure/plantali.pdf", width = 9, height = 4)
-' plantali_count.csv
+ggsave(p, file = "/mnt/e/project/srna/output/figure/plant_rna_ratio.pdf", width = 9, height = 4)
+' plant_rna_ratio.csv
 ```
 
 ### After filtering
