@@ -154,8 +154,9 @@ library(ggplot2)
 library(readr)
 args <- commandArgs(T)
 gene <- read_tsv(args[1], show_col_types = FALSE)
+gene <- gene %>% arrange(desc(gene_num))
 p <- ggplot(gene, aes(x = gene, y = gene_num)) +
-geom_bar(stat = "identity") +
+geom_bar(stat = "identity", position = "dodge") +
 labs(x = "Gene", y = "File count") +
 theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
 ggsave(p, file = "/mnt/e/project/srna/output/figure/all_gene_count.pdf", width = 9, height = 4)

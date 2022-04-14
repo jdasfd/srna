@@ -89,7 +89,7 @@ ggsave(p, file = "../figure/all_file_50.pdf", width = 9, height = 4)
 
 *A. tha* annotation is relatively abundant with full information. Using `.gff` file, it is better using gene to calculate col 3 rather than using directly RNA annotation, such as tRNA *et. al.*. It almost the same using two different methods, though there will be a few lines of difference, *e.g.* miRNA will provide you 5p and 3p, but gene will just give you a region. Because of the existence of transcript splicing, extracting annotation of gene could directly give out the different RNA region to reach the goal of deciding region that reads originated. 
 
-* All 240 files
+* All 240 sRNA-seq files
 
 ```bash
 cd /mnt/e/project/srna/annotation/plant/Atha
@@ -124,42 +124,42 @@ cd /mnt/e/project/srna/output/bam/plant
 parallel -j 4 " \
 samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_trna.bed \
 {}.sort.bam > ../plantrna/{}.trna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
 samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_rrna.bed \
 {}.sort.bam > ../plantrna/{}.rrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
 samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_mrna.bed \
 {}.sort.bam > ../plantrna/{}.mrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
 samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_mirna.bed \
 {}.sort.bam > ../plantrna/{}.mirna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
 samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_snrna.bed \
 {}.sort.bam > ../plantrna/{}.snrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
 samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_snorna.bed \
 {}.sort.bam > ../plantrna/{}.snorna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
 samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_lncrna.bed \
 {}.sort.bam > ../plantrna/{}.lncrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
 samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_ncrna.bed \
 {}.sort.bam > ../plantrna/{}.ncrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
 
 ```bash
@@ -184,7 +184,14 @@ ggsave(p, file = "/mnt/e/project/srna/output/figure/plant_rna_ratio.pdf", width 
 ' plant_rna_ratio.csv
 ```
 
-### After filtering
+Different RNA reads mean ratio. 
+
+```bash
+cat plant_rna_ratio.csv | mlr --icsv --otsv cat | \
+tsv-summarize --group-by 3 --mean | mlr --itsv --omd cat 
+```
+
+* After filtering by cut-off
 
 ```bash
 cat plantali_count.csv | mlr --icsv --otsv cat | \
@@ -213,11 +220,9 @@ ggsave(p, file = "/mnt/e/project/srna/output/figure/plantali_50.pdf", width = 9,
 
 ## Ratio of reads aligned to bacteria / all non-plant reads
 
-Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. A shell script was written to reach the goal.
+Count all reads numbers from sort.bam files. The goal of this step is to acquire fraction of the reads aligned to bacteria from all reads. A shell script was written to reach the goal. **Attention: bowtie2 results contained -L 22 (default), it means that within 22 seed regions, there were no mismatches.**
 
-### All 240 sRNA-seq files
-
-All the 240 plant sRNA-seq was originated from ecotype *A. tha* Col-0. For filtering those 
+* All 240 sRNA-seq files
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/count
