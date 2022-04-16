@@ -114,9 +114,42 @@ Meanwhile, the sequences from 3 different tiers allowed us using `tsv-join` to f
 
 ```bash
 parallel -j 6 " \
-cat {}.gene_seq.tsv | tsv-join --filter-file ../../tier/among/tier1.tsv --key-fields 1 \
-> ../tier/{}.gene_seq.tier1.tsv \
+cat {}.gene_seq.tsv | tsv-select -f 2,1 | \
+tsv-join --filter-file ../../tier/among/tier1.tsv --key-fields 1 | \
+sort | uniq > ../tier/{}.gene_seq.tier1.tsv \
 " ::: $(ls *.gene_seq.tsv | perl -p -e 's/\.ge.+tsv$//')
+
+parallel -j 6 " \
+cat {}.gene_seq.tsv | tsv-select -f 2,1 | \
+tsv-join --filter-file ../../tier/among/tier2.tsv --key-fields 1 | \
+sort | uniq > ../tier/{}.gene_seq.tier2.tsv \
+" ::: $(ls *.gene_seq.tsv | perl -p -e 's/\.ge.+tsv$//')
+
+parallel -j 6 " \
+cat {}.gene_seq.tsv | tsv-select -f 2,1 | \
+tsv-join --filter-file ../../tier/among/tier3.tsv --key-fields 1 | \
+sort | uniq > ../tier/{}.gene_seq.tier3.tsv \
+" ::: $(ls *.gene_seq.tsv | perl -p -e 's/\.ge.+tsv$//')
+```
+
+```bash
+cd ../tier
+cat SRR*.gene_seq.tier1.tsv | cut -f 2 > ../among/tier1.gene.tsv
+cat SRR*.gene_seq.tier2.tsv | cut -f 2 > ../among/tier2.gene.tsv
+cat SRR*.gene_seq.tier3.tsv | cut -f 2 > ../among/tier3.gene.tsv
+```
+
+```bash
+cd ../among
+cat tier1.gene.tsv | sort | uniq | sed '1iTAIR' > ../tier1.gene.tsv
+cat tier2.gene.tsv | sort | uniq | sed '1iTAIR' > ../tier2.gene.tsv
+cat tier3.gene.tsv | sort | uniq | sed '1iTAIR' > ../tier3.gene.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r -f tier1.gene.tsv -o plant_GO_figure/tier1_GO.pdf
+Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r -f tier2.gene.tsv -o plant_GO_figure/tier2_GO.pdf
+Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r -f tier3.gene.tsv -o plant_GO_figure/tier3_GO.pdf
 ```
 
 ## Gene list information
@@ -143,8 +176,8 @@ gene <- read.csv(args[1])
 p <- ggplot(gene, aes(x = file, y = gene_num)) +
 geom_bar(stat = "identity") +
 labs(x = "Seq files", y = "Gene number") +
-theme(axis.text.x = element_text(size = 5, angle = 90))
-ggsave(p, file = "/mnt/e/project/srna/output/figure/gene_count.pdf", width = 9, height = 4)
+theme(axis.text.x = element_text(size = 4, angle = 90))
+ggsave(p, file = "/mnt/e/project/srna/output/figure/gene_count.pdf", width = 12, height = 4)
 ' gene_count.csv
 ```
 
@@ -153,12 +186,40 @@ Rscript -e '
 library(ggplot2)
 library(readr)
 args <- commandArgs(T)
+gene <- read.csv(args[1])
+p <- ggplot(gene, aes(x = file, y = gene_num)) +
+geom_bar(stat = "identity") +
+labs(x = "Seq files", y = "Gene number") +
+theme(axis.text.x = element_text(size = 4, angle = 90))
+ggsave(p, file = "/mnt/e/project/srna/output/figure/gene_count_50.pdf", width = 12, height = 4)
+' gene_count_50.csv
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(forcats)
+args <- commandArgs(T)
 gene <- read_tsv(args[1], show_col_types = FALSE)
-gene <- gene %>% arrange(desc(gene_num))
-p <- ggplot(gene, aes(x = gene, y = gene_num)) +
+p <- gene %>%
+mutate(gene = fct_reorder(gene, desc(gene_num))) %>%
+ggplot(aes(x = gene, y = gene_num)) +
 geom_bar(stat = "identity", position = "dodge") +
 labs(x = "Gene", y = "File count") +
 theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
 ggsave(p, file = "/mnt/e/project/srna/output/figure/all_gene_count.pdf", width = 9, height = 4)
 ' all_gene_count.tsv
+```
+
+```bash
+cat all_gene_count.tsv | tsv-filter -H --ge gene_num:100 > all_gene_count_100.tsv
+
+cat all_gene_count_100.tsv | tsv-select -H -f gene | \
+sed '1d' | sed '1iTAIR' > ../all_gene_count_100.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r -f all_gene_count_100.tsv -o plant_GO_figure/100_GO.pdf
 ```

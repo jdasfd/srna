@@ -325,7 +325,20 @@ cat ${tsv} | tsv-summarize --sum 2,3,4,5 | \
 awk -v name=$name '{print name"\t"$1"\t"$2"\t"$3"\t"$4}' \
 >> ../test1.all.tsv
 done
+```
 
+```bash
+cat test1.all.tsv | head -n 3 | tsv-select -f 1,2,4 | \
+perl -n -e '$_=~s/SRR.*_1mis\.(.+)/$1/;print"$_";' | mlr --itsv --omd cat
+```
+
+| mRNA | 620294455 | 524734478 |
+| --- | --- | --- |
+| rRNA | 602358469 | 3641469 |
+| tRNA | 608199399 | 3614083 |
+
+
+```bash
 for tsv in `ls *.tsv`
 do
 name=${tsv%.*};
@@ -334,6 +347,7 @@ awk -v name=$name '{print name"\t"$1"\t"$2"\t"$3"\t"$4"\t"$5}' \
 >> ../test1.group.tsv
 done
 ```
+
 
 ```bash
 cd ..
@@ -506,6 +520,39 @@ print "$a[0]\t$rna\t$group\t$a[2]\n";
 ' | sed '1ifile\trna\tgroup\tchi' > test2.chi.group.tsv
 ```
 
+```bash
+cat test1.chi.all.tsv | \
+tsv-summarize -H --group-by rna --mean chi | \
+mlr --itsv --omd cat
+```
+
+| rna | chi_mean |
+| --- | --- |
+| mRNA | 735650.497818 |
+| rRNA | 16293788.7036 |
+| tRNA | 487963.950754 |
+
+```bash
+cat test1.chi.group.tsv | \
+tsv-summarize -H --group-by rna,group --mean chi | mlr --itsv --omd cat
+```
+
+| rna | group | chi_mean |
+| --- | --- | --- |
+| mRNA |  group3 | 216156.605921 |
+| mRNA |  group1 | 270605.336612 |
+| mRNA |  group2 | 289235.392047 |
+| mRNA |  group4 | 1016.08996373 |
+| rRNA |  group3 | 4018554.83301 |
+| rRNA |  group1 | 5952724.08608 |
+| rRNA |  group2 | 6759234.38281 |
+| rRNA |  group4 | 58027.6115616 |
+| tRNA |  group3 | 531174.634131 |
+| tRNA |  group1 | 947827.700424 |
+| tRNA |  group2 | 78130.1847635 |
+| tRNA |  group4 | 2187.89569302 |
+
+
 * Plot
 
 ```bash
@@ -594,3 +641,24 @@ plot(plot1)
 dev.off()
 ' test2.chi.rna.tsv
 ```
+
+```bash
+cat test2.rna.tsv | head -n 3 | \
+tsv-select -f 2,3,4,6,7,9,10,12,13 | mlr --itsv --omd cat
+```
+
+| mRNA | 1 | 163640953 | 2 | 198309617 | 3 | 150084354 | 4 | 12699554 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| rRNA | 1 | 964059 | 2 | 1277029 | 3 | 1350924 | 4 | 49457 |
+| tRNA | 1 | 202353 | 2 | 3088334 | 3 | 303062 | 4 | 20334 |
+
+```bash
+cat test2.rna.tsv | tsv-summarize --group-by 2 --mean 5,8,11,14 | sed
+'1iRNA\t1\t2\t3\t4' | mlr --itsv --omd cat
+```
+
+| RNA | 1 | 2 | 3 | 4 |
+| --- | --- | --- | --- | --- |
+| mRNA | 80354.2861111 | 109970.054167 | 98965.7236111 | 10804.4680556 |
+| rRNA | 62917.7111111 | 75304.1861111 | 62095.9972222 | 1080.06944444 |
+| tRNA | 9638.07083333 | 13973.6916667 | 9185.92083333 | 103.230555556 |
