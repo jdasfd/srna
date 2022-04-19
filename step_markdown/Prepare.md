@@ -1,12 +1,19 @@
+- [Preparations for the sRNA anlytic process](#preparations-for-the-srna-analytic-process)
+
+    - [Prepare](#prepare)
+
+    - [Getting sRNA-seq data](#getting-srna-seq-data)
+
+
 # Preparations for the sRNA analytic process
 
 In this process, I prepared to analyse small RNA-seq files in *A. thaliana*. There were few things should be specified. I recorded below.
 
-##  Prepare
+## The genome preparations
 
 ### *Arabidopsis thaliana*
 
-#### *A. thaliana* genome
+#### *A. thaliana* genomes
 
 For this *A. thaliana* genome, we downloaded from ensembl. I found that some links may not work well. So I copied the ftp site below.
 
@@ -42,7 +49,9 @@ mv GCF_000001735.4_TAIR10.1_genomic.gff Atha.gff
 
 ### Bacteria
 
-I used ASSEMBLY in [bacteria_ar.md](https://github.com/wang-q/withncbi/blob/master/pop/bacteria_ar.md). Please go check the markdown to get the database.
+#### Bacteria genomes
+
+I used ASSEMBLY in [bacteria_ar.md](https://github.com/wang-q/withncbi/blob/master/pop/bacteria_ar.md). Please go and check the database.
 
 #### Bacteria annotation
 
@@ -62,9 +71,9 @@ cat bac_rrna.gff | convert2bed --input=gff --output=bed > rrna.bed
 cat bac_mrna.gff | convert2bed --input=gff --output=bed > mrna.bed
 ```
 
-###  Biotools in protocol
+## Biotools in protocol
 
-#### sratoolkit (not recommended)
+* **sratoolkit (not recommended)**
 
 using SRAtoolkit for to download SRA files.
 
@@ -87,7 +96,7 @@ echo "export PATH="$(pwd):$PATH"" >> ~/.bashrc
 prefetch --help
 ```
 
-####  Samtools
+*  **Samtools**
 
 The basic SAM/BAM file manipulating tools.
 
@@ -95,7 +104,7 @@ The basic SAM/BAM file manipulating tools.
 brew install samtools
 ```
 
-#### Fastqc
+* **Fastqc**
 
 Fastqc for checking sequencing quality.
 
@@ -103,19 +112,19 @@ Fastqc for checking sequencing quality.
 brew install fastqc
 ```
 
-#### intspan and anchr
+* **intspan and anchr**
 
 [intspan](https://github.com/wang-q/intspan) and [anchr](https://github.com/wang-q/anchr) were written by my lab professor [Qiang Wang](https://www.github.com/wang-q).
 
 Go check and install.
 
-#### Bowtie2
+* **Bowtie2**
 
 ```bash
 brew install bowtie2
 ```
 
-#### Seqkit
+* **Seqkit**
 
 Using seqkit to extract reads.
 
@@ -123,13 +132,13 @@ Using seqkit to extract reads.
 brew install seqkit
 ```
 
-#### mosdepth
+* **mosdepth**
 
 ```bash
 brew install mosdepth
 ```
 
-#### tsv-utils
+* **tsv-utils**
 
 tsv-utils is an really powerful toolbox for manipulating .tsv format files. It is highly recommended that you mastered it.
 
@@ -139,16 +148,16 @@ Make sure you completed software installation [wang-q/dotfiles](https://github.c
 brew install wang-q/tap/tsv-utils
 ```
 
-#### convert2bed in bedops
+* **convert2bed in bedops**
 
 ```bash
 brew install bedops
 ```
 
 
-##  Getting sRNA-seq data
+## Getting sRNA-seq data
 
-###  Download fastq from NCBI
+### Download fastq from NCBI
 
 Using anchr for downloading fastq, which could avoid using fastq-dump (time-wasted).
 
@@ -190,11 +199,11 @@ md5sum --check ena_info.md5.txt
 # check if there was any mistake during downloading
 ```
 
+All sRNA-seq files using *A. thaliana* were added up to 240 files.
+
 I just classified different sequencing file according to plant in manual. Thale, rice, maize ... (needed to be completed).
 
-All sRNA-seq files using *A. thaliana* were added up to 244 files.
-
-###  Quality control
+### Quality control
 
 Use fastqc to check the quality of sequencing for each fastq file.
 
@@ -206,17 +215,22 @@ fastqc -t 12 --quiet -o ../../fastqc/raw *.gz
 # -t: threads number
  ```
 
+### Remove adapter
+
 Use trim galore for automatic adapters cut. Trim galore is a perl wrapper for fastqc and cutadapt. It could be automatically or manually remove adapters.
 
 ```bash
 cd /mnt/e/project/srna/ena/thale
 
 parallel -j 4 " \
-trim_galore --phred33 -j 3 \
---length 17 --output_dir ../../trim {} \
+trim_galore -j 3 --length 17 \
+--fastqc --output_dir ../../trim {} \
+--suppress_warn \
 " ::: $(ls *.fastq.gz)
 # --small_rna: automatically remove adapters for small rna sequencing. If using this, trim_galore would only trim small RNA adapters
 ```
+
+### Quality control after trim
 
 Check the quality of sequencing files after trim.
 
@@ -224,17 +238,10 @@ Check the quality of sequencing files after trim.
 mkdir -p /mnt/e/project/srna/fastqc/after_trim
 cd /mnt/e/project/srna/trim
 
-fastqc -t 12 --quiet -o ../fastqc/after_trim *.gz
+mv *_fastqc.* ../fastqc/after_trim
+
+# trim_galore --fastqc could automatically give you the same results as followed command
+# fastqc -t 12 --quiet -o ../fastqc/after_trim *.gz
 ```
 
-After I used fastqc, there were few fail in per base sequence content. It was common in this item because of fastqc not applicable for the sRNA-seq task in this step. But we could see that adapters were all removed perfectly after trimming. Now we could use sequencing files for analyze.
-
-### Convert fastq to fasta
-
-Using faops to convert all fastq to fasta format because of the non-essential use of quality lines.
-
-```bash
-parallel -j 20 " \
-faops filter -l 0 {}.fq.gz {}.fa \
-" ::: $(ls *.fq.gz | perl -p -e 's/\.fq\.gz$//')
-```
+After fastqc adapted, there would be a few failure in per-base sequence content. It was common because of inapplicable of fastqc in dealing with sRNA-seq tasks. However, we could see that adapters were all removed perfectly after trimming. Now we could use sequencing files for analyze.

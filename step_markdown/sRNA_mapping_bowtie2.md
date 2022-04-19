@@ -1,3 +1,10 @@
+- [sRNA alignment using bowtie2](#srna-alignment-using-bowtie2)
+
+	- [Aligning sRNA-seq data to plant genome](#aligning-srna-seq-data-to-plant-genome)
+
+	- [Aligning different reads to bacterial genomes](#aligning-different-reads-to-bacterial-genomes)
+
+
 # sRNA alignment using bowtie2
 
 Here we use *Arabidopsis thaliana* genome as an example to prepare potential tRFs screening protocol.
@@ -43,12 +50,14 @@ rsync -avP /mnt/e/project/srna/annotation wangq@202.119.37.251:jyq/project/srna/
 
 ### Aligning
 
-**alignall.sh**
+* This step could provide us -N 0 (no mismatch in seed region, default: 22) reads aligned.
+
+**plantall.sh**
 
 ```bash
 parallel -j 3 " \
-bowtie2 -f {}_trimmed.fa -N 0 \
--x ../genome/plant/Atha/Atha --al-gz ../output/fastq/{}_plantaliall.fq.gz \
+bowtie2 -q {}_trimmed.fq.gz -N 0 \
+-x ../genome/plant/Atha/Atha --al-gz ../output/fastq/{}_plantall.fq.gz \
 --no-unal --threads 4 -S ../output/bam/plant/{}_plantall.sam \
 " ::: $(ls SRR*.fq.gz | perl -p -e 's/_trimmed.+gz$//')
 
@@ -57,32 +66,42 @@ bowtie2 -f {}_trimmed.fa -N 0 \
 ```
 
 ```bash
-bsub -q mpi -n 24 -J aliall -o . "bash alignall.sh"
+bsub -q mpi -n 24 -J pall -o . "bash plantall.sh"
 ```
 
-Then we need another mapping round for the 1 mismatch allowed.
+Then we need another mapping round for the -N 1 reads (1 mismatch allowed in seed region, default: 22).
 
-**align1mis.sh**
+**plantall1mis.sh**
 
 ```bash
-cd ./output/fastq
 parallel -j 3 " \
 bowtie2 -q {}_trimmed.fq.gz -N 1 \
--x ../genome/plant/Atha/Atha --al-gz ../output/fastq/{}_plantali1mis.fq.gz \
---un-gz ../output/fastq/{}_plantunali.fq.gz --no-unal --threads 4 \
--S ../output/bam/plant/{}_plant1mis.sam \
+-x ../genome/plant/Atha/Atha --al-gz ../output/fastq/{}_plantall1mis.fq.gz \
+--un-gz ../output/fastq/{}_plantunali.fq.gz --threads 4 \
+-S ../output/bam/plant/{}_plantall1mis.sam \
 " ::: $(ls SRR*.fq.gz | perl -p -e 's/_trimmed.+gz$//')
 ```
 
 ```bash
-bsub -q mpi -n 24 -J ali1mis -o . "bash align1mis.sh"
+bsub -q mpi -n 24 -J pall1mis -o . "bash plantall1mis.sh"
 ```
 
 ### Extract sequences of only 1 mismatch.
 
+We aligend twice using -N 0 and -N 1 in bowtie2 plant alignment. Because we chose 240 sRNA-seq files, so the default seed region 22 could covered the most reads in our analysis. The reason why I needed to extract the only -N 1 reads was that -N 1 reads could be a pure subset of those reads which were not originally from *A. tha* (got mismatches with plant genome) and could possibly act through miRNA-like mechanism. It was more common that sRNA reads used strigent conmplementary rules to regulate plant gene expression in plants.
+
 ```bash
 cd /mnt/e/project/srna/output/fastq
 
+for file in `ls SRR*_plantall.fq.gz | perl -p -e 's/_.+gz$//'`
+do
+cat <(seqtk seq -A ${file}_plantall1mis.fq.gz | grep '>' | sed 's/>//') | \
+tsv-join --filter-file <(seqtk seq -A ${file}_plantall.fq.gz | grep '>' | sed 's/>//') --key-fields 1 -e > ${file}.list;
+seqtk subseq ${file}_plantall1mis.fq.gz ${file}.list | gzip > ${file}_plant1mis.fq.gz;
+rm ${file}.list
+done
+
+: << EOF
 parallel -j 2 " \
 seqkit grep --quiet -n -v \
 -f <(seqkit seq -n {}_plantaliall.fq.gz) \
@@ -91,31 +110,21 @@ seqkit grep --quiet -n -v \
 # -n, --by-name (default): match by full name instead of just ID
 # -j 2 could prevent running out of memory
 
+# aborted! the seqkit was too slow to complete this
+EOF
+
 ls SRR*_plant1mis.fq.gz | wc -l
 # Better check file numbers you got
 # I used to get less files than expectation (maybe run out of memory)
 
-rm *_plantali1mis.fq.gz
-```
-
-If the above would cause some error, using the command below (optional)
-
-```bash
-for file in `ls SRR*_plantunali.fq.gz | perl -p -e 's/_.+\.gz$//'`
-do
-seqkit grep --quiet -j 2 -n -v \
--f <(seqkit seq -j 2 -n ${file}_plantaliall.fq.gz) \
-${file}_plantali1mis.fq.gz -o ${file}_plant1mis.fq.gz
-done
-
-ls SRR*_plant1mis.fq.gz | wc -l
-
-rm *_plantali1mis.fq.gz
+rm *_plantall1mis.fq.gz
 ```
 
 ##  Aligning different reads to bacterial genomes
 
-We selected bacterial genomes of 191 species from NCBI RefSeq database. From the previous step, we split reads to 3 types: matched seed regions without any mistake, 1 mismatch seed region allowed and unaligned reads. 
+After aligned sRNA reads to the plant genome, we split all reads into two different parts, which was reads originally from plants and reads appeared out of nowhere.
+
+We selected bacterial genomes of 191 species from NCBI RefSeq database. From the previous step, we split reads to 3 types: matched seed regions without any mistake, 1 mismatch seed region allowed and unaligned reads.
 
 ###  Indexing
 
