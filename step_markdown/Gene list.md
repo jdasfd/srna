@@ -40,9 +40,20 @@ tsv-select -f 1,4,5,7,9 > Atha_genelist.tsv
 We only need those specific column for extraction.
 
 ```bash
-mkdir -p /mnt/e/project/srna/output/gene/bam_tsv
+mkdir -p /mnt/e/project/srna/output/bam/plant_tsv
 cd /mnt/e/project/srna/output/bam/plant
 
+parallel -j 6 " \
+samtools view -@ 2 {}.sort.bam > ../plant_tsv/{}.tsv \
+" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+
+cd ../plant_tsv
+
+parallel -j 6 " \
+cat {}_plant1mis.tsv | tsv-join --filter-file {}_plantall.tsv \
+--key-fields 1,10 -e 
+"
+# tsv-join -e,--exclude: exclude matching records
 for file in `ls SRR*_plant1mis.sort.bam | perl -p -e 's/\.sort\.bam$//'`
 do
 samtools view -@ 10 ${file}.sort.bam | \
@@ -222,4 +233,47 @@ sed '1d' | sed '1iTAIR' > ../all_gene_count_100.tsv
 
 ```bash
 Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r -f all_gene_count_100.tsv -o plant_GO_figure/100_GO.pdf
+```
+
+```bash
+cat all_gene.tsv | tsv-summarize -H --group-by TAIR --count | \
+tsv-select -H -f count,TAIR | sed '1d' | \
+tsv-summarize --group-by 1 --count | \
+sort -nk 1 | sed '1iFile\tgene_count' > all_file_gene.tsv
+```
+
+```R
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(forcats)
+gene$File <- as.factor(gene$File)
+p <- ggplot(gene, aes(x = File, y = gene_count)) +
+geom_bar(stat = "identity", position = "dodge") +
+theme(axis.text.x = element_text(size = 4, angle = 90))
+```
+
+```bash
+Thickness <- Hidalgo1872$thickness
+Year <- rep(c("1872", "1873-74"), c(289, 196))
+dens <- densityMclust(Thickness)
+summary(dens$BIC)
+summary(dens, parameters = TRUE)
+
+br <- seq(min(Thickness), max(Thickness), length = 21)
+plot(dens, what = "density", data = Thickness, breaks = br)
+
+
+h1 <- hist(Thickness[Year == "1872"], breaks = br, plot = FALSE)
+h1$density <- h1$density*prop.table(table(Year))[1]
+h2 <- hist(Thickness[Year == "1873-74"], breaks = br, plot = FALSE)
+h2$density <- h2$density*prop.table(table(Year))[2]
+x <- seq(min(Thickness)-diff(range(Thickness))/10, max(Thickness)+diff(range(Thickness))/10, length = 200)
+cdens <- predict(dens, x, what = "cdens")
+cdens <- t(apply(cdens, 1, function(d) d*dens$parameters$pro))
+col <- adjustcolor(mclust.options("classPlotColors")[1:2], alpha = 0.3)
+plot(h1, xlab = "Thickness", freq = FALSE, main = "", border = FALSE, col = col[1], xlim = range(x), ylim = range(h1$density, h2$density, cdens))
+plot(h2, add = TRUE, freq = FALSE, border = FALSE, col = col[2])
+matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 1:3, col = 1)
+box()
 ```

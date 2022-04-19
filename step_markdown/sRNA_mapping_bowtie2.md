@@ -32,7 +32,7 @@ mkdir -p /mnt/e/project/srna/output/fastq
 cd /mnt/e/project/srna/trim
 ```
 
-Upload file to the HPCC
+* Upload file to the HPCC
 
 ```bash
 rsync -avP /mnt/e/project/srna/trim wangq@202.119.37.251:jyq/project/srna/bowtie2/
@@ -47,7 +47,7 @@ rsync -avP /mnt/e/project/srna/annotation wangq@202.119.37.251:jyq/project/srna/
 
 ```bash
 parallel -j 3 " \
-bowtie2 -q {}_trimmed.fq.gz -N 0 \
+bowtie2 -f {}_trimmed.fa -N 0 \
 -x ../genome/plant/Atha/Atha --al-gz ../output/fastq/{}_plantaliall.fq.gz \
 --no-unal --threads 4 -S ../output/bam/plant/{}_plantall.sam \
 " ::: $(ls SRR*.fq.gz | perl -p -e 's/_trimmed.+gz$//')

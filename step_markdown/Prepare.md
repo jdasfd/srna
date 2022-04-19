@@ -228,3 +228,13 @@ fastqc -t 12 --quiet -o ../fastqc/after_trim *.gz
 ```
 
 After I used fastqc, there were few fail in per base sequence content. It was common in this item because of fastqc not applicable for the sRNA-seq task in this step. But we could see that adapters were all removed perfectly after trimming. Now we could use sequencing files for analyze.
+
+### Convert fastq to fasta
+
+Using faops to convert all fastq to fasta format because of the non-essential use of quality lines.
+
+```bash
+parallel -j 20 " \
+faops filter -l 0 {}.fq.gz {}.fa \
+" ::: $(ls *.fq.gz | perl -p -e 's/\.fq\.gz$//')
+```
