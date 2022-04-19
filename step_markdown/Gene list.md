@@ -259,9 +259,20 @@ Year <- rep(c("1872", "1873-74"), c(289, 196))
 dens <- densityMclust(Thickness)
 summary(dens$BIC)
 summary(dens, parameters = TRUE)
-
 br <- seq(min(Thickness), max(Thickness), length = 21)
-plot(dens, what = "density", data = Thickness, breaks = br)
+
+
+dens <- densityMclust(seq$num)
+summary(dens$BIC)
+summary(dens, parameters = TRUE)
+br <- seq(min(seq$num), max(seq$num), length = 216)
+plot(dens, what = "density", data = seq$num, breaks = br)
+x <- seq(min(seq$num)-diff(range(seq$num))/10, max(seq$num)+diff(range(seq$num))/10,length = 300)
+cdens <- predict(dens, x, what = "cdens")
+cdens <- t(apply(cdens, 1, function(d) d*dens$parameters$pro))
+matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 1:3, col = 1)
+
+
 
 
 h1 <- hist(Thickness[Year == "1872"], breaks = br, plot = FALSE)

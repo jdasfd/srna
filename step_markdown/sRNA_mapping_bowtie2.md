@@ -122,9 +122,9 @@ rm *_plantall1mis.fq.gz
 
 ##  Aligning different reads to bacterial genomes
 
-After aligned sRNA reads to the plant genome, we split all reads into two different parts, which was reads originally from plants and reads appeared out of nowhere.
+After aligned sRNA reads to the plant genome, we split all reads into two different parts, which was reads originally from plants and reads appeared out of nowhere. The goal was to explore where did those reads come from.
 
-We selected bacterial genomes of 191 species from NCBI RefSeq database. From the previous step, we split reads to 3 types: matched seed regions without any mistake, 1 mismatch seed region allowed and unaligned reads.
+We selected bacterial genomes of 161 species from NCBI RefSeq database. From the previous step, we split reads to 3 types: matched seed regions without any mistake, 1 mismatch seed region allowed and unaligned reads.
 
 ###  Indexing
 
