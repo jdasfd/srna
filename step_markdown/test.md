@@ -92,4 +92,88 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result.only_trf.tsv -t "only_trf" -y "Bac-reads in tRNA" -o ../figure/only_trf_percent.pdf
 ```
 
-## 
+```R
+seq <- read_tsv("all_seq_10.count.tsv")
+count <- read_tsv("all_seq_10.num.tsv")
+
+dens <- Mclust(seq$num)
+
+summary(dens$BIC)
+summary(dens, parameters = TRUE)
+
+---------------------------------------------------- 
+Gaussian finite mixture model fitted by EM algorithm 
+---------------------------------------------------- 
+
+Mclust V (univariate, unequal variance) model with 4 components: 
+
+ log-likelihood     n df     BIC     ICL
+      -124219.5 34307 11 -248554 -260858
+
+Clustering table:
+    1     2     3     4 
+ 7534 11822 11028  3923 
+
+Mixing probabilities:
+        1         2         3         4 
+0.1713210 0.3551181 0.3382748 0.1352861 
+
+Means:
+       1        2        3        4 
+11.42704 14.78558 25.12289 67.13416 
+
+Variances:
+           1            2            3            4 
+   0.2684187    4.6310346   55.1790645 1341.9265511
+
+
+p <- ggplot(num, aes(x = num, y = count)) + 
+geom_bar(stat="identity") + 
+coord_cartesian(ylim = c(0, 1000)) # coord_cartesian will keep all the data rather than remove them
+
+x <- seq(11, 216, by = 1)
+y1 <- dnorm(x, 11.42704, 0.2684187)
+y2 <- dnorm(x, 14.78558, 4.6310346)
+y3 <- dnorm(x, 25.12289, 55.1790645)
+y4 <- dnorm(x, 67.13416, 1341.9265511)
+data_fun <- data.frame(file = x, values1 = y1, values2 = y2, values3 = y3, values4 = y4, count = count$count, 
+                       group = c("g1","g1", rep(c("g2"), each = 13), rep(c("g3"), each = 138), rep(c("g4"), each = 53)))
+data_fun$count <- log10(data_fun$count)
+
+p <- ggplot(data_fun) +
+geom_bar(aes(x = file, y = count, fill = group,
+         color = "black"), stat="identity") +
+geom_line(aes(x = file, y = values1*400), size = 1, color = "hotpink") +
+geom_line(aes(x = file, y = values2*400), size = 1, color = "orchid3") +
+geom_line(aes(x = file, y = values3*400), size = 1, color = "royalblue3") +
+geom_line(aes(x = file, y = values4*400), size = 1, color = "tomato1") +
+scale_y_continuous(sec.axis = sec_axis(~.*0.0025, name = ), name = "log(count)") +
+coord_cartesian(ylim = c(0,4), xlim = c(11,216)) +
+scale_x_continuous(breaks = c(seq(11, 216, by = 1))) +
+theme(axis.text.x = element_text(size = 2.5, angle = 90), axis.ticks = element_blank()) +
+theme(panel.border = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank(),
+      axis.line = element_line(color = "black"))
+
+ggsave(p, file = "Group_tier.pdf", width = 12, height = 4)
+```
+
+```bash
+cat all_seq_10.num.tsv | sed '1d' | \
+perl -n -e 'chomp;
+@a = split/\t/,$_;
+if(defined $i){
+    if($a[0] == $i){
+        print join ("\t", @a);
+        print "\n";
+    }
+    else
+}
+else{
+    $i = $a[0];
+    print join ("\t", @a);
+    print "\n";
+    $i++;
+}
