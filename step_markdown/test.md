@@ -96,10 +96,36 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 seq <- read_tsv("all_seq_10.count.tsv")
 count <- read_tsv("all_seq_10.num.tsv")
 
-dens <- Mclust(seq$num)
+dens <- Mclust(count$count)
 
+summary(dens)
 summary(dens$BIC)
 summary(dens, parameters = TRUE)
+
+---------------------------------------------------- 
+Gaussian finite mixture model fitted by EM algorithm 
+---------------------------------------------------- 
+
+Mclust V (univariate, unequal variance) model with 5 components: 
+
+ log-likelihood   n df       BIC       ICL
+      -1044.448 206 14 -2163.486 -2220.309
+
+Clustering table:
+ 1  2  3  4  5 
+34 83 38 28 23 
+
+Mixing probabilities:
+        1         2         3         4         5 
+0.1333400 0.3992552 0.2010692 0.1508102 0.1155254 
+
+Means:
+          1           2           3           4           5 
+   1.066079    7.480137   29.832278  126.877615 1196.943695 
+
+Variances:
+           1            2            3            4            5 
+7.300385e-01 1.539158e+01 2.185200e+02 5.044962e+03 1.096546e+06
 
 ---------------------------------------------------- 
 Gaussian finite mixture model fitted by EM algorithm 
@@ -127,6 +153,40 @@ Variances:
    0.2684187    4.6310346   55.1790645 1341.9265511
 
 
+summary(densi, parameters = TRUE)
+
+------------------------------------------------------- 
+Density estimation via Gaussian finite mixture modeling 
+------------------------------------------------------- 
+
+Mclust V (univariate, unequal variance) model with 4 components: 
+
+ log-likelihood     n df       BIC       ICL
+      -124219.8 34307 11 -248554.5 -260858.1
+
+Mixing probabilities:
+        1         2         3         4 
+0.1713062 0.3548931 0.3384245 0.1353762 
+
+Means:
+       1        2        3        4 
+11.42694 14.78338 25.11425 67.11505 
+
+Variances:
+           1            2            3            4 
+   0.2683464    4.6234189   55.1242285 1341.6427739 
+
+x <- seq(11, 216, by = 1)
+y1 <- dnorm(x, 11.42694, 0.2683464)
+y2 <- dnorm(x, 14.78338, 4.6234189)
+y3 <- dnorm(x, 25.11425, 55.1242285)
+y4 <- dnorm(x, 67.11505, 1341.6427739)
+data_fun <- data.frame(file = x, values1 = y1, values2 = y2, values3 = y3, values4 = y4, count = count$count, 
+                       group = c("g1","g1", rep(c("g2"), each = 13), rep(c("g3"), each = 138), rep(c("g4"), each = 53))
+
+
+
+
 p <- ggplot(num, aes(x = num, y = count)) + 
 geom_bar(stat="identity") + 
 coord_cartesian(ylim = c(0, 1000)) # coord_cartesian will keep all the data rather than remove them
@@ -138,27 +198,28 @@ y3 <- dnorm(x, 25.12289, 55.1790645)
 y4 <- dnorm(x, 67.13416, 1341.9265511)
 data_fun <- data.frame(file = x, values1 = y1, values2 = y2, values3 = y3, values4 = y4, count = count$count, 
                        group = c("g1","g1", rep(c("g2"), each = 13), rep(c("g3"), each = 138), rep(c("g4"), each = 53)))
-data_fun$count <- log10(data_fun$count)
 
 p <- ggplot(data_fun) +
-geom_bar(aes(x = file, y = count, fill = group,
-         color = "black"), stat="identity") +
-geom_line(aes(x = file, y = values1*400), size = 1, color = "hotpink") +
-geom_line(aes(x = file, y = values2*400), size = 1, color = "orchid3") +
-geom_line(aes(x = file, y = values3*400), size = 1, color = "royalblue3") +
-geom_line(aes(x = file, y = values4*400), size = 1, color = "tomato1") +
-scale_y_continuous(sec.axis = sec_axis(~.*0.0025, name = ), name = "log(count)") +
-coord_cartesian(ylim = c(0,4), xlim = c(11,216)) +
-scale_x_continuous(breaks = c(seq(11, 216, by = 1))) +
-theme(axis.text.x = element_text(size = 2.5, angle = 90), axis.ticks = element_blank()) +
-theme(panel.border = element_blank(),
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      panel.background = element_blank(),
-      axis.line = element_line(color = "black"))
+    geom_bar(aes(x = file, y = count, fill = group), stat="identity", color = "black") +
+    geom_line(aes(x = file, y = values1*10000), size = 1, color = "hotpink") +
+    geom_line(aes(x = file, y = values2*10000), size = 1, color = "orchid3") +
+    geom_line(aes(x = file, y = values3*10000), size = 1, color = "royalblue3") +
+    geom_line(aes(x = file, y = values4*10000), size = 1, color = "tomato1") +
+    coord_cartesian(ylim = c(0,1000), xlim = c(11,216)) +
+    scale_y_continuous(sec.axis = sec_axis(~.*0.00001)) +
+    scale_x_continuous(breaks = c(seq(11, 216, by = 1))) +
+    theme(axis.text.x = element_text(size = 2.5, angle = 90), axis.ticks = element_blank()) +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(color = "black")) +
+    scale_fill_manual(values = c("hotpink", "orchid3", "royalblue3", "tomato1"))
 
 ggsave(p, file = "Group_tier.pdf", width = 12, height = 4)
 ```
+
+
 
 ```bash
 cat all_seq_10.num.tsv | sed '1d' | \
