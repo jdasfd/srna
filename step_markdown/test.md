@@ -95,8 +95,9 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 ```R
 seq <- read_tsv("all_seq_10.count.tsv")
 count <- read_tsv("all_seq_10.num.tsv")
+ratio <- read_tsv("all_seq_10.ratio.tsv")
 
-dens <- Mclust(count$count)
+dens <- Mclust(ratio$ratio)
 
 summary(dens)
 summary(dens$BIC)
@@ -181,9 +182,23 @@ y1 <- dnorm(x, 11.42694, 0.2683464)
 y2 <- dnorm(x, 14.78338, 4.6234189)
 y3 <- dnorm(x, 25.11425, 55.1242285)
 y4 <- dnorm(x, 67.11505, 1341.6427739)
-data_fun <- data.frame(file = x, values1 = y1, values2 = y2, values3 = y3, values4 = y4, count = count$count, 
-                       group = c("g1","g1", rep(c("g2"), each = 13), rep(c("g3"), each = 138), rep(c("g4"), each = 53))
+data_fun <- data.frame(file = x, values1 = y1, values2 = y2, values3 = y3, values4 = y4, ratio = ratio$ratio, 
+                       group = c("g1","g1", rep(c("g2"), each = 13), rep(c("g3"), each = 138), rep(c("g4"), each = 53)))
 
+p <- ggplot(data_fun) +
+    geom_bar(aes(x = file, y = ratio, fill = group), stat="identity", color = "black") +
+    geom_line(aes(x = file, y = values1), size = 1, color = "hotpink") +
+    geom_line(aes(x = file, y = values2), size = 1, color = "orchid3") +
+    geom_line(aes(x = file, y = values3), size = 1, color = "royalblue3") +
+    geom_line(aes(x = file, y = values4), size = 1, color = "tomato1") +
+    coord_cartesian(ylim = c(0,0.02), xlim = c(11,216)) +
+    theme(axis.ticks = element_blank()) +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(color = "black")) +
+    scale_fill_manual(values = c("hotpink", "orchid3", "royalblue3", "tomato1"))
 
 
 
@@ -201,11 +216,12 @@ data_fun <- data.frame(file = x, values1 = y1, values2 = y2, values3 = y3, value
 
 p <- ggplot(data_fun) +
     geom_bar(aes(x = file, y = count, fill = group), stat="identity", color = "black") +
-    geom_line(aes(x = file, y = values1*10000), size = 1, color = "hotpink") +
-    geom_line(aes(x = file, y = values2*10000), size = 1, color = "orchid3") +
-    geom_line(aes(x = file, y = values3*10000), size = 1, color = "royalblue3") +
-    geom_line(aes(x = file, y = values4*10000), size = 1, color = "tomato1") +
-    coord_cartesian(ylim = c(0,1000), xlim = c(11,216)) +
+    geom_line(aes(x = file, y = values1), size = 1, color = "hotpink") +
+    geom_line(aes(x = file, y = values2), size = 1, color = "orchid3") +
+    geom_line(aes(x = file, y = values3), size = 1, color = "royalblue3") +
+    geom_line(aes(x = file, y = values4), size = 1, color = "tomato1") +
+    coord_cartesian(ylim 
+    = c(0,1000), xlim = c(11,216)) +
     scale_y_continuous(sec.axis = sec_axis(~.*0.00001)) +
     scale_x_continuous(breaks = c(seq(11, 216, by = 1))) +
     theme(axis.text.x = element_text(size = 2.5, angle = 90), axis.ticks = element_blank()) +
@@ -217,6 +233,33 @@ p <- ggplot(data_fun) +
     scale_fill_manual(values = c("hotpink", "orchid3", "royalblue3", "tomato1"))
 
 ggsave(p, file = "Group_tier.pdf", width = 12, height = 4)
+
+plot(densi, what = "density", data = seq$num, breaks = br)
+cdens <- predict(densi, x, what = "cdens")
+cdens <- t(apply(cdens, 1, function(d) d*densi$parameters$pro))
+matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 3)
+
+table <- data.frame(file = x, cdens, ratio = ratio$ratio, group = c("g1","g1", rep(c("g2"), each = 6), rep(c("g3"), each = 26), rep(c("g4"), each = 172)))
+
+p <- ggplot(table) +
+    geom_bar(aes(x = file, y = ratio, fill = group), stat="identity", color = "black") +
+    geom_line(aes(x = file, y = X1), size = 1, color = "hotpink") +
+    geom_line(aes(x = file, y = X2), size = 1, color = "orchid3") +
+    geom_line(aes(x = file, y = X3), size = 1, color = "royalblue3") +
+    geom_line(aes(x = file, y = X4), size = 1, color = "tomato1") +
+    scale_x_continuous(breaks = c(seq(11, 221, 10))) +
+    coord_cartesian(ylim = c(0,0.03), xlim = c(11,216)) +
+    theme(axis.ticks = element_blank()) +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(color = "black")) +
+    scale_fill_manual(values = c("hotpink", "orchid3", "royalblue3", "tomato1"))
+
+ggsave(p, file = "Group_tier.pdf", width = 12, height = 4)
+ggsave(p, file = "Group_tier_all.pdf", width = 12, height = 4)
+    
 ```
 
 

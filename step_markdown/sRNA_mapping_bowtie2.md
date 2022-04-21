@@ -58,7 +58,7 @@ rsync -avP /mnt/e/project/srna/annotation wangq@202.119.37.251:jyq/project/srna/
 parallel -j 3 " \
 bowtie2 -q {}_trimmed.fq.gz -N 0 \
 -x ../genome/plant/Atha/Atha --al-gz ../output/fastq/{}_plantall.fq.gz \
---no-unal --threads 4 -S ../output/bam/plant/{}_plantall.sam \
+--threads 4 -S ../output/bam/plant/{}_plantall.sam \
 " ::: $(ls SRR*.fq.gz | perl -p -e 's/_trimmed.+gz$//')
 
 # --al-gz: alignment fastq.gz extraction
@@ -93,13 +93,15 @@ We aligend twice using -N 0 and -N 1 in bowtie2 plant alignment. Because we chos
 ```bash
 cd /mnt/e/project/srna/output/fastq
 
-for file in `ls SRR*_plantall.fq.gz | perl -p -e 's/_.+gz$//'`
+for file in `ls SRR*_plantall.fq.gz | perl -p -e 's/_pl.+gz$//'`
 do
 cat <(seqtk seq -A ${file}_plantall1mis.fq.gz | grep '>' | sed 's/>//') | \
-tsv-join --filter-file <(seqtk seq -A ${file}_plantall.fq.gz | grep '>' | sed 's/>//') --key-fields 1 -e > ${file}.list;
+tsv-join --filter-file <(seqtk seq -A ${file}_plantall.fq.gz | grep '>' | sed 's/>//') \
+--key-fields 1 -e > ${file}.list;
 seqtk subseq ${file}_plantall1mis.fq.gz ${file}.list | gzip > ${file}_plant1mis.fq.gz;
-rm ${file}.list
+rm ${file}.list;
 done
+# the reason why I avoided using parallel was to make sure that memory would not exceed limit.
 
 : << EOF
 parallel -j 2 " \
