@@ -92,6 +92,8 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result.only_trf.tsv -t "only_trf" -y "Bac-reads in tRNA" -o ../figure/only_trf_percent.pdf
 ```
 
+Previous outdated method
+
 ```R
 seq <- read_tsv("all_seq_10.count.tsv")
 count <- read_tsv("all_seq_10.num.tsv")
@@ -102,56 +104,6 @@ dens <- Mclust(ratio$ratio)
 summary(dens)
 summary(dens$BIC)
 summary(dens, parameters = TRUE)
-
----------------------------------------------------- 
-Gaussian finite mixture model fitted by EM algorithm 
----------------------------------------------------- 
-
-Mclust V (univariate, unequal variance) model with 5 components: 
-
- log-likelihood   n df       BIC       ICL
-      -1044.448 206 14 -2163.486 -2220.309
-
-Clustering table:
- 1  2  3  4  5 
-34 83 38 28 23 
-
-Mixing probabilities:
-        1         2         3         4         5 
-0.1333400 0.3992552 0.2010692 0.1508102 0.1155254 
-
-Means:
-          1           2           3           4           5 
-   1.066079    7.480137   29.832278  126.877615 1196.943695 
-
-Variances:
-           1            2            3            4            5 
-7.300385e-01 1.539158e+01 2.185200e+02 5.044962e+03 1.096546e+06
-
----------------------------------------------------- 
-Gaussian finite mixture model fitted by EM algorithm 
----------------------------------------------------- 
-
-Mclust V (univariate, unequal variance) model with 4 components: 
-
- log-likelihood     n df     BIC     ICL
-      -124219.5 34307 11 -248554 -260858
-
-Clustering table:
-    1     2     3     4 
- 7534 11822 11028  3923 
-
-Mixing probabilities:
-        1         2         3         4 
-0.1713210 0.3551181 0.3382748 0.1352861 
-
-Means:
-       1        2        3        4 
-11.42704 14.78558 25.12289 67.13416 
-
-Variances:
-           1            2            3            4 
-   0.2684187    4.6310346   55.1790645 1341.9265511
 
 
 summary(densi, parameters = TRUE)
@@ -262,22 +214,3 @@ ggsave(p, file = "Group_tier_all.pdf", width = 12, height = 4)
     
 ```
 
-
-
-```bash
-cat all_seq_10.num.tsv | sed '1d' | \
-perl -n -e 'chomp;
-@a = split/\t/,$_;
-if(defined $i){
-    if($a[0] == $i){
-        print join ("\t", @a);
-        print "\n";
-    }
-    else
-}
-else{
-    $i = $a[0];
-    print join ("\t", @a);
-    print "\n";
-    $i++;
-}

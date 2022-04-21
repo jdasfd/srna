@@ -2,17 +2,22 @@
 
     - [Basic percentages of reads aligned to plant or bacteria](#basic-percentages-of-reads-aligned-to-plant-or-bacteria)
 
-    - 
+    - [Filter by ratio of aligning to plant](#filter-by-ratio-of-aligning-to-plant)
 
 # Bacterial related reads statistical information
 
 In this markdown, I recorded all reads aligned to bacteria and their characristics.
 
 
-## Basic percentages of reads aligned to plant or bacteria
+## Basic percentages of reads aligned to plant
+
+The sRNA-seq samples we gathered from NCBI were all completed in plant. So the original purpose was to detect the presence of sRNAs in plants. So the alignment first round in [sRNA_mapping_bowtie2.md](https://github.com/jdasfd/srna/blob/main/step_markdown/sRNA_mapping_bowtie2.md) provided two files: -N 0 reads aligning mode and -N 1 reads aligning mode.
+
+Files originated from the -N 1 parameter contained all reads that could align to the plant genome without considering mismatches.
+
 
 ```bash
-cd /mnt/e/project/srna/output/bam
+cd /mnt/e/project/srna/output/bam/plant
 
 bash ../../script/all_file_count.sh > ../count/all_file.csv
 
@@ -23,7 +28,8 @@ library(ggplot2)
 library(readr)
 args <- commandArgs(T)
 ct <- read.csv(args[1])
-p <- ggplot(ct, aes(x = name, y = count, fill = factor(group, levels = c("unknown","bacteria","plant")))) +
+p <- ggplot(ct, aes(x = name, y = count, 
+fill = factor(group, levels = c("unknown","bacteria","plant")))) +
 geom_bar(stat = "identity", position = "fill") +
 labs(x = "Seq files", y = "reads aligned ratio") +
 theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
