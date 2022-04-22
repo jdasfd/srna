@@ -17,9 +17,9 @@ Files originated from the -N 1 parameter contained all reads that could align to
 
 
 ```bash
-cd /mnt/e/project/srna/output/bam/plant
+cd /mnt/e/project/srna/output/count
 
-bash ../../script/all_file_count.sh > ../count/all_file.csv
+bash ../../script/plant_reads.sh > plant_reads.csv
 
 cd ../count
 
