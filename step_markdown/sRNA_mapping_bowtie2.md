@@ -233,24 +233,32 @@ cd /mnt/e/project/srna/output/count
 
 bash ../../script/plant_reads.sh > plant_reads.csv
 
-cd ../count
+cat plant_reads.csv | perl -n -e 'chomp;
+@a = split/,/,$_;
+if($a[0] eq "name"){print "$_,num\n";}
+else{if(not defined $name){$i = 1;
+$name = $a[0];print"$_,$i\n";}
+else{if($a[0] eq $name){print"$_,$i\n";}
+else{$i++;$name=$a[0];print"$_,$i\n";}}}
+' > all_file_plant_reads.csv
 
 Rscript -e '
 library(ggplot2)
 library(readr)
 args <- commandArgs(T)
 ct <- read.csv(args[1])
-p <- ggplot(ct, aes(x = name, y = count, 
-fill = factor(group, levels = c("unknown","bacteria","plant")))) +
+p <- ggplot(ct, aes(x = num, y = count, 
+fill = factor(group, levels = c("unknown","plant")))) +
 geom_bar(stat = "identity", position = "fill") +
-labs(x = "Seq files", y = "reads aligned ratio") +
-theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-p <- p + scale_x_discrete(breaks = NULL) +
+labs(x = "File numbers", y = "Reads aligned ratio")
+p <- p + scale_x_continuous(breaks = seq(0, 240, 10)) +
 scale_fill_manual(name = "reads source",
-labels = c("unknown", "bacteria", "plant"),
-values = c("gray75", "darkgoldenrod", "seagreen3"))
-ggsave(p, file = "../figure/all_file.pdf", width = 9, height = 4)
-' all_file.csv
+labels = c("non-plant", "plant"),
+values = c("gray75", "seagreen3")) +
+theme(panel.background = element_blank(),
+axis.text.x  = element_text(angle=45, vjust=0.5))
+ggsave(p, file = "../figure/all_file_plant_reads.pdf", width = 9, height = 4)
+' all_file_plant_reads.csv
 ```
 
 ## Filter by ratio of aligning to plant
@@ -262,27 +270,25 @@ From the above results, it is clear that some sRNA-seq files cannot align to pla
 ```bash
 cd /mnt/e/project/srna/output/count
 
-cat all_file.csv | mlr --icsv --otsv cat | \
-tsv-summarize -H --group-by name --sum count > all_reads_count.tsv
+cat all_file_plant_reads.csv | mlr --icsv --otsv cat | \
+tsv-summarize -H --group-by name --sum count > all_file_plant_sum.tsv
 
-cat all_file.csv | mlr --icsv --otsv cat | \
+cat all_file_plant_reads.csv | mlr --icsv --otsv cat | \
 tsv-filter -H --str-eq group:plant | \
-tsv-join -H --filter-file all_reads_count.tsv \
+tsv-join -H --filter-file all_file_plant_sum.tsv \
 --key-fields name --append-fields count_sum | \
-tsv-select -H -f name,count,count_sum | sed '1d' | \
+tsv-select -H -f name,count,count_sum,num | sed '1d' | \
 perl -n -e 'chomp;@a = split/\t/,$_; $ratio=$a[1]/$a[2]*100;
-printf("%s\t%.2f\n","$a[0]","$ratio");' | sed '1iname\tratio' > plant_ratio.tsv
+printf("%s\t%.2f\t%s\n","$a[0]","$ratio",$a[3]);' | sed '1iname\tratio\tnum' > plant_ratio.tsv
 
-cat plant_ratio.tsv | tsv-filter -H --ge ratio:50 > plant_50.tsv
+cat plant_ratio.tsv | tsv-filter -H --ge ratio:50 > all_file_plant_reads_50.tsv
 # cut-off 50%
-
-rm all_reads_count.tsv
 ```
 
 ```bash
-cat all_file.csv | mlr --icsv --otsv cat | \
-tsv-join -H --filter-file plant_50.tsv --key-fields name | \
-mlr --itsv --ocsv cat > all_file_50.csv
+cat all_file_plant_reads.csv | mlr --icsv --otsv cat | \
+tsv-join -H --filter-file all_file_plant_reads_50.tsv --key-fields name | \
+mlr --itsv --ocsv cat > all_file_plant_reads_50.csv
 ```
 
 ```bash
@@ -291,16 +297,18 @@ library(ggplot2)
 library(readr)
 args <- commandArgs(T)
 ct <- read.csv(args[1])
-p <- ggplot(ct, aes(x = name, y = count, fill = factor(group, levels = c("unknown","bacteria","plant")))) +
+p <- ggplot(ct, aes(x = num, y = count, 
+fill = factor(group, levels = c("unknown","plant")))) +
 geom_bar(stat = "identity", position = "fill") +
-labs(x = "Seq files", y = "reads aligned ratio") +
-theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-p <- p + scale_x_discrete(breaks = NULL) +
+labs(x = "File numbers", y = "Reads aligned ratio")
+p <- p + scale_x_continuous(breaks = seq(0, 240, 10)) +
 scale_fill_manual(name = "reads source",
-labels = c("unknown", "bacteria", "plant"),
-values = c("gray75", "darkgoldenrod", "seagreen3"))
-ggsave(p, file = "../figure/all_file_50.pdf", width = 9, height = 4)
-' all_file_50.csv
+labels = c("non-plant", "plant"),
+values = c("gray75", "seagreen3")) +
+theme(panel.background = element_blank(),
+axis.text.x  = element_text(angle=45, vjust=0.5))
+ggsave(p, file = "../figure/all_file_plant_reads_50.pdf", width = 9, height = 4)
+' all_file_plant_reads_50.csv
 ```
 
 ## Plant sRNA reads distribution
@@ -335,54 +343,13 @@ cat Atha_{}.gff | convert2bed --input=gff --output=bed > Atha_{}.bed \
 " ::: $(ls *_*.gff | perl -p -e 's/^Atha_(.+)\.gff/$1/')
 ```
 
-```bash
-mkdir -p /mnt/e/project/srna/output/bam/plantrna
-cd /mnt/e/project/srna/output/bam/plant
+* Count reads from different plant region
 
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_trna.bed \
-{}.sort.bam > ../plantrna/{}.trna.bam \
-" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_rrna.bed \
-{}.sort.bam > ../plantrna/{}.rrna.bam \
-" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_mrna.bed \
-{}.sort.bam > ../plantrna/{}.mrna.bam \
-" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_mirna.bed \
-{}.sort.bam > ../plantrna/{}.mirna.bam \
-" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_snrna.bed \
-{}.sort.bam > ../plantrna/{}.snrna.bam \
-" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_snorna.bed \
-{}.sort.bam > ../plantrna/{}.snorna.bam \
-" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_lncrna.bed \
-{}.sort.bam > ../plantrna/{}.lncrna.bam \
-" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/plant/Atha/Atha_ncrna.bed \
-{}.sort.bam > ../plantrna/{}.ncrna.bam \
-" ::: $(ls *_plantall.sort.bam | perl -p -e 's/\.sort\.bam$//')
-```
+Here we used `SRR*_plantall.sort.bam` because of we wanted to check the different sRNA ratio - whether they were all miRNA or not. 
 
 ```bash
 cd /mnt/e/project/srna/output/count
-bash ../../script/plant_rna_ratio.sh > plant_rna_ratio.csv
+bash ../../script/plant_rna_ratio.sh | tee plant_rna_ratio.csv
 
 Rscript -e '
 library(ggplot2)
