@@ -1,9 +1,10 @@
-echo "name,count,group";
-cd /mnt/e/project/srna/output/bam/plant
-for file in `ls *_plantall1mis.sort.bam | perl -p -e 's/_.+bam$//'`
+cd /mnt/e/project/srna/output/fastq
+for file in `ls *_plantall.fq.gz | perl -p -e 's/_.+gz$//'`
 do
-plant=`samtools view -F 4 -c -@ 10 ${file}_plantall1mis.sort.bam`;
-un=`samtools view -f 4 -c -@ 10 ${file}_plantall1mis.sort.bam`;
+plant=`faops filter -l 0 ${file}_plantall.fq.gz stdout | grep '^>' | wc -l`;
+1mis=`faops filter -l 0 ${file}_plant1mis.fq.gz stdout | grep '^>' | wc -l`;
+un=`faops filter -l 0 ${file}_plantunali.fq.gz stdout | grep '^>' | wc -l`;
+let no=${1mis}+${un};
 echo "${file},${plant},plant";
-echo "${file},${un},unknown";
+echo "${file},${no},unknown";
 done
