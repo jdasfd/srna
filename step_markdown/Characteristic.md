@@ -1,5 +1,11 @@
+- [sRNA reads characteristics](#srna-reads-characteristics)
 
-## Ratio of sRNA reads / aligned reads from different RNA regions in groups
+
+# sRNA reads characteristics
+
+The sRNA sequences has some specific characteristics. We wanted to find if there were any patterns of the sRNA distribution.
+
+## Ratio of sRNA reads / aligned reads from different RNA regions of 4 groups
 
 Using bed of rna to extract mapping reads from different RNA regions.
 

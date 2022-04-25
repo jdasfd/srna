@@ -214,3 +214,54 @@ ggsave(p, file = "Group_tier_all.pdf", width = 12, height = 4)
     
 ```
 
+
+```bash
+cd /mnt/e/project/srna/output/bam/plant
+
+echo "name,all" > ../../count/plant_allreads.csv
+for file in `ls SRR*_plantall.sort.bam | perl -p -e 's/_p.+bam$//'`
+do
+count=`samtools view -@ 10 --count ${file}_plantall.sort.bam`;
+echo "${file},${count}" | tee ../../count/plant_allreads.csv;
+done
+```
+
+```bash
+for num in {mrna,rrna,ncrna,lncrna,snrna,snorna,trna,mirna}
+do
+cat plant_rna_ratio_50.csv | mlr --icsv --otsv cat | \
+tsv-filter -H --str-eq group:${num} | \
+tsv-select -f 1,2 | sed '1d' | sed "1iname\t${num}" > plant_${num}.tsv;
+cat plant_allreads.csv | mlr --icsv --otsv cat | \
+tsv-join -H --filter-file plant_${num}.tsv --key-fields name --append-fields ${num}
+
+# sed "" can pass variable to sed command
+```
+
+We first want to summarize all sRNA-seq from different regions.
+
+```bash
+cd /mnt/e/project/srna/output/count
+
+cat all_file_plant_rna_ratio_50.csv | mlr --icsv --otsv cat | tsv-summarize -H --group-by name --sum count > all.tmp.tsv
+```
+
+```bash
+for num in {mrna,rrna,ncrna,lncrna,snrna,snorna,trna,mirna}
+do
+cat all_file_plant_rna_ratio_50.csv | mlr --icsv --otsv cat | \
+tsv-filter -H --str-eq group:${num} | \
+tsv-select -f 1,2 | sed '1d' | sed "1iname\t${num}" > plant_${num}.tmp.tsv;
+done
+
+cat all.tmp.tsv | tsv-join -H --filter-file plant_mirna.tmp.tsv --key-fields name --append-fields mirna | \
+tsv-join -H --filter-file plant_lncrna.tmp.tsv --key-fields name --append-fields lncrna | \
+tsv-join -H --filter-file plant_ncrna.tmp.tsv --key-fields name --append-fields ncrna | \
+tsv-join -H --filter-file plant_mrna.tmp.tsv --key-fields name --append-fields mrna | \
+tsv-join -H --filter-file plant_rrna.tmp.tsv --key-fields name --append-fields rrna | \
+tsv-join -H --filter-file plant_trna.tmp.tsv --key-fields name --append-fields trna | \
+tsv-join -H --filter-file plant_snorna.tmp.tsv --key-fields name --append-fields snorna | \
+tsv-join -H --filter-file plant_snrna.tmp.tsv --key-fields name --append-fields snrna | \
+tsv-join -H --filter-file plant_mirna.tmp.tsv --key-fields name --append-fields mirna | 
+# sed "" can pass variable to sed command
+```
