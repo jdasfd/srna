@@ -14,7 +14,7 @@ Here we use *Arabidopsis thaliana* genome as an example to prepare potential tRF
 
 - [Aligning different reads to bacterial genomes](#aligning-different-reads-to-bacterial-genomes)
 
-  - [Extract sequences of only 1 mismatch](#extract-sequences-of-only-1-mismatch)
+  - [Extract different seq files](#extract-different-seq-files)
 
 **Using Bowtie2 for reads alignment**: Because of the problem of downloading Bowtie. I decided to adopt Bowtie2, though Bowtie has advantages in mapping short reads.
 
@@ -64,12 +64,12 @@ We used this parameter for bowtie2 alignment `-N 1`.
 parallel -j 3 " \
 bowtie2 -q {}_trimmed.fq.gz -N 1 --xeq \
 -x ../genome/plant/Atha/Atha --threads 4 \
--S ../output/bam/plant/{}_plantall1mis.sam \
+-S ../output/bam/plant/{}_plant.sam \
 " ::: $(ls SRR*.fq.gz | perl -p -e 's/_trimmed.+gz$//')
 ```
 
 ```bash
-bsub -q mpi -n 24 -J pall1mis -o . "bash plantall1mis.sh"
+bsub -q mpi -n 24 -J plant -o . "bash plant.sh"
 ```
 
 ### Convert sam to bam file for minimum storage stress
@@ -127,9 +127,11 @@ ggsave(p, file = "../figure/plant_reads_all.pdf", width = 9, height = 4)
 ' plant_reads_all.csv
 ```
 
-- Filter by ratio of aligning to plant
+### Filter by ratio of aligning to plant
 
-From the above results, it is clear that some sRNA-seq files cannot align to plant in relatively high ratio. A cut-off of more than 50% reads that cannot aligned to plant was used to filter those low quality seq files.
+From the above results, it was clear that sRNA-seq files differed a lot in ratio that reads aligned to the plant. A cut-off should be determined to filter those low quality seq files. The Density estimation via Gaussian finite mixture modeling could provide us a relatively reasonable cut-off. We seperated every 3 percentages as a bin (0-3, 3-6, ..., *etc.*) and counted the file whose ratio of plant reads aligned was exactly in the diveded intervals. After that we estimated the distribution of the ratio distribution and divided it by running the density estimation using mixture modeling in R-package `mclust`.
+
+- Extracting ratio count of each bin
 
 ```bash
 cd /mnt/e/project/srna/output/count
@@ -168,24 +170,62 @@ print "$1\n";}}
 ' > ratio_3.tsv
 ```
 
-- Waiting for update: **Mclust for predicting plant ratio cut-off**
+- Mclust for predicting plant ratio cut-off
 
-```R
+Give out BIC and ICL rates of each model using in `mclust` and deciding which model should be adopted.
+
+```bash
+Rscript -e '
 library(readr)
 library(mclust)
 
 ratio <- read_tsv("ratio_3.tsv")
 dens <- Mclust(ratio$ratio)
-# dens <- densityMclust(ratio$ratio)
-summary(dens$BIC)
-summary(dens, parameters = TRUE)
-br <- seq(min(ratio$ratio), max(ratio$ratio), length = 33)
-plot(dens, what = "density", data = ratio$ratio, breaks = br)
+BIC <- mclustBIC(ratio$ratio)
+ICL <- mclustICL(ratio$ratio)
+write.table(BIC, "BIC.tmp.tsv", row.names = FALSE, col.names = TRUE, sep = "\t")
+write.table(ICL, "ICL.tmp.tsv", row.names = FALSE, col.names = TRUE, sep = "\t")
+'
+
+cat BIC.tmp.tsv | perl -n -e 'chomp;
+@a = split/\t/, $_;if($_ =~ /"/){$i = 1;next;}else{
+print "$i\t$a[0]\tBICE\n"; print "$i\t$a[1]\tBICV\n";
+$i++;}' | tsv-filter --str-ne 2:NA > BIC2.tmp.tsv
+
+cat ICL.tmp.tsv | perl -n -e 'chomp;
+@a = split/\t/, $_;if($_ =~ /"/){$i = 1;next;}else{
+print "$i\t$a[0]\tICLE\n"; print "$i\t$a[1]\tICLV\n";
+$i++;}' | tsv-filter --str-ne 2:NA > ICL2.tmp.tsv
+
+cat ICL2.tmp.tsv BIC2.tmp.tsv | sed '1inum\tgrade\tmethod' > mclust.tsv
+
+rm *.tmp.*
+
+Rscript -e '
+library(readr)
+library(ggplot2)
+num <- read_tsv("mclust.tsv", show_col_types = FALSE)
+p <- ggplot()+
+geom_line(data = num, aes(x = num, y = grade, group = method, color = method)) +
+scale_x_continuous(breaks = seq(0,9,1))
+ggsave(p, file = "../figure/mclust.pdf", width = 5, height = 4)
+'
+```
+
+Then using `mclust` to estimated density of ratios.
+
+```bash
+Rscript -e "
+
 x <- seq(1, 100, length = 33)
 cdens <- predict(dens, br, what = "cdens")
 cdens <- t(apply(cdens, 1, function(d) d*dens$parameters$pro))
 matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 1:3, col = 1)
 
+summary(dens$BIC)
+summary(dens, parameters = TRUE)
+br <- seq(min(ratio$ratio), max(ratio$ratio), length = 33)
+plot(dens, what = "density", data = ratio$ratio, breaks = br)
 h1 <- hist(Thickness[Year == "1872"], breaks = br, plot = FALSE)
 h1$density <- h1$density*prop.table(table(Year))[1]
 h2 <- hist(Thickness[Year == "1873-74"], breaks = br, plot = FALSE)
@@ -198,6 +238,7 @@ plot(h1, xlab = "Thickness", freq = FALSE, main = "", border = FALSE, col = col[
 plot(h2, add = TRUE, freq = FALSE, border = FALSE, col = col[2])
 matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 1:3, col = 1)
 box()
+"
 ```
 
 - Filter by the cut-off
@@ -336,10 +377,13 @@ In the bowtie2, the `--xeq` parameter should be added (detailed reasons could be
 
 ### Extract different seq files
 
-I split all reads aligned to plant into 3 groups. They were named as aliall, 1mis and unali.
+I split all reads aligned to plant into 3 groups. They were named as aliall, mis and unali.
+
 aliall: reads that aligned to plant genome perfectly (without any mismatch, originated from *A. tha*)
-1mis: reads that aligned to plant genome which allowed a mismatch occured in the seed region (k-mer expand, `-L 22`)
-unali: reads that did not to plant genome (in sam files contained `-F 4`)
+
+mis: reads that aligned to plant genome which allowed a mismatch occured in the seed region (k-mer expand, `-L 22`) -- reads probably target plant genome
+
+unali: reads that did not align to plant genome (in sam files contained `-F 4`)
 
 ```bash
 cd /mnt/e/project/srna/output/bam/plant
@@ -348,7 +392,7 @@ cd /mnt/e/project/srna/output/bam/plant
 ```bash
 for file in `ls SRR*.bam | perl -p -e 's/_.+bam$//'`
 do
-samtools view -@ 10 -h ${file}_plantall1mis.sort.bam | \
+samtools view -@ 10 -h ${file}_plant.sort.bam | \
 perl -n -e 'chomp;if($_=~/^@/){print "$_\n";}else{@array = split/\t/, $_;
 if($array[5] =~ /^((?!X).)*$/ && $array[1] != 4){print "$_\n";}else{next;}}
 ' | samtools fastq -@ 10 | gzip > ../../fastq/${file}_plantall.fq.gz;
@@ -358,17 +402,17 @@ done
 ```bash
 for file in `ls SRR*.bam | perl -p -e 's/_.+bam$//'`
 do
-samtools view -@ 10 -h ${file}_plantall1mis.sort.bam | \
+samtools view -@ 10 -h ${file}_plant.sort.bam | \
 perl -n -e 'chomp;if($_=~/^@/){print "$_\n";}else{@array = split/\t/, $_;
 if($array[1] != 4){if($array[5] =~ /X/){print "$_\n";}else{next;}}}
-' | samtools fastq -@ 10 | gzip > ../../fastq/${file}_plant1mis.fq.gz;
+' | samtools fastq -@ 10 | gzip > ../../fastq/${file}_plantmis.fq.gz;
 done
 ```
 
 ```bash
 for file in `ls SRR*.bam | perl -p -e 's/_.+bam$//'`
 do
-samtools view -h -@ 10 -f 4 ${file}_plantall1mis.sort.bam | \
+samtools view -h -@ 10 -f 4 ${file}_plant.sort.bam | \
 samtools fastq -@ 10 | gzip > ../../fastq/${file}_plantunali.fq.gz;
 done
 ```
@@ -409,13 +453,13 @@ bsub -q mpi -n 24 -J unali -o . "bash unali.sh"
 
 ```bash
 parallel -j 4 " \
-bowtie2 -q {}_plant1mis.fq.gz -N 0 --xeq \
--x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_1mis.sam \
-" ::: $(ls SRR*_plant1mis.fq.gz | perl -p -e 's/_plant.+gz$//')
+bowtie2 -q {}_plantmis.fq.gz -N 0 --xeq \
+-x ../../genome/bacteria/bacteria --threads 6 -S ../bam/bacteria/{}_mis.sam \
+" ::: $(ls SRR*_plantmis.fq.gz | perl -p -e 's/_plant.+gz$//')
 ```
 
 ```bash
-bsub -q mpi -n 24 -J 1mis -o . "bash 1mis.sh"
+bsub -q mpi -n 24 -J mis -o . "bash mis.sh"
 ```
 
 - Aligning perfectly matched reads to bacteria species.
@@ -510,7 +554,7 @@ ggsave(p, file = "../figure/bac_reads_30.pdf", width = 9, height = 4)
 ' bac_reads_30.csv
 ```
 
-### Summary of the plant alignment
+### Summary of the bateria alignment
 
 Count reads from different species (plant or bacteria)
 

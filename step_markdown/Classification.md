@@ -15,10 +15,9 @@ In RefSeq genome, there were different assembly species. In order to match the s
 
 After we specified 161 (only include category 1-4) species habitat (details in `ASSEMBLY.xlsx`), we grouped them according to the bacteria spatial distance with the landplants. I numbered every group preventing too much characters in a tsv file. After that I saved them into `name.tsv`.
 
-| group | number | species number |
-|:-:|:-:|:-:|
-| endo/epiphyte | 1 | 38 |
-| environment | 2 | 50 |
-| gut | 3 | 68 |
-| marine | 4 | 5 |
-
+|     group     | number | species number |
+| :-----------: | :----: | :------------: |
+| endo/epiphyte |   1    |       38       |
+|  environment  |   2    |       50       |
+|      gut      |   3    |       68       |
+|    marine     |   4    |       5        |

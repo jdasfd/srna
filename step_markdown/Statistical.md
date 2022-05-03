@@ -1,16 +1,45 @@
-- [Bacterial related reads statistical information](#bacterial-related-reads-statistical-information)
-
-    - [Basic percentages of reads aligned to plant or bacteria](#basic-percentages-of-reads-aligned-to-plant-or-bacteria)
-
-    - [Filter by ratio of aligning to plant](#filter-by-ratio-of-aligning-to-plant)
-
 # Bacterial related reads statistical information
 
 In this markdown, I recorded all reads aligned to bacteria and their characristics.
 
+- [Bacterial related reads statistical information](#bacterial-related-reads-statistical-information)
+  - [Counting bacterial reads among 3 files](#counting-bacterial-reads-among-3-files)
+  - [Ratio of reads aligned to bacteria / all non-plant reads among categories](#ratio-of-reads-aligned-to-bacteria--all-non-plant-reads-among-categories)
+      - [After filtering](#after-filtering)
+
+## Counting bacterial reads among 3 files
+
+Because of the seperation of 3 types of reads in the previous markdown [sRNA_mapping_bowtie2.md](sRNA_mapping_bowtie2.md): aliall(plant), mis(target plant), unali(unknown source), we wanted to know the ratio of reads belong to bacteria among 3 types of file.
+
+```bash
+bash ../../script/bac_ratio.sh | tee bac_per.csv
+
+cat bac_per.csv | mlr --icsv --otsv cat | \
+tsv-join -H --filter-file plant_30.tsv --key-fields name | \
+mlr --itsv --ocsv cat > bac_per_30.csv
+```
+
+Plot
+
+```bash
+Rscript -e '
+library(readr)
+library(ggplot2)
+library(ggforce)
+per <- read_tsv("bac_per_30_2.tsv", show_col_types = FALSE)
+
+s <- ggplot (data = per, aes(x = group, y = ratio)) +
+geom_boxplot() +
+geom_jitter(aes(color = name), alpha = 0.5, show.legend = FALSE) +
+theme(legend.position = "none")
+
+ggsave(s, file = "../figure/bac_per_30.pdf", width = 3, height = 4)
+'
+```
+
 ## Ratio of reads aligned to bacteria / all non-plant reads among categories
 
-* All 240 sRNA-seq files
+
 
 ```bash
 cd /mnt/e/project/srna/output/bam/bacteria

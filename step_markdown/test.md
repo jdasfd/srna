@@ -166,24 +166,6 @@ y4 <- dnorm(x, 67.13416, 1341.9265511)
 data_fun <- data.frame(file = x, values1 = y1, values2 = y2, values3 = y3, values4 = y4, count = count$count, 
                        group = c("g1","g1", rep(c("g2"), each = 13), rep(c("g3"), each = 138), rep(c("g4"), each = 53)))
 
-p <- ggplot(data_fun) +
-    geom_bar(aes(x = file, y = count, fill = group), stat="identity", color = "black") +
-    geom_line(aes(x = file, y = values1), size = 1, color = "hotpink") +
-    geom_line(aes(x = file, y = values2), size = 1, color = "orchid3") +
-    geom_line(aes(x = file, y = values3), size = 1, color = "royalblue3") +
-    geom_line(aes(x = file, y = values4), size = 1, color = "tomato1") +
-    coord_cartesian(ylim 
-    = c(0,1000), xlim = c(11,216)) +
-    scale_y_continuous(sec.axis = sec_axis(~.*0.00001)) +
-    scale_x_continuous(breaks = c(seq(11, 216, by = 1))) +
-    theme(axis.text.x = element_text(size = 2.5, angle = 90), axis.ticks = element_blank()) +
-    theme(panel.border = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          axis.line = element_line(color = "black")) +
-    scale_fill_manual(values = c("hotpink", "orchid3", "royalblue3", "tomato1"))
-
 ggsave(p, file = "Group_tier.pdf", width = 12, height = 4)
 
 plot(densi, what = "density", data = seq$num, breaks = br)

@@ -1,6 +1,3 @@
-- [sRNA reads characteristics](#srna-reads-characteristics)
-
-
 # sRNA reads characteristics
 
 The sRNA sequences has some specific characteristics. We wanted to find if there were any patterns of the sRNA distribution.
@@ -9,7 +6,7 @@ The sRNA sequences has some specific characteristics. We wanted to find if there
 
 Using bed of rna to extract mapping reads from different RNA regions.
 
-* All 240 sRNA-seq files
+- All 240 sRNA-seq files
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/bam/rna
@@ -47,6 +44,8 @@ rm {}.bam \
 Use idxstats to count the different chromosome cover. Because there were 190 bacteria included, so the chromosome numbers should be joined to its own name.
 
 ```bash
+samtools view SRR10049355_1mis.trna.bam | tsv-filter --not-iregex 6:X | tsv-summarize --group-by 3 --count
+
 parallel -j 6 " \
 samtools idxstats {}.trna.sort.bam | \
 tsv-select -f 1,3 | grep -v '*' | \
