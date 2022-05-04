@@ -4,6 +4,7 @@ library(ggplot2)
 library(readr)
 library("optparse")
 library(gridExtra)
+library(dplyr)
 
 option_list = list(
     make_option(c("-f","--file"), type = "character", default = NULL,
@@ -28,6 +29,8 @@ if (is.null(opt$file)){
 
 rna <- read_tsv(opt$file, col_types = cols(group = col_character()), col_names = T)
 ytitle <- paste(opt$ylab,"all Bac-reads (%)", sep = "/")
+neworder <- c("mis", "unali", "aliall")
+rna <- arrange(transform(rna, catgry = factor(catgry, levels = neworder)), catgry)
 
 plot1 <- ggplot (data = rna, aes(x = group, y = ratio, group = group, fill = group)) +
 geom_boxplot() + 

@@ -247,3 +247,22 @@ tsv-join -H --filter-file plant_snrna.tmp.tsv --key-fields name --append-fields 
 tsv-join -H --filter-file plant_mirna.tmp.tsv --key-fields name --append-fields mirna | 
 # sed "" can pass variable to sed command
 ```
+
+```bash
+mkdir -p /mnt/e/project/srna/output/count/bacteria
+cd /mnt/e/project/srna/output/bam/bac_tsv
+
+parallel -j 4 " \
+cat {}.tsv | tsv-summarize --group-by 3 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 \
+> ../../count/bacteria/{}.bac.tsv \
+" ::: $(ls *.tsv | perl -p -e 's/\.tsv$//')
+
+
+parallel -j 6 " \
+cat {}.bac.tsv | tsv-summarize --group-by 3 --sum 2 | \
+sort -nk 1 > {}.group.tsv \
+" ::: $(ls *.bac.tsv | perl -p -e 's/\.bac\.tsv$//')
+```

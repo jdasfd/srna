@@ -114,7 +114,7 @@ library(readr)
 args <- commandArgs(T)
 ct <- read.csv(args[1])
 p <- ggplot(ct, aes(x = num, y = count, 
-fill = factor(group, levels = c("unknown","plant")))) +
+fill = factor(catgry, levels = c("unknown","plant")))) +
 geom_bar(stat = "identity", position = "fill") +
 labs(x = "File numbers", y = "Ratio of reads source")
 p <- p + scale_x_continuous(breaks = seq(0, 240, 10)) +
@@ -140,15 +140,12 @@ cat plant_reads_all.csv | mlr --icsv --otsv cat | \
 tsv-summarize -H --group-by name --sum count > plant_all.tmp.tsv
 
 cat plant_reads_all.csv | mlr --icsv --otsv cat | \
-tsv-filter -H --str-eq group:plant | \
+tsv-filter -H --str-eq catgry:plant | \
 tsv-join -H --filter-file plant_all.tmp.tsv \
 --key-fields name --append-fields count_sum | \
 tsv-select -H -f name,count,count_sum,num | sed '1d' | \
 perl -n -e 'chomp;@a = split/\t/,$_; $ratio=$a[1]/$a[2]*100;
 printf("%s\t%.2f\t%s\n","$a[0]","$ratio",$a[3]);' | sed '1iname\tratio\tnum' > plant_ratio.tsv
-
-perl ../../script/ratio2count.pl -b 2 -r plant_ratio.tsv | \
-sort -nk 1 | sed '1iratio\tcount' > ratio_count_2.tsv
 
 perl ../../script/ratio2count.pl -b 3 -r plant_ratio.tsv | \
 sort -nk 1 | sed '1iratio\tcount' > ratio_count_3.tsv
@@ -157,12 +154,6 @@ rm *.tmp.*
 ```
 
 ```bash
-cat ratio_count_2.tsv | perl -n -e 'chomp;$i=0;if($_=~/^r/){
-print "ratio\n";}else{$_ =~ /^(\d+)\s+(\d+)$/;
-for($i = 0; $i < $2; $i++){
-print "$1\n";}}
-' > ratio_2.tsv
-
 cat ratio_count_3.tsv | perl -n -e 'chomp;$i=0;if($_=~/^r/){
 print "ratio\n";}else{$_ =~ /^(\d+)\s+(\d+)$/;
 for($i = 0; $i < $2; $i++){
@@ -179,7 +170,7 @@ Rscript -e '
 library(readr)
 library(mclust)
 
-ratio <- read_tsv("ratio_3.tsv")
+ratio <- read_tsv("ratio_3.tsv", show_col_types = FALSE)
 dens <- Mclust(ratio$ratio)
 BIC <- mclustBIC(ratio$ratio)
 ICL <- mclustICL(ratio$ratio)
@@ -212,14 +203,31 @@ ggsave(p, file = "../figure/mclust.pdf", width = 5, height = 4)
 '
 ```
 
-Then using `mclust` to estimated density of ratios.
+Then using `mclust` to estimated density of ratios. According to BIC and ICL from the previous step, the parameters `model = "E"` and `G = 4` were chosen for density estimation.
 
 ```bash
-Rscript -e "
+Rscript -e '
+library(readr)
+library(mclust)
 
-x <- seq(1, 100, length = 33)
-cdens <- predict(dens, br, what = "cdens")
-cdens <- t(apply(cdens, 1, function(d) d*dens$parameters$pro))
+ratio <- read_tsv("ratio_3.tsv", show_col_types = FALSE)
+dens <- Mclust(ratio$ratio, G = 4, model = "E")
+br <- seq(min(ratio$ratio), max(ratio$ratio), length = 33)
+pdf("../figure/density.pdf", width = 6, height = 4)
+plot(dens, what = "density", data = ratio$ratio, breaks = br)
+dev.off()
+'
+
+Rscript -e '
+library(readr)
+library(mclust)
+
+ratio <- read_tsv("ratio_3.tsv", show_col_types = FALSE)
+dens <- Mclust(ratio$ratio, G = 4, model = "E")
+br <- seq(min(ratio$ratio), max(ratio$ratio), length = 33)
+x <- seq(3, 102, length = 200)
+cdens <- predict(dens, x, what = "cdens")
+cdens <- t(apply(cdens, 3, function(d) d*dens$parameters$pro))
 matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 1:3, col = 1)
 
 summary(dens$BIC)
@@ -238,7 +246,7 @@ plot(h1, xlab = "Thickness", freq = FALSE, main = "", border = FALSE, col = col[
 plot(h2, add = TRUE, freq = FALSE, border = FALSE, col = col[2])
 matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 1:3, col = 1)
 box()
-"
+'
 ```
 
 - Filter by the cut-off
@@ -262,7 +270,7 @@ library(readr)
 args <- commandArgs(T)
 ct <- read.csv(args[1])
 p <- ggplot(ct, aes(x = num, y = count, 
-fill = factor(group, levels = c("unknown","plant")))) +
+fill = factor(catgry, levels = c("unknown","plant")))) +
 geom_bar(stat = "identity", position = "fill") +
 labs(x = "File numbers", y = "Ratio of reads source")
 p <- p + scale_x_continuous(breaks = seq(0, 240, 10)) +
@@ -342,7 +350,7 @@ library(readr)
 args <- commandArgs(T)
 plant <- read.csv(args[1])
 p <- ggplot(plant, aes(x = num, y = count, 
-fill = factor(group, levels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna")))) +
+fill = factor(catgry, levels = c("mrna","rrna","ncrna","lncrna","snrna","snorna","trna","mirna")))) +
 geom_bar(stat = "identity", position = "fill") +
 labs(x = "Seq files", y = "Ratio of reads from plant regions")
 p <- p + scale_x_continuous(breaks = seq(0, 185, 5)) +
@@ -395,7 +403,7 @@ do
 samtools view -@ 10 -h ${file}_plant.sort.bam | \
 perl -n -e 'chomp;if($_=~/^@/){print "$_\n";}else{@array = split/\t/, $_;
 if($array[5] =~ /^((?!X).)*$/ && $array[1] != 4){print "$_\n";}else{next;}}
-' | samtools fastq -@ 10 | gzip > ../../fastq/${file}_plantall.fq.gz;
+' | samtools fastq -@ 10 | gzip > ../../fastq/${file}_plantaliall.fq.gz;
 done
 ```
 
@@ -502,7 +510,7 @@ cd /mnt/e/project/srna/output/bam/bacteria
 for file in `ls SRR*.bam | perl -p -e 's/\.sort\.bam$//'`
 do
 samtools view -@ 10 ${file}.sort.bam | \
-tsv-filter --not-iregex 6:= --ne 2:4 > ../bac_tsv/${file}.tsv;
+tsv-filter --not-iregex 6:X --ne 2:4 > ../bac_tsv/${file}.tsv;
 done
 ```
 
@@ -541,7 +549,7 @@ library(readr)
 args <- commandArgs(T)
 ct <- read.csv(args[1])
 p <- ggplot(ct, aes(x = num, y = count, 
-fill = factor(group, levels = c("unknown","bacteria","plant")))) +
+fill = factor(catgry, levels = c("unknown","bacteria","plant")))) +
 geom_bar(stat = "identity", position = "fill") +
 labs(x = "File numbers", y = "Ratio of reads source")
 p <- p + scale_x_continuous(breaks = seq(0, 185, 5)) +
@@ -556,7 +564,7 @@ ggsave(p, file = "../figure/bac_reads_30.pdf", width = 9, height = 4)
 
 ### Summary of the bateria alignment
 
-Count reads from different species (plant or bacteria)
+- Count reads from different species (plant or bacteria)
 
 ```bash
 cat bac_reads_30.csv | mlr --icsv --otsv cat | \
@@ -565,19 +573,123 @@ tsv-summarize -H --group-by name --sum count > bac_30.tmp.tsv
 cat bac_reads_30.csv | mlr --icsv --otsv cat | \
 tsv-join -H --filter-file bac_30.tmp.tsv \
 --key-fields name --append-fields count_sum | \
-tsv-select -H -f name,count,count_sum,group | sed '1d' | \
+tsv-select -H -f name,count,count_sum,catgry | sed '1d' | \
 perl -n -e 'chomp;@a = split/\t/,$_; $ratio=$a[1]/$a[2]*100;
-printf("%s\t%.2f\t%s\n","$a[0]","$ratio",$a[3]);' | sed '1iname\tratio\tgroup' > bac_ratio_30.tsv
+printf("%s\t%.2f\t%s\n","$a[0]","$ratio",$a[3]);' | sed '1iname\tratio\tcatgry' > bac_ratio_30.tsv
 
 rm *.tmp.*
 ```
 
 ```bash
-cat bac_ratio_30.tsv | tsv-summarize -H --group-by group --mean ratio --median ratio | mlr --itsv --omd cat
+cat bac_ratio_30.tsv | tsv-summarize -H --group-by catgry --mean ratio --median ratio | mlr --itsv --omd cat
 ```
 
-| group    | ratio_mean     | ratio_median |
+| catgry   | ratio_mean     | ratio_median |
 | -------- | -------------- | ------------ |
 | plant    | 75.4014285714  | 82.1         |
 | bacteria | 0.897586206897 | 0.15         |
 | unknown  | 23.7014778325  | 17.87        |
+
+## Counting bacterial reads among 3 files
+
+Because of the seperation of 3 types of reads in the previous markdown [sRNA_mapping_bowtie2.md](sRNA_mapping_bowtie2.md): aliall(plant), mis(target plant), unali(unknown source), we wanted to know the ratio of reads belong to bacteria among 3 types of file.
+
+```bash
+bash ../../script/bac_ratio.sh | tee bac_per.csv
+
+cat bac_per.csv | mlr --icsv --otsv cat | \
+tsv-join -H --filter-file plant_30.tsv --key-fields name > bac_per_30.tsv
+```
+
+- Plot
+
+```bash
+Rscript -e '
+library(readr)
+library(ggplot2)
+library(ggforce)
+per <- read_tsv("bac_per_30.tsv", show_col_types = FALSE)
+
+s <- ggplot (data = per, aes(x = catgry, y = ratio)) +
+geom_boxplot() +
+geom_jitter(aes(color = name), alpha = 0.5, show.legend = FALSE) +
+theme(legend.position = "none")
+
+ggsave(s, file = "../figure/bac_per_30.pdf", width = 6, height = 4)
+'
+```
+
+## Ratio of reads aligned to bacteria / all non-plant reads among categories
+
+Bacteria were all grouped according to bacteria living habitats. Whether bacteria lived with plant or not was the only criterion for grouping bacteria. The goal was to find that if there were any difference between 4 groups.
+
+```bash
+mkdir /mnt/e/project/srna/output/count/all
+cd /mnt/e/project/srna/output/bam/bac_tsv
+
+cd /mnt/e/project/srna/output/bam/bac_tsv
+for file in `ls *.tsv | perl -p -e 's/\.tsv$//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+all=`faops filter -l 0 ../../fastq/${name}_plant${catgry}.fq.gz stdout | grep '^>' | wc -l`;
+cat ${file}.tsv | \
+tsv-summarize --group-by 3 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/all/${file}.all.tsv;
+echo -e "$name\tall\t$all\t$catgry" >> ../../count/all/${file}.all.tsv;
+done
+
+cd /mnt/e/project/srna/output/count/all
+rm ../bac_ratio_group.tsv
+# use >> the next, so clear the directory first
+for file in `ls`
+do
+cat ${file} | perl ../../../script/reads_group.pl >> ../bac_ratio_group.tsv;
+done
+
+cd ..
+
+sed -i "1iname\tgroup\tratio\tcatgry" bac_ratio_group.tsv
+
+cat bac_ratio_group.tsv | \
+tsv-join -H --filter-file plant_30.tsv --key-fields name \
+> bac_ratio_group_30.tsv
+```
+
+- Plot
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-n 3 -f bac_ratio_group_30.tsv -t "Bac-reads/all_in_group" \
+-y "Bac-reads/all" -o ../figure/bac_ratio_group_30.pdf
+
+# add the scale_y_continuous limits
+```
+
+- Statistical information
+
+```bash
+cat bac_ratio_group_30.tsv | \
+tsv-summarize -H --group-by group,catgry --mean ratio | \
+mlr --itsv --omd cat
+```
+
+| group | catgry | ratio_mean       |
+| ----- | ------ | ---------------- |
+| 2     | aliall | 0.376965024631   |
+| 3     | aliall | 0.236798522167   |
+| 4     | aliall | 0.0736566502463  |
+| 1     | aliall | 0.273780295567   |
+| 4     | mis    | 0.011142364532   |
+| 3     | mis    | 0.23722955665    |
+| 1     | mis    | 0.314582758621   |
+| 2     | mis    | 0.421583251232   |
+| 3     | unali  | 0.85832955665    |
+| 1     | unali  | 1.37684236453    |
+| 4     | unali  | 0.00303453608247 |
+| 2     | unali  | 1.54263251232    |
