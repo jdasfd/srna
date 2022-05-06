@@ -1,29 +1,27 @@
 # sRNA reads characteristics
 
-The sRNA sequences has some specific characteristics. We wanted to find if there were any patterns of the sRNA distribution.
+The sRNA sequences has some specific characteristics. We wanted to find if there were patterns of the sRNA distribution.
 
-## Ratio of sRNA reads / aligned reads from different RNA regions of 4 groups
+## Ratio of sRNA reads / bac-reads from different RNA regions of 4 groups
 
-Using bed of rna to extract mapping reads from different RNA regions.
-
-- All 240 sRNA-seq files
+- Using bed of rna to extract mapping reads from different RNA regions
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/bam/rna
 cd /mnt/e/project/srna/output/bam/bacteria
 
 parallel -j 4 " \
-samtools view -bh -L ../../../annotation/bacteria/trna.bed \
+samtools view -F 4 -bh -L ../../../annotation/bacteria/trna.bed \
 {}.sort.bam > ../rna/{}.trna.bam \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
-samtools view -bh -L ../../../annotation/bacteria/rrna.bed \
+samtools view -F 4 -bh -L ../../../annotation/bacteria/rrna.bed \
 {}.sort.bam > ../rna/{}.rrna.bam \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 
 parallel -j 4 " \
-samtools view -bh -L ../../../annotation/bacteria/mrna.bed \
+samtools view -F 4 -bh -L ../../../annotation/bacteria/mrna.bed \
 {}.sort.bam > ../rna/{}.mrna.bam \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
@@ -41,11 +39,123 @@ rm {}.bam \
 " ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
 ```
 
-Use idxstats to count the different chromosome cover. Because there were 190 bacteria included, so the chromosome numbers should be joined to its own name.
+- Use CIGAR to filter alll bac-reads from different region
+
+Three different RNA regions `.bam` files from the previous step.
 
 ```bash
-samtools view SRR10049355_1mis.trna.bam | tsv-filter --not-iregex 6:X | tsv-summarize --group-by 3 --count
+mkdir -p /mnt/e/project/srna/output/bam/rna_tsv
+cd /mnt/e/project/srna/output/bam/rna
 
+for file in `ls SRR*.bam | perl -p -e 's/\.sort\.bam$//'`
+do
+samtools view -@ 10 ${file}.sort.bam | \
+tsv-filter --not-iregex 6:X > ../rna_tsv/${file}.tsv;
+done
+```
+
+```bash
+mkdir -p /mnt/e/project/srna/output/count/rna
+cd /mnt/e/project/srna/output/bam/rna_tsv
+
+for file in `ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+bacall=`cat ../bac_tsv/${file}.tsv | wc -l`;
+cat ${file}.trna.tsv | \
+tsv-summarize --group-by 3 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/rna/${file}.trna.tsv;
+echo -e "$name\tall\t$bacall\t$catgry" >> ../../count/rna/${file}.trna.tsv;
+done
+
+for file in `ls *.rrna.tsv | perl -p -e 's/\.rrna\.tsv$//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+bacall=`cat ../bac_tsv/${file}.tsv | wc -l`;
+cat ${file}.rrna.tsv | \
+tsv-summarize --group-by 3 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/rna/${file}.rrna.tsv;
+echo -e "$name\tall\t$bacall\t$catgry" >> ../../count/rna/${file}.rrna.tsv;
+done
+
+for file in `ls *.mrna.tsv | perl -p -e 's/\.mrna\.tsv$//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+bacall=`cat ../bac_tsv/${file}.tsv | wc -l`;
+cat ${file}.mrna.tsv | \
+tsv-summarize --group-by 3 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/rna/${file}.mrna.tsv;
+echo -e "$name\tall\t$bacall\t$catgry" >> ../../count/rna/${file}.mrna.tsv;
+done
+```
+
+- RNA reads ratio in all bac-reads
+
+```bash
+cd /mnt/e/project/srna/output/count/rna
+rm ../bac_ratio_group.trna.tsv
+# use >> the next, so clear the directory first
+for file in `ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//'`
+do
+cat ${file}.trna.tsv | perl ../../../script/reads_group.pl >> ../bac_ratio_group.trna.tsv;
+done
+
+rm ../bac_ratio_group.rrna.tsv
+# use >> the next, so clear the directory first
+for file in `ls *.rrna.tsv | perl -p -e 's/\.rrna\.tsv$//'`
+do
+cat ${file}.rrna.tsv | perl ../../../script/reads_group.pl >> ../bac_ratio_group.rrna.tsv;
+done
+
+rm ../bac_ratio_group.mrna.tsv
+# use >> the next, so clear the directory first
+for file in `ls *.mrna.tsv | perl -p -e 's/\.mrna\.tsv$//'`
+do
+cat ${file}.mrna.tsv | perl ../../../script/reads_group.pl >> ../bac_ratio_group.mrna.tsv;
+done
+
+cd ..
+
+sed -i "1iname\tgroup\tratio\tcatgry" bac_ratio_group.trna.tsv bac_ratio_group.rrna.tsv bac_ratio_group.mrna.tsv
+
+for rna in "trna" "rrna" "mrna"
+do
+cat bac_ratio_group.${rna}.tsv | \
+tsv-join -H --filter-file plant_30.tsv --key-fields name \
+> bac_ratio_group_30.${rna}.tsv
+done
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f bac_ratio_group_30.trna.tsv -n 25 -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f bac_ratio_group_30.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f bac_ratio_group_30.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
+```
+
+```bash
 parallel -j 6 " \
 samtools idxstats {}.trna.sort.bam | \
 tsv-select -f 1,3 | grep -v '*' | \
@@ -170,8 +280,6 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result_50.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads_50.pdf
 ```
 
-
-
 ## Bacteria occurred frequencies among different groups (waiting for update)
 
 ```bash
@@ -238,8 +346,6 @@ Rscript /mnt/e/project/srna/script/rna_plot.r -f {}.num.tsv \
 -o ../figure/{}_freq.pdf -t {} -y frequencies \
 " ::: $(ls *.tsv | perl -p -e 's/\.num\.tsv//')
 ```
-
-
 
 ## Sequence among all files
 
@@ -424,8 +530,6 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result_50.tier3.tsv -t "<60_files" -y "Bac-reads in tRNA (T3)" -o ../figure/tier3_percent_50.pdf
 ```
 
-
-
 ## tRF region
 
 tRF3/5 regions and other_tRNA regions were extracted from the tRNA.bed file according to tRF characteristics.
@@ -576,11 +680,6 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result_50.other_trf.tsv -t other-tRNA_region -n 25 -y "other tRNA Bac-reads" -o ../figure/other_trf_percent_50.pdf
 ```
 
-
-
-
-
-
 ## Extract tRF sequence from different bacteria
 
 ### Get the *A. thaliana* transcripts
@@ -727,8 +826,6 @@ Rscript ../../script/line_cover.r -d {}.sum.tsv \
 " ::: $(ls *.sum.tsv | perl -p -e 's/\.sum\.tsv$//')
 ```
 
-
-
 ### Bacteria with tRNA coverage
 
 ```bash
@@ -777,8 +874,7 @@ facet_zoom(ylim = c(0, 30000))
 # facet_zoom function was from ggforce
 ```
 
-
-###  tRNA reads statistical information
+### tRNA reads statistical information
 
 Reads extracted from tRNA regions were considered as our target sRNAs. First, we used a script to check file
 
@@ -838,8 +934,6 @@ scale_x_continuous(breaks=seq(23,35,1))
 plot(l)
 ```
 
-
-
 ```bash
 for file in `ls *.fasta | perl -p -e 's/\.fasta$//'`
 do
@@ -872,11 +966,7 @@ tsv-join --filter-file ../../rawname.tsv --key-fields 1 --append-fields 2 \
 rm *_1mis*.tsv
 ```
 
-
-
-----------------------------------------------------
-
-
+---
 
 ```R
 bar <- ggplot(data = name, mapping = aes(x = 'category', y = count, fill = cate)) +
@@ -885,8 +975,6 @@ coord_polar(theta = 'y') +
 labs(x = '', y = '', title = '') +
 
 ```
-
-
 
 ```bash
 cat plot.count | perl -n -e 'chomp;
@@ -919,8 +1007,6 @@ theme(legend.position = 'none')
 plot(depth)
 ```
 
-
-
 ```bash
 Rscript -e '
 library(readr)
@@ -939,8 +1025,6 @@ theme(axis.text.x = NULL)
 ggsave(tplot, file = "freq.pdf", width = 7, height = 4)
 '
 ```
-
-
 
 ## Reads TPM among different groups (waiting for update)
 

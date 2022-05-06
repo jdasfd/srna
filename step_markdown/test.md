@@ -266,3 +266,10 @@ cat {}.bac.tsv | tsv-summarize --group-by 3 --sum 2 | \
 sort -nk 1 > {}.group.tsv \
 " ::: $(ls *.bac.tsv | perl -p -e 's/\.bac\.tsv$//')
 ```
+
+```bash
+cat SRR10049355_aliall.all.tsv | perl -n -e 'while(<>){@a=split/\t/,$_; $name = $a[0];$catgry = $a[3];
+if($a[1] eq all){$all = $a[2];}else{$group{$a[1]} = $a[2];}}
+for $key (keys %group){$group{$key} = $group{$key}*100/$all; print "$name\t$key\t$group{$key}\t$catgry";}
+'
+```

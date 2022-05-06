@@ -10,11 +10,27 @@ Here we use *Arabidopsis thaliana* genome as an example to prepare potential tRF
 
   - [Convert sam to bam file for minimum storage stress](#convert-sam-to-bam-file-for-minimum-storage-stress)
 
-  - [Reads ratio from plant](#reads-ratio-from-plant)
+  - [Reads ratio in plant](#reads-ratio-in-plant)
 
 - [Aligning different reads to bacterial genomes](#aligning-different-reads-to-bacterial-genomes)
 
   - [Extract different seq files](#extract-different-seq-files)
+
+  - [Indexing](#indexing-1)
+
+  - [Aligning](#aligning-1)
+  
+  - [Convert sam to bam file for minimum storage stress](#convert-sam-to-bam-file-for-minimum-storage-stress-1)
+  
+  - [Filter those aligned reads](#filter-those-aligned-reads)
+  
+  - [Reads ratio in bacteria](#reads-ratio-in-bacteria)
+  
+  - [Summary of the bateria alignment](#summary-of-the-bateria-alignment)
+  
+  - [Counting bacterial reads among 3 files](#counting-bacterial-reads-among-3-files)
+  
+  - [Ratio of reads aligned to bacteria / all non-plant reads among categories](#ratio-of-reads-aligned-to-bacteria--all-non-plant-reads-among-categories)
 
 **Using Bowtie2 for reads alignment**: Because of the problem of downloading Bowtie. I decided to adopt Bowtie2, though Bowtie has advantages in mapping short reads.
 
@@ -34,7 +50,7 @@ bowtie-build --quiet --threads 12 Atha.fna Atha
 
 - NOTICE
 
- > I used HPCC for such a number of files. So the bash script were 12 threads (my own computer), and I changed it into 24 threads when submit to  HPCC.
+ > I used HPCC for such a number of files. So the bash script were 12 threads (my own computer), and I changed it into 24 threads when submit to HPCC.
  >
  > Meanwhile, all the rsync step would be optional, depending on your choice.
 
@@ -83,7 +99,7 @@ samtools index {1}.sort.bam
 " ::: $(ls *.sam | perl -p -e 's/\.sam$//')
 ```
 
-### Reads ratio from plant
+### Reads ratio in plant
 
 The sRNA-seq samples we gathered from NCBI were all completed in plant. So the original purpose was to detect the presence of sRNAs in plants. There were files orginated from two different parameters: -N 0 reads aligning mode and -N 1 reads aligning mode.
 
@@ -381,17 +397,17 @@ After aligned sRNA reads to the plant genome, we split all reads into two differ
 
 We selected bacterial genomes of 161 species from NCBI RefSeq database. From the previous step, we split reads to 3 types: plant reads (matched perfectly to plant genome), reads which target plant genome (not perfectly matched plant genome but could be aligned in bowtie2) and unaligned reads (did not match plant genome at all).
 
-In the bowtie2, the `--xeq` parameter should be added (detailed reasons could be seen above [Aligning](#aligning)
+In the bowtie2, the `--xeq` parameter should be added (detailed reasons could be seen above [Aligning](#aligning)).
 
 ### Extract different seq files
 
 I split all reads aligned to plant into 3 groups. They were named as aliall, mis and unali.
 
-aliall: reads that aligned to plant genome perfectly (without any mismatch, originated from *A. tha*)
+aliall: reads that aligned to plant genome perfectly (without any mismatch, originated from *A. tha*).
 
-mis: reads that aligned to plant genome which allowed a mismatch occured in the seed region (k-mer expand, `-L 22`) -- reads probably target plant genome
+mis: reads that aligned to plant genome which allowed a mismatch occured in the seed region (k-mer expand, `-L 22`) -- reads probably target plant genome.
 
-unali: reads that did not align to plant genome (in sam files contained `-F 4`)
+unali: reads that did not align to plant genome (in sam files contained `-F 4`).
 
 ```bash
 cd /mnt/e/project/srna/output/bam/plant
@@ -427,7 +443,7 @@ done
 
 ### Indexing
 
-Here we treated 161 bacterial genomes all as chromosome
+Here we treated 161 bacterial genomes all as chromosome.
 
 ```bash
 cd /mnt/e/project/srna/genome/bacteria
@@ -437,14 +453,14 @@ bowtie2-build --threads 12 --quiet bacteria.fna bacteria
 
 ### Aligning
 
-**Notice:** path should be adjusted appropriately by yourself depending on your device
+**Notice:** path should be adjusted appropriately by yourself depending on your device.
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/bam/bacteria
 cd /mnt/e/project/srna/output/fastq
 ```
 
-- Aligning unaligned reads to bacteria species.
+- Aligning unaligned reads to bacteria species
 
 ```bash
 parallel -j 4 " \
@@ -457,7 +473,7 @@ bowtie2 -q {}_plantunali.fq.gz -N 0 --xeq \
 bsub -q mpi -n 24 -J unali -o . "bash unali.sh"
 ```
 
-- Aligning 1 mismatch allowed reads to bacteria species.
+- Aligning 1 mismatch allowed reads to bacteria species
 
 ```bash
 parallel -j 4 " \
@@ -470,7 +486,7 @@ bowtie2 -q {}_plantmis.fq.gz -N 0 --xeq \
 bsub -q mpi -n 24 -J mis -o . "bash mis.sh"
 ```
 
-- Aligning perfectly matched reads to bacteria species.
+- Aligning perfectly matched reads to bacteria species
 
 ```bash
 parallel -j 4 " \
@@ -514,7 +530,7 @@ tsv-filter --not-iregex 6:X --ne 2:4 > ../bac_tsv/${file}.tsv;
 done
 ```
 
-### Reads ratio from bacteria
+### Reads ratio in bacteria
 
 All the sRNA reads aligned perfectly to bacterial genomes were regarded as the reads orginated from bacteria. Previously, the results were suggested that all sRNA-seq files of the plant had unknown reads for proximately 20%. Here we calculated the ratio of all reads from bacteria for each file.
 
@@ -590,7 +606,7 @@ cat bac_ratio_30.tsv | tsv-summarize -H --group-by catgry --mean ratio --median 
 | bacteria | 0.897586206897 | 0.15         |
 | unknown  | 23.7014778325  | 17.87        |
 
-## Counting bacterial reads among 3 files
+### Counting bacterial reads among 3 files
 
 Because of the seperation of 3 types of reads in the previous markdown [sRNA_mapping_bowtie2.md](sRNA_mapping_bowtie2.md): aliall(plant), mis(target plant), unali(unknown source), we wanted to know the ratio of reads belong to bacteria among 3 types of file.
 
@@ -619,7 +635,7 @@ ggsave(s, file = "../figure/bac_per_30.pdf", width = 6, height = 4)
 '
 ```
 
-## Ratio of reads aligned to bacteria / all non-plant reads among categories
+### Ratio of reads aligned to bacteria / all non-plant reads among categories
 
 Bacteria were all grouped according to bacteria living habitats. Whether bacteria lived with plant or not was the only criterion for grouping bacteria. The goal was to find that if there were any difference between 4 groups.
 
