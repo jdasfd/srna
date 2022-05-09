@@ -8,7 +8,7 @@ All the processes were recorded into several markdown files.
 graph TB
     A[Prepare.md] --> B[sRNA_mapping]
     B[sRNA_mapping] --> |bowtie2| D[sRNA_mapping_bowtie2.md]
-    D --> F[Statistical.md]
+    D --> F[Characteristic.md]
 ```
 
 Other analytic processes of sRNAs in plants would be recorded in different markdowns.
