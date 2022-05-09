@@ -55,14 +55,30 @@ done
 ```
 
 ```bash
-mkdir -p /mnt/e/project/srna/output/count/rna
+cd /mnt/e/project/srna/output/count/
+mkdir all rna
+cd /mnt/e/project/srna/output/bam/bac_tsv
+
+for file in `ls *.tsv | perl -p -e 's/\.tsv$//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+cat ${file}.tsv | \
+tsv-summarize --group-by 3 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/all/${file}.all.tsv;
+done
+
 cd /mnt/e/project/srna/output/bam/rna_tsv
 
 for file in `ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//'`
 do
 name=${file%%_*};
 catgry=${file#*_};
-bacall=`cat ../bac_tsv/${file}.tsv | wc -l`;
 cat ${file}.trna.tsv | \
 tsv-summarize --group-by 3 --count | \
 tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
@@ -71,14 +87,12 @@ tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
 tsv-summarize --group-by 3 --sum 2 | \
 awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
 > ../../count/rna/${file}.trna.tsv;
-echo -e "$name\tall\t$bacall\t$catgry" >> ../../count/rna/${file}.trna.tsv;
 done
 
 for file in `ls *.rrna.tsv | perl -p -e 's/\.rrna\.tsv$//'`
 do
 name=${file%%_*};
 catgry=${file#*_};
-bacall=`cat ../bac_tsv/${file}.tsv | wc -l`;
 cat ${file}.rrna.tsv | \
 tsv-summarize --group-by 3 --count | \
 tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
@@ -87,14 +101,12 @@ tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
 tsv-summarize --group-by 3 --sum 2 | \
 awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
 > ../../count/rna/${file}.rrna.tsv;
-echo -e "$name\tall\t$bacall\t$catgry" >> ../../count/rna/${file}.rrna.tsv;
 done
 
 for file in `ls *.mrna.tsv | perl -p -e 's/\.mrna\.tsv$//'`
 do
 name=${file%%_*};
 catgry=${file#*_};
-bacall=`cat ../bac_tsv/${file}.tsv | wc -l`;
 cat ${file}.mrna.tsv | \
 tsv-summarize --group-by 3 --count | \
 tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
@@ -103,7 +115,6 @@ tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
 tsv-summarize --group-by 3 --sum 2 | \
 awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
 > ../../count/rna/${file}.mrna.tsv;
-echo -e "$name\tall\t$bacall\t$catgry" >> ../../count/rna/${file}.mrna.tsv;
 done
 ```
 
@@ -111,30 +122,37 @@ done
 
 ```bash
 cd /mnt/e/project/srna/output/count/rna
-rm ../bac_ratio_group.trna.tsv
-# use >> the next, so clear the directory first
+
 for file in `ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//'`
 do
-cat ${file}.trna.tsv | perl ../../../script/reads_group.pl >> ../bac_ratio_group.trna.tsv;
+cat ${file}.trna.tsv | tsv-join --filter-file ../all/${file}.all.tsv \
+--key-fields 2 --append-fields 3 >> ../bac_reads_group.trna.tsv;
 done
 
-rm ../bac_ratio_group.rrna.tsv
-# use >> the next, so clear the directory first
 for file in `ls *.rrna.tsv | perl -p -e 's/\.rrna\.tsv$//'`
 do
-cat ${file}.rrna.tsv | perl ../../../script/reads_group.pl >> ../bac_ratio_group.rrna.tsv;
+cat ${file}.rrna.tsv | tsv-join --filter-file ../all/${file}.all.tsv \
+--key-fields 2 --append-fields 3 >> ../bac_reads_group.rrna.tsv;
 done
 
-rm ../bac_ratio_group.mrna.tsv
-# use >> the next, so clear the directory first
 for file in `ls *.mrna.tsv | perl -p -e 's/\.mrna\.tsv$//'`
 do
-cat ${file}.mrna.tsv | perl ../../../script/reads_group.pl >> ../bac_ratio_group.mrna.tsv;
+cat ${file}.mrna.tsv | tsv-join --filter-file ../all/${file}.all.tsv \
+--key-fields 2 --append-fields 3 >> ../bac_reads_group.mrna.tsv;
 done
+```
 
+```bash
 cd ..
 
-sed -i "1iname\tgroup\tratio\tcatgry" bac_ratio_group.trna.tsv bac_ratio_group.rrna.tsv bac_ratio_group.mrna.tsv
+for rna in "trna" "rrna" "mrna"
+do
+cat bac_reads_group.${rna}.tsv | perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[4];
+print"$a[0]\t$a[1]\t$b\t$a[3]\n";
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > bac_ratio_group.${rna}.tsv
+done
 
 for rna in "trna" "rrna" "mrna"
 do
@@ -146,7 +164,7 @@ done
 
 ```bash
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f bac_ratio_group_30.trna.tsv -n 25 -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads.pdf
+-f bac_ratio_group_30.trna.tsv -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f bac_ratio_group_30.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads.pdf
@@ -263,7 +281,7 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
 ```
 
-#### After filtering
+- After filtering
 
 ```bash
 cat result.trna.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.trna.tsv
