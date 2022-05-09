@@ -155,6 +155,8 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f bac_ratio_group_30.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
 ```
 
+- Old version
+
 ```bash
 parallel -j 6 " \
 samtools idxstats {}.trna.sort.bam | \

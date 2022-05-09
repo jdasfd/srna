@@ -273,3 +273,18 @@ if($a[1] eq all){$all = $a[2];}else{$group{$a[1]} = $a[2];}}
 for $key (keys %group){$group{$key} = $group{$key}*100/$all; print "$name\t$key\t$group{$key}\t$catgry";}
 '
 ```
+
+| group | catgry | ratio_mean     |
+| ----- | ------ | -------------- |
+| 1     | aliall | 3.48643137842  |
+| 2     | aliall | 7.28741824153  |
+| 3     | aliall | 2.51668786714  |
+| 4     | aliall | 0.62532542953  |
+| 1     | mis    | 7.17837896075  |
+| 2     | mis    | 10.2846318487  |
+| 3     | mis    | 10.2209894554  |
+| 4     | mis    | 0.329244945806 |
+| 1     | unali  | 11.7434182248  |
+| 2     | unali  | 9.69985005573  |
+| 3     | unali  | 6.82058079933  |
+| 4     | unali  | 1.2904385973   |
