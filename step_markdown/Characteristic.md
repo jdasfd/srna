@@ -118,27 +118,18 @@ awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
 done
 ```
 
-- RNA reads ratio in all bac-reads
+- RNA reads ratio in all bac-reads (group)
 
 ```bash
 cd /mnt/e/project/srna/output/count/rna
 
 for file in `ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//'`
 do
-cat ${file}.trna.tsv | tsv-join --filter-file ../all/${file}.all.tsv \
---key-fields 2 --append-fields 3 >> ../bac_reads_group.trna.tsv;
-done
-
-for file in `ls *.rrna.tsv | perl -p -e 's/\.rrna\.tsv$//'`
+for rna in "trna" "rrna" "mrna"
 do
-cat ${file}.rrna.tsv | tsv-join --filter-file ../all/${file}.all.tsv \
---key-fields 2 --append-fields 3 >> ../bac_reads_group.rrna.tsv;
+cat ${file}.${rna}.tsv | tsv-join --filter-file ../all/${file}.all.tsv \
+--key-fields 2 --append-fields 3 >> ../bac_reads_group.${rna}.tsv;
 done
-
-for file in `ls *.mrna.tsv | perl -p -e 's/\.mrna\.tsv$//'`
-do
-cat ${file}.mrna.tsv | tsv-join --filter-file ../all/${file}.all.tsv \
---key-fields 2 --append-fields 3 >> ../bac_reads_group.mrna.tsv;
 done
 ```
 
@@ -147,13 +138,19 @@ cd ..
 
 for rna in "trna" "rrna" "mrna"
 do
-cat bac_reads_group.${rna}.tsv | perl -n -e 'while(<>){chomp;
+cat bac_reads_group.${rna}.tsv | \
+tsv-filter --ne 5:0 | \
+perl -n -e 'while(<>){chomp;
 @a=split/\t/,$_;
 $b=$a[2]*100/$a[4];
-print"$a[0]\t$a[1]\t$b\t$a[3]\n";
+printf"%s\t%s\t%.3f\t%s\n",$a[0],$a[1],$b,$a[3];
 }' | sed -e '1i\name\tgroup\tratio\tcatgry' > bac_ratio_group.${rna}.tsv
 done
+```
 
+- Filter
+
+```bash
 for rna in "trna" "rrna" "mrna"
 do
 cat bac_ratio_group.${rna}.tsv | \
@@ -161,6 +158,8 @@ tsv-join -H --filter-file plant_30.tsv --key-fields name \
 > bac_ratio_group_30.${rna}.tsv
 done
 ```
+
+- Plot
 
 ```bash
 Rscript /mnt/e/project/srna/script/rna_percent.r \
@@ -173,214 +172,32 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f bac_ratio_group_30.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
 ```
 
-- Old version
-
-```bash
-parallel -j 6 " \
-samtools idxstats {}.trna.sort.bam | \
-tsv-select -f 1,3 | grep -v '*' | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 \
-> ../../count/trna/{}.trna.tsv \
-" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
-
-parallel -j 6 " \
-samtools idxstats {}.rrna.sort.bam | \
-tsv-select -f 1,3 | grep -v '*' | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 \
-> ../../count/rrna/{}.rrna.tsv \
-" ::: $(ls *.rrna.sort.bam | perl -p -e 's/\.rrna.+bam$//')
-
-parallel -j 6 " \
-samtools idxstats {}.mrna.sort.bam | \
-tsv-select -f 1,3 | grep -v '*' | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 \
-> ../../count/mrna/{}.mrna.tsv \
-" ::: $(ls *.mrna.sort.bam | perl -p -e 's/\.mrna.+bam$//')
-```
-
-All aligned reads to different bacteria of all regions.
-
-```bash
-cd /mnt/e/project/srna/output/count/trna
-
-for file in `ls *.trna.tsv | perl -p -e 's/\.trna\.tsv//'`
-do
-cat ${file}.trna.tsv | \
-tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
-> ${file}.tsv
-done
-
-rm *.trna.tsv
-
-bash ../../../script/group_rna_count.sh > ../name_count.trna.tsv
-```
-
-```bash
-cd /mnt/e/project/srna/output/count/rrna
-
-for file in `ls *.rrna.tsv | perl -p -e 's/\.rrna\.tsv//'`
-do
-cat ${file}.rrna.tsv | \
-tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
-> ${file}.tsv
-done
-
-rm *.rrna.tsv
-
-bash ../../../script/group_rna_count.sh > ../name_count.rrna.tsv
-```
-
-```bash
-cd /mnt/e/project/srna/output/count/mrna
-
-for file in `ls *.mrna.tsv | perl -p -e 's/\.mrna\.tsv//'`
-do
-cat ${file}.mrna.tsv | \
-tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
-> ${file}.tsv
-done
-
-rm *.mrna.tsv
-
-bash ../../../script/group_rna_count.sh > ../name_count.mrna.tsv
-```
-
-```bash
-cd /mnt/e/project/srna/output/count
-
-cat name_count.trna.tsv | perl -n -e 'while(<>){chomp;
-@a=split/\t/,$_;
-$b=$a[2]*100/$a[3];
-print"$a[0]\t$a[1]\t$b\t$a[4]\n";
-}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.trna.tsv
-
-cat name_count.rrna.tsv | perl -n -e 'while(<>){chomp;
-@a=split/\t/,$_;
-$b=$a[2]*100/$a[3];
-print"$a[0]\t$a[1]\t$b\t$a[4]\n";
-}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.rrna.tsv
-
-cat name_count.mrna.tsv | perl -n -e 'while(<>){chomp;
-@a=split/\t/,$_;
-$b=$a[2]*100/$a[3];
-print"$a[0]\t$a[1]\t$b\t$a[4]\n";
-}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.mrna.tsv
-```
-
-```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.trna.tsv -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
-```
-
-- After filtering
-
-```bash
-cat result.trna.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.trna.tsv
-cat result.rrna.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.rrna.tsv
-cat result.mrna.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.mrna.tsv
-```
-
-```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result_50.trna.tsv -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads_50.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result_50.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads_50.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result_50.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads_50.pdf
-```
-
-## Bacteria occurred frequencies among different groups (waiting for update)
-
-```bash
-mkdir -p /mnt/e/project/srna/output/occurrence
-cd /mnt/e/project/srna/output/count
-```
-
-```bash
-for file in `ls`
-do
-if [ -d "$file" ]
-then
-if [[ "$file" = "all" ]]
-then
-continue
-else
-cd ${file};
-cat *_1mis.tsv >> ../../occurrence/${file}/1mis.tsv;
-cat *_unali.tsv >> ../../occurrence/${file}/unali.tsv;
-cat *_aliall.tsv >> ../../occurrence/${file}/aliall.tsv;
-cd ..;
-fi
-fi
-done
-```
-
-```bash
-cd /mnt/e/project/srna/output/occurrence/
-
-for file in `ls`
-do
-if [[ -d "$file" ]]
-then
-cd $file;
-parallel -j 3 " \
-perl ../../../script/occurrence.pl -f {}.tsv -o {}.num.tsv \
-" ::: $(ls *.tsv | perl -p -e 's/\.tsv//');
-cd ..;
-fi
-done
-```
-
-```bash
-for dir in `ls`
-do
-if [[ -d "$dir" ]]
-then
-cd $dir;
-for file in `ls *.num.tsv | perl -p -e 's/\.num\.tsv//'`
-do
-cat ${file}.num.tsv | \
-tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
-awk -v file=$file '{print $1"\t"$2"\t"$3"\t"file}'
-done | \
-sed '1ispecies\tnum\tgroup\tcatgry'> ../${dir}.num.tsv;
-cd ..;
-fi
-done
-```
-
-```bash
-parallel -j 3 " \
-Rscript /mnt/e/project/srna/script/rna_plot.r -f {}.num.tsv \
--o ../figure/{}_freq.pdf -t {} -y frequencies \
-" ::: $(ls *.tsv | perl -p -e 's/\.num\.tsv//')
-```
+| group | catgry | ratio_mean     | ratio_median |
+| ----- | ------ | -------------- | ------------ |
+| 1     | aliall | 12.9401138614  | 8.463        |
+| 2     | aliall | 10.7372512315  | 6.531        |
+| 3     | aliall | 7.22172772277  | 4.5755       |
+| 4     | aliall | 0.161110169492 | 0.072        |
+| 1     | mis    | 11.1145114943  | 8.39         |
+| 2     | mis    | 9.25039408867  | 6.641        |
+| 3     | mis    | 15.660540107   | 13.418       |
+| 4     | mis    | 1.85691011236  | 1.307        |
+| 1     | unali  | 19.3068579235  | 19.266       |
+| 2     | unali  | 15.6841386139  | 15.868       |
+| 3     | unali  | 14.3077142857  | 16.3145      |
+| 4     | unali  | 7.67607462687  | 5.882        |
 
 ## Sequence among all files
 
 So the main reason I do this step is to select those frequently occurred among all sequence files, that is, the most likely sRNA appeared among *A. tha* sRNA-seq files.
 
-#### All seq files
-
 ```bash
-mkdir -p /mnt/e/project/srna/output/tier/trna
-cd /mnt/e/project/srna/output/bam/rna
+mkdir -p /mnt/e/project/srna/output/tier/rna
+cd /mnt/e/project/srna/output/bam/rna_tsv
 
-parallel -j 4 " \
-samtools view -@ 2 {}.trna.sort.bam | \
-tsv-select -f 3,10 > ../../tier/trna/{}.trna.tsv \
-" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
+parallel -j 6 " \
+cat {}.tsv | tsv-select -f 3,10 > ../../tier/rna/{}.tsv \
+" ::: $(ls *.tsv | perl -p -e 's/\.tsv$//')
 ```
 
 ```bash
@@ -531,7 +348,7 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result.tier3.tsv -t "<60_files" -y "Bac-reads in tRNA (T3)" -o ../figure/tier3_percent.pdf
 ```
 
-#### After filtering
+### After filtering
 
 ```bash
 cat result.tier1.tsv | tsv-join -H --filter-file ../count/plant_50.tsv --key-fields 1 > result_50.tier1.tsv
@@ -554,7 +371,7 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 
 tRF3/5 regions and other_tRNA regions were extracted from the tRNA.bed file according to tRF characteristics.
 
-#### All seq files
+### All seq files
 
 ```bash
 cd /mnt/e/project/srna/annotation/bacteria
