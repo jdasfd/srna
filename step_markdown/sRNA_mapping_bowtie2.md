@@ -243,7 +243,7 @@ dens <- Mclust(ratio$ratio, G = 4, model = "E")
 br <- seq(min(ratio$ratio), max(ratio$ratio), length = 33)
 x <- seq(3, 102, length = 200)
 cdens <- predict(dens, x, what = "cdens")
-cdens <- t(apply(cdens, 3, function(d) d*dens$parameters$pro))
+cdens <- t(apply(cdens, 1, function(d) d*dens$parameters$pro))
 matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 1:3, col = 1)
 
 summary(dens$BIC)

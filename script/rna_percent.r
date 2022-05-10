@@ -4,7 +4,7 @@ library(ggplot2)
 library(readr)
 library("optparse")
 library(gridExtra)
-library(dplyr)
+suppressMessages(library(dplyr))
 
 option_list = list(
     make_option(c("-f","--file"), type = "character", default = NULL,

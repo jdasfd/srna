@@ -1,4 +1,17 @@
-- [Preparations for the sRNA anlytic process](#preparations-for-the-srna-analytic-process)
+- [Preparations for the sRNA analytic process](#preparations-for-the-srna-analytic-process)
+  - [The genome preparations](#the-genome-preparations)
+    - [*Arabidopsis thaliana*](#arabidopsis-thaliana)
+      - [*A. thaliana* genomes](#a-thaliana-genomes)
+      - [*A. thaliana* annotation](#a-thaliana-annotation)
+    - [Bacteria](#bacteria)
+      - [Bacteria genomes](#bacteria-genomes)
+      - [Bacteria annotation](#bacteria-annotation)
+  - [Biotools in protocol](#biotools-in-protocol)
+  - [Getting sRNA-seq data](#getting-srna-seq-data)
+    - [Download fastq from NCBI](#download-fastq-from-ncbi)
+    - [Quality control](#quality-control)
+    - [Remove adapter](#remove-adapter)
+    - [Quality control after trim](#quality-control-after-trim)
 
     - [Prepare](#prepare)
 

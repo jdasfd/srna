@@ -172,6 +172,8 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f bac_ratio_group_30.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
 ```
 
+- Summary
+
 | group | catgry | ratio_mean     | ratio_median |
 | ----- | ------ | -------------- | ------------ |
 | 1     | aliall | 12.9401138614  | 8.463        |
@@ -191,13 +193,96 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 
 So the main reason I do this step is to select those frequently occurred among all sequence files, that is, the most likely sRNA appeared among *A. tha* sRNA-seq files.
 
+- Extract all reads and count their frequencies occured among files
+
+```bash
+mkdir -p /mnt/e/project/srna/output/tier/all
+cd /mnt/e/project/srna/output/bam/bac_tsv
+
+parallel -j 4 " \
+cat {}_aliall.tsv | tsv-summarize --group-by 3,10 --count \
+> ../../tier/all/{}_aliall.tsv; \
+cat {}_mis.tsv | tsv-summarize --group-by 3,10 --count \
+> ../../tier/all/{}_mis.tsv; \
+cat {}_unali.tsv | tsv-summarize --group-by 3,10 --count \
+> ../../tier/all/{}_unali.tsv; \
+" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
+
+cd ../../tier/all
+
+if [[ -e ../among/reads_*.all.tsv ]]
+then
+rm ../among/reads_*.all.tsv;
+else
+echo "OK for next step"
+fi
+
+for file in `ls *_aliall.tsv | perl -p -e 's/_.+tsv$//'`
+do
+cat ${file}_aliall.tsv | tsv-select -f 2 | \
+tsv-summarize --group-by 1 --count >> ../among/reads_aliall.all.tsv;
+cat ${file}_mis.tsv | tsv-select -f 2 | \
+tsv-summarize --group-by 1 --count >> ../among/reads_mis.all.tsv;
+cat ${file}_unali.tsv | tsv-select -f 2 | \
+tsv-summarize --group-by 1 --count >> ../among/reads_unali.all.tsv;
+done
+```
+
+- Count and sort
+
+```bash
+cd /mnt/e/project/srna/output/tier/among
+
+for catgry in "aliall" "mis" "unali"
+do
+cat reads_${catgry}.all.tsv | \
+tsv-summarize --group-by 1 --count | \
+tsv-filter --ge 2:5 | \
+sort -nk 2 -r | sed '1iseq\tcount' \
+> all_file_${catgry}.all.tsv;
+done
+```
+
+- Plot
+
+```bash
+for file in `ls all_file_*.all.tsv`
+do
+bash ../../../script/mclust.sh ${file};
+bash ../../../script/mclust_dens.sh ${file} 3
+done
+```
+
 ```bash
 mkdir -p /mnt/e/project/srna/output/tier/rna
 cd /mnt/e/project/srna/output/bam/rna_tsv
 
 parallel -j 6 " \
-cat {}.tsv | tsv-select -f 3,10 > ../../tier/rna/{}.tsv \
+cat {}.tsv | tsv-summarize --group-by 3,10 --count > ../../tier/rna/{}.tsv \
 " ::: $(ls *.tsv | perl -p -e 's/\.tsv$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/tier/rna
+
+for rna in "mrna" "rrna" "trna"
+do
+for file in `ls *_aliall.mrna.tsv | perl -p -e 's/_.+tsv$//'`
+do
+cat ${file}_aliall.${rna}.tsv >> ../among/reads_aliall.${rna}.tsv;
+cat ${file}_mis.${rna}.tsv >> ../among/reads_mis.${rna}.tsv;
+cat ${file}_unali.${rna}.tsv >> ../among/reads_unali.${rna}.tsv;
+done
+done
+```
+
+```bash
+cd ../among
+
+parallel -j 6 " \
+cat {}.tsv | tsv-summarize --group-by 1,2 --count \
+> {}.all.tsv \
+" ::: $(ls reads_*.tsv | perl -p -e 's/\.tsv$//')
 ```
 
 ```bash

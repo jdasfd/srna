@@ -11,5 +11,3 @@ Above is the information about all Col-0 seeds.
 N1092/N1093 was donated at 1993-06-01. So there is about 30 years history of *A. tha*
 
 According to the article published <https://www.nature.com/articles/nature14649> online, 26 homozygotes of *Arabidopsis* genome (both Col and Ler) were sequenced and total 23 base mutations were found and validated by Sanger sequence. It means approximately 1 SNP per generation per genome.
-
-
