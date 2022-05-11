@@ -224,45 +224,33 @@ Then using `mclust` to estimated density of ratios. According to BIC and ICL fro
 ```bash
 Rscript -e '
 library(readr)
-library(mclust)
+suppressMessages(library(mclust))
 
 ratio <- read_tsv("ratio_3.tsv", show_col_types = FALSE)
-dens <- Mclust(ratio$ratio, G = 4, model = "E")
+dens <- densityMclust(ratio$ratio, G = 4, model = "E")
 br <- seq(min(ratio$ratio), max(ratio$ratio), length = 33)
 pdf("../figure/density.pdf", width = 6, height = 4)
 plot(dens, what = "density", data = ratio$ratio, breaks = br)
 dev.off()
 '
+rm Rplots.pdf
 
 Rscript -e '
 library(readr)
-library(mclust)
+suppressMessages(library(mclust))
 
 ratio <- read_tsv("ratio_3.tsv", show_col_types = FALSE)
-dens <- Mclust(ratio$ratio, G = 4, model = "E")
+dens <- densityMclust(ratio$ratio, G = 4, model = "E")
 br <- seq(min(ratio$ratio), max(ratio$ratio), length = 33)
 x <- seq(3, 102, length = 200)
 cdens <- predict(dens, x, what = "cdens")
 cdens <- t(apply(cdens, 1, function(d) d*dens$parameters$pro))
-matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 1:3, col = 1)
-
-summary(dens$BIC)
-summary(dens, parameters = TRUE)
-br <- seq(min(ratio$ratio), max(ratio$ratio), length = 33)
+pdf("../figure/density.pdf", width = 6, height = 4)
 plot(dens, what = "density", data = ratio$ratio, breaks = br)
-h1 <- hist(Thickness[Year == "1872"], breaks = br, plot = FALSE)
-h1$density <- h1$density*prop.table(table(Year))[1]
-h2 <- hist(Thickness[Year == "1873-74"], breaks = br, plot = FALSE)
-h2$density <- h2$density*prop.table(table(Year))[2]
-x <- seq(min(Thickness)-diff(range(Thickness))/10, max(Thickness)+diff(range(Thickness))/10, length = 200)
-cdens <- predict(dens, x, what = "cdens")
-cdens <- t(apply(cdens, 1, function(d) d*dens$parameters$pro))
-col <- adjustcolor(mclust.options("classPlotColors")[1:2], alpha = 0.3)
-plot(h1, xlab = "Thickness", freq = FALSE, main = "", border = FALSE, col = col[1], xlim = range(x), ylim = range(h1$density, h2$density, cdens))
-plot(h2, add = TRUE, freq = FALSE, border = FALSE, col = col[2])
-matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 1:3, col = 1)
-box()
+matplot(x, cdens, type = "l", lwd = 1, add = TRUE, lty = 1:4, col = 1)
+dev.off()
 '
+rm Rplots.pdf
 ```
 
 - Filter by the cut-off
