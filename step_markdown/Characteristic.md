@@ -483,6 +483,19 @@ done
 
 tRF3/5 regions and other_tRNA regions were extracted from the tRNA.bed file according to tRF characteristics.
 
+- Get yml of tRF and other tRNA regions file
+
+```bash
+cat bac_trna.gff | spanr gff stdin -o bac_trna.yml
+cat bac_trna.yml | spanr span stdin --op trim -n 22 -o bac_other_trna.yml
+# trim 22 from each tRNA as other tRNA regions
+spanr compare --op diff bac_trna.yml bac_other_trna.yml -o bac_trf.yml
+```
+
+```bash
+cd 
+```
+
 ### All seq files
 
 ```bash

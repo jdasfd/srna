@@ -647,3 +647,15 @@ Rscript /mnt/e/project/srna/script/rna_percent.r \
 Rscript /mnt/e/project/srna/script/rna_percent.r \
 -f result.tier3.tsv -t "<60_files" -y "Bac-reads in tRNA (T3)" -o ../figure/tier3_percent.pdf
 ```
+
+```bash
+cat SRR10049355_aliall.trna.tsv | perl -n -e 'while(<>){
+    chomp;
+    m>     chomp;
+>     my @a = split/\t/, $_;
+>     my $len = length($a[9]);
+>     my $start = $a[3];
+>     my $end = $start + $len - 1;
+    prin>     print "$a[2]:$start-$end|reads=$a[0]\n";
+> }' | head -n 20
+```
