@@ -10,33 +10,32 @@ The sRNA sequences has some specific characteristics. We wanted to find if there
 mkdir -p /mnt/e/project/srna/output/bam/rna
 cd /mnt/e/project/srna/output/bam/bacteria
 
-parallel -j 4 " \
-samtools view -F 4 -bh -L ../../../annotation/bacteria/trna.bed \
-{}.sort.bam > ../rna/{}.trna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+parallel -j 6 " \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/trna.bed \
+{}_aliall.sort.bam > ../rna/{}_aliall.trna.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/trna.bed \
+{}_mis.sort.bam > ../rna/{}_mis.trna.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/trna.bed \
+{}_unali.sort.bam > ../rna/{}_unali.trna.sort.bam; \
+" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
 
-parallel -j 4 " \
-samtools view -F 4 -bh -L ../../../annotation/bacteria/rrna.bed \
-{}.sort.bam > ../rna/{}.rrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+parallel -j 6 " \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/rrna.bed \
+{}_aliall.sort.bam > ../rna/{}_aliall.rrna.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/rrna.bed \
+{}_mis.sort.bam > ../rna/{}_mis.rrna.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/rrna.bed \
+{}_unali.sort.bam > ../rna/{}_unali.rrna.sort.bam; \
+" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
 
-parallel -j 4 " \
-samtools view -F 4 -bh -L ../../../annotation/bacteria/mrna.bed \
-{}.sort.bam > ../rna/{}.mrna.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-```
-
-```bash
-cd /mnt/e/project/srna/output/bam/rna
-
-parallel -j 3 " 
-samtools sort -@ 4 {1}.bam > {1}.sort.bam 
-samtools index {1}.sort.bam
-" ::: $(ls *.bam | perl -p -e 's/\.bam$//')
-
-parallel -j 3 " \
-rm {}.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
+parallel -j 6 " \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/mrna.bed \
+{}_aliall.sort.bam > ../rna/{}_aliall.mrna.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/mrna.bed \
+{}_mis.sort.bam > ../rna/{}_mis.mrna.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/mrna.bed \
+{}_unali.sort.bam > ../rna/{}_unali.mrna.sort.bam; \
+" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
 ```
 
 - Use CIGAR to filter alll bac-reads from different region
@@ -483,157 +482,14 @@ done
 
 tRF3/5 regions and other_tRNA regions were extracted from the tRNA.bed file according to tRF characteristics.
 
-- Get yml of tRF and other tRNA regions file
+- Using bed of trna to extract mapping reads from different RNA regions
 
 ```bash
-cat bac_trna.gff | spanr gff stdin -o bac_trna.yml
-cat bac_trna.yml | spanr span stdin --op trim -n 22 -o bac_other_trna.yml
-# trim 22 from each tRNA as other tRNA regions
-spanr compare --op diff bac_trna.yml bac_other_trna.yml -o bac_trf.yml
-```
+faops count ../../genome/bacteria/bacteria.fna | tsv-select -f 1,2 | sed '1d' > bac.genome
 
-```bash
-mkdir -p /mnt/e/project/srna/output/seq/trna
-cd /mnt/e/project/srna/output/bam/rna_tsv
+bedtools flank -i bac_trna.gff -b 50 -g bac.genome > bac_trf1.gff
+cat bac_trf1.gff | convert2bed --input=gff --output=bed > trf1.bed
 
-parallel -j 6 " \
-cat {}_aliall.trna.tsv | perl ../../../script/bam2yml.pl \
-> ../../seq/trna/{}_aliall.trna.yml \
-" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
-
-parallel -j 6 " \
-cat {}_mis.trna.tsv | perl ../../../script/bam2yml.pl \
-> ../../seq/trna/{}_mis.trna.yml \
-" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
-
-parallel -j 6 " \
-cat {}_unali.trna.tsv | perl ../../../script/bam2yml.pl \
-> ../../seq/trna/{}_unali.trna.yml \
-" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
-```
-
-- Intersect from tRNA region and yml
-
-Using spanr for getting intersect in `yml` format.
-
-```bash
-cd /mnt/e/project/srna/output/seq/trna
-
-parallel -j 6 " \
-spanr compare --op intersect ../../../annotation/bacteria/bac_trf.yml \
-{}.trna.yml -o {}.trf.yml \
-" ::: $(ls *.trna.yml | perl -p -e 's/\.trna\.yml//')
-
-parallel -j 6 " \
-spanr compare --op intersect ../../../annotation/bacteria/bac_other_trna.yml \
-{}.trna.yml -o {}.other.yml \
-" ::: $(ls *.trna.yml | perl -p -e 's/\.trna\.yml//')
-```
-
-- Transfer yml to tsv for join
-
-```bash
-mkdir -p ../tsv
-
-for file in `ls *.trf.yml | perl -p -e 's/\.yml$//'`
-do
-cat ${file}.yml | spanr convert stdin | cut -d "-" -f 1 | \
-perl -n -e 'chomp;@a = split/:/,$_;print "$a[0]\t$a[1]\n";' \
-> ../tsv/${file}.tsv
-done
-
-for file in `ls *.other.yml | perl -p -e 's/\.yml$//'`
-do
-cat ${file}.yml | spanr convert stdin | cut -d "-" -f 1 | \
-perl -n -e 'chomp;@a = split/:/,$_;print "$a[0]\t$a[1]\n";' \
-> ../tsv/${file}.tsv
-done
-```
-
-### Region count and plot
-
-- Region ratio count
-
-```bash
-mkdir -p /mnt/e/project/srna/output/count/region
-cd /mnt/e/project/srna/output/bam/rna_tsv
-
-for file in `cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d'`
-do
-for catgry in "aliall" "mis" "unali"
-do
-for region in "trf" "other"
-do
-cat ${file}_${catgry}.trna.tsv | tsv-select -f 3,4,10 | \
-tsv-join --filter-file ../../seq/tsv/${file}_${catgry}.${region}.tsv --key-fields 1,2 | \
-tsv-summarize --group-by 1 --count | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 | \
-tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 | \
-awk -v file=${file} -v catgry=$catgry '{print file"\t"$1"\t"$2"\t"catgry}' \
-> ../../count/region/${file}_${catgry}.${region}.tsv
-done
-done
-done
-```
-
-```bash
-cd /mnt/e/project/srna/output/count/region
-
-for file in `ls *.trf.tsv | perl -p -e 's/\.trf\.tsv$//'`
-do
-for region in "trf" "other"
-do
-cat ${file}.${region}.tsv | tsv-join --filter-file ../all/${file}.all.tsv \
---key-fields 2 --append-fields 3 >> ../bac_reads_group.${region}.tsv;
-done
-done
-```
-
-```bash
-cd ..
-
-for region in "trf" "other"
-do
-cat bac_reads_group.${region}.tsv | \
-tsv-filter --ne 5:0 | \
-perl -n -e 'while(<>){chomp;
-@a=split/\t/,$_;
-$b=$a[2]*100/$a[4];
-printf"%s\t%s\t%.3f\t%s\n",$a[0],$a[1],$b,$a[3];
-}' | sed -e '1i\name\tgroup\tratio\tcatgry' > bac_ratio_group.${region}.tsv
-done
-```
-
-- Plot
-
-```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f bac_ratio_group.trf.tsv -t tRF -y "Bac-reads in tRF" -o ../figure/trf_reads.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f bac_ratio_group.other.tsv -t others -y "Bac-reads in other" -o ../figure/other_reads.pdf
-```
-
-- Summary
-
-```bash
-for region in "trf" "other"
-do
-cat bac_ratio_group.${region}.tsv | \
-tsv-summarize -H --group-by group,catgry --mean ratio --median ratio | \
-mlr --itsv --omd cat
-done
-```
-
-### All seq files
-
-```bash
-cd /mnt/e/project/srna/annotation/bacteria
-```
-
-```bash
 cat trna.bed | perl -e 'while(<>){
     chomp;
     @a = split/\t/,$_;
@@ -642,135 +498,40 @@ cat trna.bed | perl -e 'while(<>){
     print"$a[0]\t$a[1]\t$end1\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
     print"$a[0]\t$end2\t$a[2]\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
 }' > trf3_5.bed
-```
 
-```bash
-cat trna.bed | perl -e 'while(<>){
-    chomp;
-    @a = split/\t/,$_;
-    $start = $a[1] + 26;
-    $end = $a[2] - 26;
-    print"$a[0]\t$start\t$end\t$a[3]\t$a[4]\t$a[5]\t$a[6]\t$a[7]\t$a[8]\t$a[9]\n";
-}' > other_trf.bed
+bedtools subtract -a trna.bed -b trf3_5.bed > other_trf.bed
 ```
 
 ```bash
 mkdir -p /mnt/e/project/srna/output/bam/trf
-cd /mnt/e/project/srna/output/bam/rna
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/bacteria/trf3_5.bed \
-{}.trna.sort.bam > ../trf/{}.trf3_5.bam \
-" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
-
-parallel -j 4 " \
-samtools view -@ 3 -bh -L ../../../annotation/bacteria/other_trf.bed \
-{}.trna.sort.bam > ../trf/{}.other_trf.bam \
-" ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
-```
-
-``` bash
-cd /mnt/e/project/srna/output/bam/trf
-
-parallel -j 3 " 
-samtools sort -@ 4 {1}.bam > {1}.sort.bam 
-samtools index {1}.sort.bam
-" ::: $(ls *.bam | perl -p -e 's/\.bam$//')
-
-parallel -j 3 " \
-rm {}.bam \
-" ::: $(ls *.sort.bam | perl -p -e 's/\.sort\.bam$//')
-```
-
-```bash
-cd /mnt/e/project/srna/output/count
-mkdir trf3_5 other_trf
-cd /mnt/e/project/srna/output/bam/trf
+cd /mnt/e/project/srna/output/bam/bacteria
 
 parallel -j 6 " \
-samtools idxstats {}.trf3_5.sort.bam | \
-tsv-select -f 1,3 | grep -v '*' | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 \
-> ../../count/trf3_5/{}.trf3_5.tsv \
-" ::: $(ls *.trf3_5.sort.bam | perl -p -e 's/\.trf.+bam$//')
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/trf3_5.bed \
+{}_aliall.sort.bam > ../trf/{}_aliall.trf3_5.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/trf3_5.bed \
+{}_mis.sort.bam > ../trf/{}_mis.trf3_5.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/trf3_5.bed \
+{}_unali.sort.bam > ../trf/{}_unali.trf3_5.sort.bam; \
+" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
 
 parallel -j 6 " \
-samtools idxstats {}.other_trf.sort.bam | \
-tsv-select -f 1,3 | grep -v '*' | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-summarize --group-by 3 --sum 2 \
-> ../../count/other_trf/{}.other_trf.tsv \
-" ::: $(ls *.other_trf.sort.bam | perl -p -e 's/\.other.+bam$//')
-```
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/trf1.bed \
+{}_aliall.sort.bam > ../trf/{}_aliall.trf1.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/trf1.bed \
+{}_mis.sort.bam > ../trf/{}_mis.trf1.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/trf1.bed \
+{}_unali.sort.bam > ../trf/{}_unali.trf1.sort.bam; \
+" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
 
-```bash
-cd /mnt/e/project/srna/output/count/trf3_5
-
-for file in `ls *.trf3_5.tsv | perl -p -e 's/\.trf.+tsv//'`
-do
-cat ${file}.trf3_5.tsv | \
-tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
-> ${file}.tsv
-done
-
-rm *.trf3_5.tsv
-
-bash ../../../script/group_rna_count.sh > ../name_count.trf3_5.tsv
-```
-
-```bash
-cd /mnt/e/project/srna/output/count/other_trf
-
-for file in `ls *.other_trf.tsv | perl -p -e 's/\.other.+tsv//'`
-do
-cat ${file}.other_trf.tsv | \
-tsv-join --filter-file ../all/${file}.all.tsv --key-fields 1 --append-fields 2 \
-> ${file}.tsv
-done
-
-rm *.other_trf.tsv
-
-bash ../../../script/group_rna_count.sh > ../name_count.other_trf.tsv
-```
-
-```bash
-cd /mnt/e/project/srna/output/count
-
-cat name_count.trf3_5.tsv | perl -n -e 'while(<>){chomp;
-@a=split/\t/,$_;
-$b=$a[2]*100/$a[3];
-print"$a[0]\t$a[1]\t$b\t$a[4]\n";
-}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.trf3_5.tsv
-
-cat name_count.other_trf.tsv | perl -n -e 'while(<>){chomp;
-@a=split/\t/,$_;
-$b=$a[2]*100/$a[3];
-print"$a[0]\t$a[1]\t$b\t$a[4]\n";
-}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.other_trf.tsv
-```
-
-```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.trf3_5.tsv -t tRF-3/5_region -y "tRF3/5 Bac-reads" -o ../figure/trf3_5_percent.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.other_trf.tsv -t other-tRNA_region -y "other tRNA Bac-reads" -o ../figure/other_trf_percent.pdf
-```
-
-#### After filtering
-
-```bash
-cat result.trf3_5.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.trf3_5.tsv
-cat result.other_trf.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > result_50.other_trf.tsv
-```
-
-```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result_50.trf3_5.tsv -t tRF-3/5_region -y "tRF3/5 Bac-reads" -o ../figure/trf3_5_percent_50.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result_50.other_trf.tsv -t other-tRNA_region -n 25 -y "other tRNA Bac-reads" -o ../figure/other_trf_percent_50.pdf
+parallel -j 6 " \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/other_trf.bed \
+{}_aliall.sort.bam > ../trf/{}_aliall.other.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/other_trf.bed \
+{}_mis.sort.bam > ../trf/{}_mis.other.sort.bam; \
+samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/other_trf.bed \
+{}_unali.sort.bam > ../trf/{}_unali.other.sort.bam; \
+" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
 ```
 
 ## Extract tRF sequence from different bacteria

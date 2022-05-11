@@ -631,7 +631,6 @@ Bacteria were all grouped according to bacteria living habitats. Whether bacteri
 mkdir /mnt/e/project/srna/output/count/all
 cd /mnt/e/project/srna/output/bam/bac_tsv
 
-cd /mnt/e/project/srna/output/bam/bac_tsv
 for file in `ls *.tsv | perl -p -e 's/\.tsv$//'`
 do
 name=${file%%_*};
