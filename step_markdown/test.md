@@ -490,3 +490,160 @@ samtools view -@ 2 {}.trna.sort.bam | \
 tsv-select -f 3,10 > ../../tier/trna/{}.trna.tsv \
 " ::: $(ls *.trna.sort.bam | perl -p -e 's/\.trna.+bam$//')
 ```
+
+```bash
+cd ../among
+
+parallel -j 6 " \
+cat {}.tsv | tsv-summarize --group-by 1,2 --count \
+> {}.all.tsv \
+" ::: $(ls reads_*.tsv | perl -p -e 's/\.tsv$//')
+```
+
+```bash
+mkdir -p /mnt/e/project/srna/output/tier/among
+mkdir -p /mnt/e/project/srna/output/tier/file
+cd /mnt/e/project/srna/output/tier/trna
+
+parallel -j 6 " \
+cat {}_aliall.trna.tsv {}_1mis.trna.tsv {}_unali.trna.tsv | \
+tsv-summarize --group-by 2 --count > ../file/{}.trna.tsv \
+" ::: $(ls *.trna.tsv | perl -p -e 's/_.+tsv$//' | uniq)
+
+cd ../file
+
+rm ../among/all_seq.tsv # ensure >> will not just output after the old file
+cat *.tsv | tsv-select -f 1 >> ../among/all_seq.tsv
+cd ../among
+cat all_seq.tsv | tsv-summarize --group-by 1 --count > all_seq.count.tsv
+
+cat all_seq.count.tsv | tsv-summarize --group-by 2 --count | sed '1inum\tcount'> seq_num.tsv
+```
+
+```bash
+Rscript -e '
+library(ggplot2)
+library(readr)
+library(ggforce)
+args <- commandArgs(T)
+count <- read_tsv(args[1])
+s <- ggplot (data = count, aes(x = num, y = count)) +
+geom_bar(stat = "identity") +
+theme(axis.ticks.x = element_blank()) +
+labs(x = "file num", y = "frequency") +
+scale_x_continuous(limits = c(0,220)) +
+facet_zoom(ylim = c(0, 2000)) +
+geom_col()
+ggsave(s, file = "../../figure/seq_distri.pdf", width = 10, height = 4)
+' seq_num.tsv
+```
+
+```bash
+cat all_seq.count.tsv | tsv-filter --ge 2:120 > tier1.tsv
+cat all_seq.count.tsv | tsv-filter --ge 2:60 --lt 2:120 > tier2.tsv
+cat all_seq.count.tsv | tsv-filter --lt 2:60 > tier3.tsv
+```
+
+```bash
+mkdir tier1 tier2 tier3
+cd /mnt/e/project/srna/output/tier/trna
+
+parallel -j 10 " \
+perl /mnt/e/project/srna/script/select_seq.pl -i {}.trna.tsv \
+-t ../among/tier1.tsv -o ../tier1/{}.tier1.tsv \
+" ::: $(ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//')
+
+parallel -j 10 " \
+perl /mnt/e/project/srna/script/select_seq.pl -i {}.trna.tsv \
+-t ../among/tier2.tsv -o ../tier2/{}.tier2.tsv \
+" ::: $(ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//')
+
+parallel -j 10 " \
+perl /mnt/e/project/srna/script/select_seq.pl -i {}.trna.tsv \
+-t ../among/tier3.tsv -o ../tier3/{}.tier3.tsv \
+" ::: $(ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//')
+```
+
+```bash
+cd /mnt/e/project/srna/output/tier/tier1
+
+parallel -j 6 " \
+cat {}.tier1.tsv | \
+tsv-summarize --group-by 1 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-select -f 3,2 | perl ../../../script/filter.pl | \
+tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields 2 \
+> {}.tsv \
+" ::: $(ls *.tier1.tsv | perl -p -e 's/\.tier.+tsv$//')
+
+rm *.tier1.tsv
+
+bash ../../../script/group_rna_count.sh > ../name_count.tier1.tsv
+```
+
+```bash
+cd /mnt/e/project/srna/output/tier/tier2
+
+parallel -j 6 " \
+cat {}.tier2.tsv | \
+tsv-summarize --group-by 1 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-select -f 3,2 | perl ../../../script/filter.pl | \
+tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields 2 \
+> {}.tsv \
+" ::: $(ls *.tier2.tsv | perl -p -e 's/\.tier.+tsv$//')
+
+rm *.tier2.tsv
+
+bash ../../../script/group_rna_count.sh > ../name_count.tier2.tsv
+```
+
+```bash
+cd /mnt/e/project/srna/output/tier/tier3
+
+parallel -j 6 " \
+cat {}.tier3.tsv | \
+tsv-summarize --group-by 1 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-select -f 3,2 | perl ../../../script/filter.pl | \
+tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields 2 \
+> {}.tsv \
+" ::: $(ls *.tier3.tsv | perl -p -e 's/\.tier.+tsv$//')
+
+rm *.tier3.tsv
+
+bash ../../../script/group_rna_count.sh > ../name_count.tier3.tsv
+```
+
+```bash
+cd ..
+
+cat name_count.tier1.tsv | perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[3];
+print"$a[0]\t$a[1]\t$b\t$a[4]\n";
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.tier1.tsv
+
+cat name_count.tier2.tsv | perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[3];
+print"$a[0]\t$a[1]\t$b\t$a[4]\n";
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.tier2.tsv
+
+cat name_count.tier3.tsv | perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[3];
+print"$a[0]\t$a[1]\t$b\t$a[4]\n";
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.tier3.tsv
+```
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.tier1.tsv -t ">120_files" -y "Bac-reads in tRNA (T1)" -o ../figure/tier1_percent.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.tier2.tsv -t "60-120_files" -y "Bac-reads in tRNA (T2)" -o ../figure/tier2_percent.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f result.tier3.tsv -t "<60_files" -y "Bac-reads in tRNA (T3)" -o ../figure/tier3_percent.pdf
+```

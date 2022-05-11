@@ -285,7 +285,7 @@ cat all_file_unali.all.tsv | tsv-filter -H --ge count:14 --le count:24 | sed '1d
 cat all_file_unali.all.tsv | tsv-filter -H --ge count:25 --le count:149 | sed '1d' > unali.tier1.all.tsv
 ```
 
-## Extract sequences from bam and ratio count
+## Extract reads in tiers and ratio count
 
 - Extract reads
 
@@ -314,8 +314,128 @@ done
 - Ratio count
 
 ```bash
+mkdir -p /mnt/e/project/srna/output/count/tier
+cd /mnt/e/project/srna/output/tier
 
+for dir in "tier1" "tier2" "tier3"
+do
+cd ${dir};
+for file in `ls *.tsv | perl -p -e 's/\.tsv$//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+cat ${file}.tsv | \
+tsv-summarize --group-by 2 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/tier/${file}.${dir}.tsv;
+done
+cd ..;
+done
 ```
+
+```bash
+cd /mnt/e/project/srna/output/count/tier
+
+for file in `ls *.tier1.tsv | perl -p -e 's/\.tier1\.tsv$//'`
+do
+for tier in "tier1" "tier2" "tier3"
+do
+cat ${file}.${tier}.tsv | tsv-join --filter-file ../all/${file}.all.tsv \
+--key-fields 2 --append-fields 3 >> ../bac_reads_group.${tier}.tsv;
+done
+done
+```
+
+```bash
+cd ..
+
+for tier in "tier1" "tier2" "tier3"
+do
+cat bac_reads_group.${tier}.tsv | \
+tsv-filter --ne 5:0 | \
+perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[4];
+printf"%s\t%s\t%.3f\t%s\n",$a[0],$a[1],$b,$a[3];
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > bac_ratio_group.${tier}.tsv
+done
+```
+
+- Plot
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f bac_ratio_group.tier1.tsv -t tier1 -y "Bac-reads in tRNA" -o ../figure/tier1_reads.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f bac_ratio_group.tier2.tsv -t tier2 -y "Bac-reads in rRNA" -o ../figure/tier2_reads.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f bac_ratio_group.tier3.tsv -t tier3 -y "Bac-reads in mRNA" -o ../figure/tier3_reads.pdf
+```
+
+- Summary
+
+```bash
+for tier in "tier1" "tier2" "tier3"
+do
+cat bac_ratio_group.${tier}.tsv | \
+tsv-summarize -H --group-by group,catgry --mean ratio --median ratio | \
+mlr --itsv --omd cat
+done
+```
+
+tier1:
+| group | catgry | ratio_mean    | ratio_median |
+| ----- | ------ | ------------- | ------------ |
+| 1     | aliall | 84.4243497537 | 91.416       |
+| 2     | aliall | 82.778044335  | 91.692       |
+| 3     | aliall | 81.3253366337 | 89.0585      |
+| 4     | aliall | 87.3819310345 | 95.408       |
+| 1     | mis    | 54.7773399015 | 57.961       |
+| 2     | mis    | 52.8013891626 | 59.662       |
+| 3     | mis    | 46.4350246305 | 47.479       |
+| 4     | mis    | 36.43272      | 32.52        |
+| 1     | unali  | 29.832729064  | 29.483       |
+| 2     | unali  | 36.5572660099 | 31.955       |
+| 3     | unali  | 17.9435320197 | 17.045       |
+| 4     | unali  | 6.56031666667 | 3.852        |
+
+tier2:
+| group | catgry | ratio_mean    | ratio_median |
+| ----- | ------ | ------------- | ------------ |
+| 1     | aliall | 6.95022167488 | 5.239        |
+| 2     | aliall | 7.15395073892 | 4.413        |
+| 3     | aliall | 7.67451485149 | 5.8685       |
+| 4     | aliall | 3.95294059406 | 1.931        |
+| 1     | mis    | 14.8673399015 | 13.889       |
+| 2     | mis    | 15.150364532  | 15.302       |
+| 3     | mis    | 15.2956157635 | 14.085       |
+| 4     | mis    | 16.8176060606 | 14.8055      |
+| 1     | unali  | 19.5638275862 | 15.517       |
+| 2     | unali  | 13.7571231527 | 13.56        |
+| 3     | unali  | 15.9602413793 | 14.13        |
+| 4     | unali  | 17.0745890411 | 12.903       |
+
+tier3:
+| group | catgry | ratio_mean    | ratio_median |
+| ----- | ------ | ------------- | ------------ |
+| 1     | aliall | 1.98148275862 | 0.87         |
+| 2     | aliall | 2.39063054187 | 0.844        |
+| 3     | aliall | 2.41216336634 | 1.2985       |
+| 4     | aliall | 1.57330150754 | 0.408        |
+| 1     | mis    | 54.7773399015 | 57.961       |
+| 2     | mis    | 52.8013891626 | 59.662       |
+| 3     | mis    | 46.4350246305 | 47.479       |
+| 4     | mis    | 36.43272      | 32.52        |
+| 1     | unali  | 5.39365174129 | 5.473        |
+| 2     | unali  | 4.92791089109 | 4.7175       |
+| 3     | unali  | 6.06823383085 | 6            |
+| 4     | unali  | 10.1163176471 | 5.392        |
 
 ```bash
 cd /mnt/e/project/srna/output/tier/rna
@@ -329,182 +449,6 @@ cat ${file}_mis.${rna}.tsv >> ../among/reads_mis.${rna}.tsv;
 cat ${file}_unali.${rna}.tsv >> ../among/reads_unali.${rna}.tsv;
 done
 done
-```
-
-```bash
-cd ../among
-
-parallel -j 6 " \
-cat {}.tsv | tsv-summarize --group-by 1,2 --count \
-> {}.all.tsv \
-" ::: $(ls reads_*.tsv | perl -p -e 's/\.tsv$//')
-```
-
-```bash
-mkdir -p /mnt/e/project/srna/output/tier/among
-mkdir -p /mnt/e/project/srna/output/tier/file
-cd /mnt/e/project/srna/output/tier/trna
-
-parallel -j 6 " \
-cat {}_aliall.trna.tsv {}_1mis.trna.tsv {}_unali.trna.tsv | \
-tsv-summarize --group-by 2 --count > ../file/{}.trna.tsv \
-" ::: $(ls *.trna.tsv | perl -p -e 's/_.+tsv$//' | uniq)
-
-cd ../file
-
-rm ../among/all_seq.tsv # ensure >> will not just output after the old file
-cat *.tsv | tsv-select -f 1 >> ../among/all_seq.tsv
-cd ../among
-cat all_seq.tsv | tsv-summarize --group-by 1 --count > all_seq.count.tsv
-
-cat all_seq.count.tsv | tsv-summarize --group-by 2 --count | sed '1inum\tcount'> seq_num.tsv
-```
-
-```bash
-Rscript -e '
-library(ggplot2)
-library(readr)
-library(ggforce)
-args <- commandArgs(T)
-count <- read_tsv(args[1])
-s <- ggplot (data = count, aes(x = num, y = count)) +
-geom_bar(stat = "identity") +
-theme(axis.ticks.x = element_blank()) +
-labs(x = "file num", y = "frequency") +
-scale_x_continuous(limits = c(0,220)) +
-facet_zoom(ylim = c(0, 2000)) +
-geom_col()
-ggsave(s, file = "../../figure/seq_distri.pdf", width = 10, height = 4)
-' seq_num.tsv
-```
-
-```bash
-cat all_seq.count.tsv | tsv-filter --ge 2:120 > tier1.tsv
-cat all_seq.count.tsv | tsv-filter --ge 2:60 --lt 2:120 > tier2.tsv
-cat all_seq.count.tsv | tsv-filter --lt 2:60 > tier3.tsv
-```
-
-```bash
-mkdir tier1 tier2 tier3
-cd /mnt/e/project/srna/output/tier/trna
-
-parallel -j 10 " \
-perl /mnt/e/project/srna/script/select_seq.pl -i {}.trna.tsv \
--t ../among/tier1.tsv -o ../tier1/{}.tier1.tsv \
-" ::: $(ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//')
-
-parallel -j 10 " \
-perl /mnt/e/project/srna/script/select_seq.pl -i {}.trna.tsv \
--t ../among/tier2.tsv -o ../tier2/{}.tier2.tsv \
-" ::: $(ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//')
-
-parallel -j 10 " \
-perl /mnt/e/project/srna/script/select_seq.pl -i {}.trna.tsv \
--t ../among/tier3.tsv -o ../tier3/{}.tier3.tsv \
-" ::: $(ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//')
-```
-
-```bash
-cd /mnt/e/project/srna/output/tier/tier1
-
-parallel -j 6 " \
-cat {}.tier1.tsv | \
-tsv-summarize --group-by 1 --count | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-select -f 3,2 | perl ../../../script/filter.pl | \
-tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields 2 \
-> {}.tsv \
-" ::: $(ls *.tier1.tsv | perl -p -e 's/\.tier.+tsv$//')
-
-rm *.tier1.tsv
-
-bash ../../../script/group_rna_count.sh > ../name_count.tier1.tsv
-```
-
-```bash
-cd /mnt/e/project/srna/output/tier/tier2
-
-parallel -j 6 " \
-cat {}.tier2.tsv | \
-tsv-summarize --group-by 1 --count | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-select -f 3,2 | perl ../../../script/filter.pl | \
-tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields 2 \
-> {}.tsv \
-" ::: $(ls *.tier2.tsv | perl -p -e 's/\.tier.+tsv$//')
-
-rm *.tier2.tsv
-
-bash ../../../script/group_rna_count.sh > ../name_count.tier2.tsv
-```
-
-```bash
-cd /mnt/e/project/srna/output/tier/tier3
-
-parallel -j 6 " \
-cat {}.tier3.tsv | \
-tsv-summarize --group-by 1 --count | \
-tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
-tsv-select -f 3,2 | perl ../../../script/filter.pl | \
-tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields 2 \
-> {}.tsv \
-" ::: $(ls *.tier3.tsv | perl -p -e 's/\.tier.+tsv$//')
-
-rm *.tier3.tsv
-
-bash ../../../script/group_rna_count.sh > ../name_count.tier3.tsv
-```
-
-```bash
-cd ..
-
-cat name_count.tier1.tsv | perl -n -e 'while(<>){chomp;
-@a=split/\t/,$_;
-$b=$a[2]*100/$a[3];
-print"$a[0]\t$a[1]\t$b\t$a[4]\n";
-}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.tier1.tsv
-
-cat name_count.tier2.tsv | perl -n -e 'while(<>){chomp;
-@a=split/\t/,$_;
-$b=$a[2]*100/$a[3];
-print"$a[0]\t$a[1]\t$b\t$a[4]\n";
-}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.tier2.tsv
-
-cat name_count.tier3.tsv | perl -n -e 'while(<>){chomp;
-@a=split/\t/,$_;
-$b=$a[2]*100/$a[3];
-print"$a[0]\t$a[1]\t$b\t$a[4]\n";
-}' | sed -e '1i\name\tgroup\tratio\tcatgry' > result.tier3.tsv
-```
-
-```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.tier1.tsv -t ">120_files" -y "Bac-reads in tRNA (T1)" -o ../figure/tier1_percent.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.tier2.tsv -t "60-120_files" -y "Bac-reads in tRNA (T2)" -o ../figure/tier2_percent.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result.tier3.tsv -t "<60_files" -y "Bac-reads in tRNA (T3)" -o ../figure/tier3_percent.pdf
-```
-
-### After filtering
-
-```bash
-cat result.tier1.tsv | tsv-join -H --filter-file ../count/plant_50.tsv --key-fields 1 > result_50.tier1.tsv
-cat result.tier2.tsv | tsv-join -H --filter-file ../count/plant_50.tsv --key-fields 1 > result_50.tier2.tsv
-cat result.tier3.tsv | tsv-join -H --filter-file ../count/plant_50.tsv --key-fields 1 > result_50.tier3.tsv
-```
-
-```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result_50.tier1.tsv -t ">120_files" -y "Bac-reads in tRNA (T1)" -o ../figure/tier1_percent_50.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result_50.tier2.tsv -t "60-120_files" -y "Bac-reads in tRNA (T2)" -o ../figure/tier2_percent_50.pdf
-
-Rscript /mnt/e/project/srna/script/rna_percent.r \
--f result_50.tier3.tsv -t "<60_files" -y "Bac-reads in tRNA (T3)" -o ../figure/tier3_percent_50.pdf
 ```
 
 ## tRF region
