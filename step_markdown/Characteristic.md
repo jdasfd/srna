@@ -285,7 +285,7 @@ cat all_file_unali.all.tsv | tsv-filter -H --ge count:14 --le count:24 | sed '1d
 cat all_file_unali.all.tsv | tsv-filter -H --ge count:25 --le count:149 | sed '1d' > unali.tier1.all.tsv
 ```
 
-## Extract reads in tiers and ratio count
+### Extract reads in tiers and ratio count
 
 - Extract reads
 
@@ -437,17 +437,45 @@ tier3:
 | 3     | unali  | 6.06823383085 | 6            |
 | 4     | unali  | 10.1163176471 | 5.392        |
 
-```bash
-cd /mnt/e/project/srna/output/tier/rna
+### Length distribution
 
-for rna in "mrna" "rrna" "trna"
+Count different reads length in each tier
+
+- Length distribution
+
+```bash
+cd /mnt/e/project/srna/output/tier/among
+
+parallel -j 6 " \
+cat {}.all.tsv | tsv-select -f 1 | \
+perl ../../../script/seq_len.pl | sort -nk 1 | \
+sed '1ilen\tnum' > ../../length/{}.len.tsv
+" ::: $(ls *.tier*.all.tsv | perl -p -e 's/\.all\.tsv$//')
+```
+
+- Plot
+
+```bash
+cd /mnt/e/project/srna/output/length
+
+for file in `ls *.len.tsv | perl -p -e 's/\.len\.tsv$//'`
 do
-for file in `ls *_aliall.mrna.tsv | perl -p -e 's/_.+tsv$//'`
-do
-cat ${file}_aliall.${rna}.tsv >> ../among/reads_aliall.${rna}.tsv;
-cat ${file}_mis.${rna}.tsv >> ../among/reads_mis.${rna}.tsv;
-cat ${file}_unali.${rna}.tsv >> ../among/reads_unali.${rna}.tsv;
-done
+Rscript -e '
+library(readr)
+library(ggplot2)
+args <- commandArgs(T)
+input <- paste0(args[1], ".len.tsv")
+out <- paste0("../figure/length_", args[1], ".pdf")
+
+length <- read_tsv(input, show_col_types = FALSE)
+nmax <- max(length$len)
+nmin <- min(length$len)
+p <- ggplot(length, aes(x = len, y = num)) +
+geom_line() +
+scale_x_continuous(limits = c(nmin, nmax), breaks = seq(nmin, nmax, by = 1))
+
+ggsave(p, file = out, width = 9, height = 4)
+' ${file}
 done
 ```
 
