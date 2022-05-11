@@ -493,7 +493,138 @@ spanr compare --op diff bac_trna.yml bac_other_trna.yml -o bac_trf.yml
 ```
 
 ```bash
-cd 
+mkdir -p /mnt/e/project/srna/output/seq/trna
+cd /mnt/e/project/srna/output/bam/rna_tsv
+
+parallel -j 6 " \
+cat {}_aliall.trna.tsv | perl ../../../script/bam2yml.pl \
+> ../../seq/trna/{}_aliall.trna.yml \
+" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
+
+parallel -j 6 " \
+cat {}_mis.trna.tsv | perl ../../../script/bam2yml.pl \
+> ../../seq/trna/{}_mis.trna.yml \
+" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
+
+parallel -j 6 " \
+cat {}_unali.trna.tsv | perl ../../../script/bam2yml.pl \
+> ../../seq/trna/{}_unali.trna.yml \
+" ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
+```
+
+- Intersect from tRNA region and yml
+
+Using spanr for getting intersect in `yml` format.
+
+```bash
+cd /mnt/e/project/srna/output/seq/trna
+
+parallel -j 6 " \
+spanr compare --op intersect ../../../annotation/bacteria/bac_trf.yml \
+{}.trna.yml -o {}.trf.yml \
+" ::: $(ls *.trna.yml | perl -p -e 's/\.trna\.yml//')
+
+parallel -j 6 " \
+spanr compare --op intersect ../../../annotation/bacteria/bac_other_trna.yml \
+{}.trna.yml -o {}.other.yml \
+" ::: $(ls *.trna.yml | perl -p -e 's/\.trna\.yml//')
+```
+
+- Transfer yml to tsv for join
+
+```bash
+mkdir -p ../tsv
+
+for file in `ls *.trf.yml | perl -p -e 's/\.yml$//'`
+do
+cat ${file}.yml | spanr convert stdin | cut -d "-" -f 1 | \
+perl -n -e 'chomp;@a = split/:/,$_;print "$a[0]\t$a[1]\n";' \
+> ../tsv/${file}.tsv
+done
+
+for file in `ls *.other.yml | perl -p -e 's/\.yml$//'`
+do
+cat ${file}.yml | spanr convert stdin | cut -d "-" -f 1 | \
+perl -n -e 'chomp;@a = split/:/,$_;print "$a[0]\t$a[1]\n";' \
+> ../tsv/${file}.tsv
+done
+```
+
+### Region count and plot
+
+- Region ratio count
+
+```bash
+mkdir -p /mnt/e/project/srna/output/count/region
+cd /mnt/e/project/srna/output/bam/rna_tsv
+
+for file in `cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d'`
+do
+for catgry in "aliall" "mis" "unali"
+do
+for region in "trf" "other"
+do
+cat ${file}_${catgry}.trna.tsv | tsv-select -f 3,4,10 | \
+tsv-join --filter-file ../../seq/tsv/${file}_${catgry}.${region}.tsv --key-fields 1,2 | \
+tsv-summarize --group-by 1 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v file=${file} -v catgry=$catgry '{print file"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/region/${file}_${catgry}.${region}.tsv
+done
+done
+done
+```
+
+```bash
+cd /mnt/e/project/srna/output/count/region
+
+for file in `ls *.trf.tsv | perl -p -e 's/\.trf\.tsv$//'`
+do
+for region in "trf" "other"
+do
+cat ${file}.${region}.tsv | tsv-join --filter-file ../all/${file}.all.tsv \
+--key-fields 2 --append-fields 3 >> ../bac_reads_group.${region}.tsv;
+done
+done
+```
+
+```bash
+cd ..
+
+for region in "trf" "other"
+do
+cat bac_reads_group.${region}.tsv | \
+tsv-filter --ne 5:0 | \
+perl -n -e 'while(<>){chomp;
+@a=split/\t/,$_;
+$b=$a[2]*100/$a[4];
+printf"%s\t%s\t%.3f\t%s\n",$a[0],$a[1],$b,$a[3];
+}' | sed -e '1i\name\tgroup\tratio\tcatgry' > bac_ratio_group.${region}.tsv
+done
+```
+
+- Plot
+
+```bash
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f bac_ratio_group.trf.tsv -t tRF -y "Bac-reads in tRF" -o ../figure/trf_reads.pdf
+
+Rscript /mnt/e/project/srna/script/rna_percent.r \
+-f bac_ratio_group.other.tsv -t others -y "Bac-reads in other" -o ../figure/other_reads.pdf
+```
+
+- Summary
+
+```bash
+for region in "trf" "other"
+do
+cat bac_ratio_group.${region}.tsv | \
+tsv-summarize -H --group-by group,catgry --mean ratio --median ratio | \
+mlr --itsv --omd cat
+done
 ```
 
 ### All seq files
