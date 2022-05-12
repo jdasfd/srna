@@ -38,7 +38,7 @@ samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/mrna.bed \
 " ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
 ```
 
-- Use CIGAR to filter alll bac-reads from different region
+- Use CIGAR to filter all bac-reads from different region
 
 Three different RNA regions `.bam` files from the previous step.
 
@@ -49,7 +49,8 @@ cd /mnt/e/project/srna/output/bam/rna
 for file in `ls SRR*.bam | perl -p -e 's/\.sort\.bam$//'`
 do
 samtools view -@ 10 ${file}.sort.bam | \
-tsv-filter --not-iregex 6:X > ../rna_tsv/${file}.tsv;
+tsv-filter --not-iregex 6:X | \
+tsv-select -f 1,2,3,4,6,10,11 > ../rna_tsv/${file}.tsv;
 done
 ```
 
@@ -147,28 +148,17 @@ printf"%s\t%s\t%.3f\t%s\n",$a[0],$a[1],$b,$a[3];
 done
 ```
 
-- Filter
-
-```bash
-for rna in "trna" "rrna" "mrna"
-do
-cat bac_ratio_group.${rna}.tsv | \
-tsv-join -H --filter-file plant_30.tsv --key-fields name \
-> bac_ratio_group_30.${rna}.tsv
-done
-```
-
 - Plot
 
 ```bash
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f bac_ratio_group_30.trna.tsv -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads.pdf
+-f bac_ratio_group.trna.tsv -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f bac_ratio_group_30.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads.pdf
+-f bac_ratio_group.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads.pdf
 
 Rscript /mnt/e/project/srna/script/rna_percent.r \
--f bac_ratio_group_30.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
+-f bac_ratio_group.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
 ```
 
 - Summary
@@ -532,6 +522,85 @@ samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/other_trf.bed \
 samtools view -@ 2 -F 4 -bh -L ../../../annotation/bacteria/other_trf.bed \
 {}_unali.sort.bam > ../trf/{}_unali.other.sort.bam; \
 " ::: $(cat ../../count/plant_30.tsv | tsv-select -f 1 | sed '1d')
+```
+
+- Use CIGAR to filter all bac-reads from different tRF region
+
+Three different RNA regions `.bam` files from the previous step.
+
+```bash
+mkdir -p /mnt/e/project/srna/output/bam/trf_tsv
+cd /mnt/e/project/srna/output/bam/trf
+
+for file in `ls SRR*.bam | perl -p -e 's/\.sort\.bam$//'`
+do
+samtools view -@ 10 ${file}.sort.bam | \
+tsv-filter --not-iregex 6:X > ../trf_tsv/${file}.tsv;
+done
+```
+
+```bash
+cd /mnt/e/project/srna/output/count/
+mkdir all rna
+cd /mnt/e/project/srna/output/bam/bac_tsv
+
+for file in `ls *.tsv | perl -p -e 's/\.tsv$//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+cat ${file}.tsv | \
+tsv-summarize --group-by 3 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/all/${file}.all.tsv;
+done
+
+cd /mnt/e/project/srna/output/bam/rna_tsv
+
+for file in `ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+cat ${file}.trna.tsv | \
+tsv-summarize --group-by 3 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/rna/${file}.trna.tsv;
+done
+
+for file in `ls *.rrna.tsv | perl -p -e 's/\.rrna\.tsv$//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+cat ${file}.rrna.tsv | \
+tsv-summarize --group-by 3 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/rna/${file}.rrna.tsv;
+done
+
+for file in `ls *.mrna.tsv | perl -p -e 's/\.mrna\.tsv$//'`
+do
+name=${file%%_*};
+catgry=${file#*_};
+cat ${file}.mrna.tsv | \
+tsv-summarize --group-by 3 --count | \
+tsv-join --filter-file ../../../rawname.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+tsv-join --filter-file ../../../name.tsv --key-fields 1 --append-fields 2 | \
+tsv-summarize --group-by 3 --sum 2 | \
+awk -v name=${name} -v catgry=$catgry '{print name"\t"$1"\t"$2"\t"catgry}' \
+> ../../count/rna/${file}.mrna.tsv;
+done
 ```
 
 ## Extract tRF sequence from different bacteria

@@ -514,7 +514,8 @@ cd /mnt/e/project/srna/output/bam/bacteria
 for file in `ls SRR*.bam | perl -p -e 's/\.sort\.bam$//'`
 do
 samtools view -@ 10 ${file}.sort.bam | \
-tsv-filter --not-iregex 6:X --ne 2:4 > ../bac_tsv/${file}.tsv;
+tsv-filter --not-iregex 6:X --ne 2:4 | \
+tsv-select -f 1,2,3,4,6,10,11 > ../bac_tsv/${file}.tsv;
 done
 ```
 

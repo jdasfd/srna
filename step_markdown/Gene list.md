@@ -1,27 +1,10 @@
-* [Extracting gene list from bam files](#extracting-gene-list-from-bam-files)
-
-    - [TAIR locus gene list from the 1mis bam files](#tair-locus-gene-list-from-the-1mis-bam-files)
-
-        - [Convert gff to tsv](#convert-gff-to-tsv)
-
-        - [Convert bam to tsv files](#convert-bam-to-tsv-files)
-
-    - [clusterProfiler for GO enrichment analysis](#clusterprofiler-for-go-enrichment-analysis)
-
-        - [Prepare clusterProfiler R packages](#prepare-clusterprofiler-r-packages)
-
-        - [Extract 1mis gene list](#extract-1mis-gene-list)
-
-        - [Gene list join with tier](#gene-list-join-with-tier)
-
-
 # Extracting gene list from bam files
 
 Because of the necessity to get the tair_locus id for enrichment analysis, the gene targeted by 1mis reads should be extracted according their positions.
 
-## TAIR locus gene list from the 1mis bam files
+## TAIR locus gene list from the mis bam files
 
-### Convert gff to tsv
+### Convert gff to yml
 
 There were a few columns needed, including chrom, position, annotation.
 

@@ -1,26 +1,48 @@
-- [Preparations for the sRNA analytic process](#preparations-for-the-srna-analytic-process)
-  - [The genome preparations](#the-genome-preparations)
-    - [*Arabidopsis thaliana*](#arabidopsis-thaliana)
-      - [*A. thaliana* genomes](#a-thaliana-genomes)
-      - [*A. thaliana* annotation](#a-thaliana-annotation)
-    - [Bacteria](#bacteria)
-      - [Bacteria genomes](#bacteria-genomes)
-      - [Bacteria annotation](#bacteria-annotation)
-  - [Biotools in protocol](#biotools-in-protocol)
-  - [Getting sRNA-seq data](#getting-srna-seq-data)
-    - [Download fastq from NCBI](#download-fastq-from-ncbi)
-    - [Quality control](#quality-control)
-    - [Remove adapter](#remove-adapter)
-    - [Quality control after trim](#quality-control-after-trim)
-
-    - [Prepare](#prepare)
-
-    - [Getting sRNA-seq data](#getting-srna-seq-data)
-
-
 # Preparations for the sRNA analytic process
 
 In this process, I prepared to analyse small RNA-seq files in *A. thaliana*. There were few things should be specified. I recorded below.
+
+- [Preparations for the sRNA analytic process](#preparations-for-the-srna-analytic-process)
+
+  - [The genome preparations](#the-genome-preparations)
+  
+    - [*Arabidopsis thaliana*](#arabidopsis-thaliana)
+  
+      - [*A. thaliana* genomes](#a-thaliana-genomes)
+  
+      - [*A. thaliana* annotation](#a-thaliana-annotation)
+  
+    - [Bacteria](#bacteria)
+  
+      - [Bacteria genomes](#bacteria-genomes)
+  
+      - [Bacteria annotation](#bacteria-annotation)
+  
+  - [Biotools in protocol](#biotools-in-protocol)
+  
+  - [Getting sRNA-seq data](#getting-srna-seq-data)
+  
+    - [Download fastq from NCBI](#download-fastq-from-ncbi)
+  
+    - [Quality control](#quality-control)
+  
+    - [Remove adapter](#remove-adapter)
+  
+    - [Quality control after trim](#quality-control-after-trim)
+
+  - [Getting sRNA-seq data](#getting-srna-seq-data)
+  
+    - [Download fastq from NCBI](#download-fastq-from-ncbi)
+  
+    - [Quality control](#quality-control)
+  
+    - [Remove adapter](#remove-adapter)
+  
+    - [Quality control after trim](#quality-control-after-trim)
+  
+    - [Prepare](#prepare)
+  
+    - [Getting sRNA-seq data](#getting-srna-seq-data)
 
 ## The genome preparations
 
@@ -30,7 +52,7 @@ In this process, I prepared to analyse small RNA-seq files in *A. thaliana*. The
 
 For this *A. thaliana* genome, we downloaded from ensembl. I found that some links may not work well. So I copied the ftp site below.
 
-http://ftp.ebi.ac.uk/ensemblgenomes/pub/release-51/plants/
+<http://ftp.ebi.ac.uk/ensemblgenomes/pub/release-51/plants/>
 
 ```bash
 cd /mnt/e/project/srna
@@ -71,8 +93,8 @@ I used ASSEMBLY in [bacteria_ar.md](https://github.com/wang-q/withncbi/blob/mast
 There is a demand that separating RNA GFF from annotation. tRNA, rRNA and mRNA regions were three different types.
 
 ```bash
-cat bacteria.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:tRNA > bac_trna.gff
-cat bacteria.gff | grep -v '#' | tsv-filter --str-eq 3:gene --iregex 9:rRNA > bac_rrna.gff
+cat bacteria.gff | grep -v '^#' | tsv-filter --str-eq 3:tRNA > bac_trna.gff
+cat bacteria.gff | grep -v '^#' | tsv-filter --str-eq 3:rRNA > bac_rrna.gff
 cat bacteria.gff | grep -v '#' | tsv-filter --str-eq 3:CDS --not-iregex 9:tRNA --not-iregex 9:rRNA > bac_mrna.gff
 
 # All CDS contain tRNAs and rRNAs, which should be removed 
@@ -86,7 +108,7 @@ cat bac_mrna.gff | convert2bed --input=gff --output=bed > mrna.bed
 
 ## Biotools in protocol
 
-* **sratoolkit (not recommended)**
+- **sratoolkit (not recommended)**
 
 using SRAtoolkit for to download SRA files.
 
@@ -109,7 +131,7 @@ echo "export PATH="$(pwd):$PATH"" >> ~/.bashrc
 prefetch --help
 ```
 
-*  **Samtools**
+- **Samtools**
 
 The basic SAM/BAM file manipulating tools.
 
@@ -117,7 +139,7 @@ The basic SAM/BAM file manipulating tools.
 brew install samtools
 ```
 
-* **Fastqc**
+- **Fastqc**
 
 Fastqc for checking sequencing quality.
 
@@ -125,19 +147,19 @@ Fastqc for checking sequencing quality.
 brew install fastqc
 ```
 
-* **intspan and anchr**
+- **intspan and anchr**
 
 [intspan](https://github.com/wang-q/intspan) and [anchr](https://github.com/wang-q/anchr) were written by my lab professor [Qiang Wang](https://www.github.com/wang-q).
 
 Go check and install.
 
-* **Bowtie2**
+- **Bowtie2**
 
 ```bash
 brew install bowtie2
 ```
 
-* **Seqkit**
+- **Seqkit**
 
 Using seqkit to extract reads.
 
@@ -145,28 +167,27 @@ Using seqkit to extract reads.
 brew install seqkit
 ```
 
-* **mosdepth**
+- **mosdepth**
 
 ```bash
 brew install mosdepth
 ```
 
-* **tsv-utils**
+- **tsv-utils**
 
 tsv-utils is an really powerful toolbox for manipulating .tsv format files. It is highly recommended that you mastered it.
 
-Make sure you completed software installation [wang-q/dotfiles](https://github.com/wang-q/dotfiles) and `brew tap wang-q/tap` could be adopted. 
+Make sure you completed software installation [wang-q/dotfiles](https://github.com/wang-q/dotfiles) and `brew tap wang-q/tap` could be adopted.
 
 ```bash
 brew install wang-q/tap/tsv-utils
 ```
 
-* **convert2bed in bedops**
+- **convert2bed in bedops**
 
 ```bash
 brew install bedops
 ```
-
 
 ## Getting sRNA-seq data
 
