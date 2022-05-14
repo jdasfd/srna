@@ -260,7 +260,7 @@ After viewing the plot, it was pretty sure that the 1st alignment results were r
 
 Because of the 1st alignment had serious errors, I had to exclude all possible mistakes from anywhere.
 
-- Alignment results cound
+- Alignment results count
 
 ```bash
 cd /mnt/e/project/srna/output/test
@@ -287,3 +287,52 @@ cat check.1.tsv | tsv-filter -H --ff-eq bam:sum | wc -l
 cat check.2.tsv | tsv-filter -H --ff-eq bam:sum | wc -l
 #204
 ```
+
+After doing this, I found that the 1st alignment results were abnormal.
+
+- Reads extraction
+
+```bash
+mkdir /mnt/e/project/srna/output/check/plant
+cd /mnt/e/project/srna/output/check/plant
+mkdir all mis unali
+cd /mnt/e/project/srna/output/test
+mkdir name
+
+# check those files with high tRNA ratio
+cat count/result.trna.tsv | tsv-filter -H --gt ratio:50 --eq group:1 > group1_trna_50.tsv
+
+cat group1_trna_50.tsv | wc -l
+#84
+
+bash ext_all.sh &
+bash ext_mis.sh &
+bash ext_un.sh &
+
+rm -rf name
+```
+
+- Why always tRNA
+
+```bash
+mkdir /mnt/e/project/srna/output/test/bac_mis
+cd mkdir /mnt/e/project/srna/output/test/rna
+
+for file in `cat ../group1_trna_50.tsv | cut -f 1 | sed '1d'`
+do
+samtools view -@ 5 ${file}_1mis.trna.sort.bam | \
+tsv-filter --ne 2:4 | tsv-select -f 1,3,4,6,10 \
+> ../bac_mis/${file}.trna.tsv
+done
+
+cd ..
+bash bac_or_not.sh > mis_over_50.trna.tsv
+
+cd bac_mis
+parallel -j 6 " \
+cat {}.trna.tsv | tsv-filter --iregex 4:X | \
+tsv-select -f 2,3,4,5 | \
+tsv-summarize --group-by 1,2,3,4 --count | \
+sort -r -nk 5 > ../seq/{}.not-bac.trna.tsv \
+" ::: $(ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//')
+
