@@ -254,8 +254,36 @@ dev.off()
 done
 ```
 
+After viewing the plot, it was pretty sure that the 1st alignment results were reproduced.
+
 ## Troubleshooting
 
 Because of the 1st alignment had serious errors, I had to exclude all possible mistakes from anywhere.
 
+- Alignment results cound
+
 ```bash
+cd /mnt/e/project/srna/output/test
+
+bash check_trim.sh > ../check/check_trim.tmp.tsv
+bash check_bam_1.sh > ../check/check_bam.1.tmp.tsv
+bash check_fq_1.sh > ../check/check_fq.1.tmp.tsv
+```
+
+```bash
+cd /mnt/e/project/srna/output/check
+
+cat check_bam_1.tmp.sh | tsv-join -H --filter-file check_trim.tmp.tsv | \
+tsv-join -H --filter-file check_fq.1.tmp.tsv \
+> check.1.tsv
+
+cat check.1.tsv | tsv-filter -H --ff-eq bam:trim_fq | wc -l
+#204
+
+cat check.1.tsv | tsv-filter -H --ff-eq bam:sum | wc -l
+#1
+
+# repeat processes above and get the results named check.2.tsv
+cat check.2.tsv | tsv-filter -H --ff-eq bam:sum | wc -l
+#204
+```
