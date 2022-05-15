@@ -316,7 +316,7 @@ rm -rf name
 
 ```bash
 mkdir /mnt/e/project/srna/output/test/bac_mis
-cd mkdir /mnt/e/project/srna/output/test/rna
+cd /mnt/e/project/srna/output/test/rna
 
 for file in `cat ../group1_trna_50.tsv | cut -f 1 | sed '1d'`
 do
@@ -336,3 +336,31 @@ tsv-summarize --group-by 1,2,3,4 --count | \
 sort -r -nk 5 > ../seq/{}.not-bac.trna.tsv \
 " ::: $(ls *.trna.tsv | perl -p -e 's/\.trna\.tsv$//')
 
+cd ..
+cat seq/*.tsv >> seq.tsv
+cat seq.tsv | tsv-summarize --group-by 1,2,3,4 --sum 5 > seq.num.tsv
+cat seq.num.tsv | tsv-join --filter-file ../../rawname.tsv --key-fields 1 --append-fields 2 | tsv-select -f 6,5 | tsv-join --filter-file ../../name.tsv --key-fields 1 --append-fields 2 | tsv-summarize --group-by 3 --sum 2 | mlr --itsv --omd cat
+```
+
+| 1   | 30894 |
+| --- | ----- |
+| 2   | 23149 |
+| 3   | 4090  |
+| 4   | 1     |
+
+So almost those non-bac reads were accumulated into group 1 and group 2.
+
+Next question is: what were their characteristics?
+
+- Characristics of non-bac reads in tRNA region
+
+```bash
+cd /mnt/e/project/srna/output/test
+cat seq.num.tsv | tsv-select -f 4,3,5 > ../check/seq.raw.tsv
+```
+
+- Remove those top bacteria
+
+```bash
+
+```
