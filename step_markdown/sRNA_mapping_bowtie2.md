@@ -111,7 +111,7 @@ cd /mnt/e/project/srna/output/count
 mkdir trna rrna mrna all
 cd ..
 
-bash ../../script/plant_reads.sh > plant_reads.csv
+bash ../../scripts/plant_reads.sh > plant_reads.csv
 
 cat plant_reads.csv | perl -n -e 'chomp;
 @a = split/,/,$_;
@@ -163,7 +163,7 @@ tsv-select -H -f name,count,count_sum,num | sed '1d' | \
 perl -n -e 'chomp;@a = split/\t/,$_; $ratio=$a[1]/$a[2]*100;
 printf("%s\t%.2f\t%s\n","$a[0]","$ratio",$a[3]);' | sed '1iname\tratio\tnum' > plant_ratio.tsv
 
-perl ../../script/ratio2count.pl -b 3 -r plant_ratio.tsv | \
+perl ../../scripts/ratio2count.pl -b 3 -r plant_ratio.tsv | \
 sort -nk 1 | sed '1iratio\tcount' > ratio_count_3.tsv
 
 rm *.tmp.*
@@ -325,7 +325,7 @@ Here we used `SRR*_plantall.sort.bam` because of we wanted to check the differen
 
 ```bash
 cd /mnt/e/project/srna/output/count
-bash ../../script/plant_rna_ratio.sh | tee plant_rna_ratio_all.csv
+bash ../../scripts/plant_rna_ratio.sh | tee plant_rna_ratio_all.csv
 ```
 
 - Filtered by cut-off
@@ -527,7 +527,7 @@ All the sRNA reads aligned perfectly to bacterial genomes were regarded as the r
 
 ```bash
 cd /mnt/e/project/srna/output/count
-bash ../../script/bac_reads.sh | tee bac_reads.csv
+bash ../../scripts/bac_reads.sh | tee bac_reads.csv
 ```
 
 ```bash
@@ -600,7 +600,7 @@ cat bac_ratio_30.tsv | tsv-summarize -H --group-by catgry --mean ratio --median 
 Because of the seperation of 3 types of reads in the previous markdown [sRNA_mapping_bowtie2.md](sRNA_mapping_bowtie2.md): aliall(plant), mis(target plant), unali(unknown source), we wanted to know the ratio of reads belong to bacteria among 3 types of file.
 
 ```bash
-bash ../../script/bac_ratio.sh | tee bac_per.csv
+bash ../../scripts/bac_ratio.sh | tee bac_per.csv
 
 cat bac_per.csv | mlr --icsv --otsv cat | \
 tsv-join -H --filter-file plant_30.tsv --key-fields name > bac_per_30.tsv
@@ -653,7 +653,7 @@ rm ../bac_ratio_group.tsv
 # use >> the next, so clear the directory first
 for file in `ls`
 do
-cat ${file} | perl ../../../script/reads_group.pl >> ../bac_ratio_group.tsv;
+cat ${file} | perl ../../../scripts/reads_group.pl >> ../bac_ratio_group.tsv;
 done
 
 cd ..
@@ -668,7 +668,7 @@ tsv-join -H --filter-file plant_30.tsv --key-fields name \
 - Plot
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -n 3 -f bac_ratio_group_30.tsv -t "Bac-reads/all_in_group" \
 -y "Bac-reads/all" -o ../figure/bac_ratio_group_30.pdf
 

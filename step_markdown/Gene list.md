@@ -56,7 +56,7 @@ Before we started, we should install some packages for R
 The raw R packages needed could be seen in <https://github.com/wang-q/dotfiles/blob/master/r/packages.R>. org.At.tair.db were added into path.
 
 ```bash
-Rscript /mnt/e/project/srna/script/packages.R
+Rscript /mnt/e/project/srna/scripts/packages.R
 ```
 
 ### Extract 1mis gene list
@@ -93,7 +93,7 @@ cd /mnt/e/project/srna/output/gene/genelist
 
 for file in `ls SRR*.gene.tsv | perl -p -e 's/\.g.+tsv$//'`
 do
-Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r \
+Rscript /mnt/e/project/srna/scripts/enrichgo_dotplot.r \
 -f ${file}.gene.tsv -o ../plant_GO_figure/${file}_GO.pdf;
 done
 ```
@@ -141,9 +141,9 @@ cat tier3.gene.tsv | sort | uniq | sed '1iTAIR' > ../tier3.gene.tsv
 ```
 
 ```bash
-Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r -f tier1.gene.tsv -o plant_GO_figure/tier1_GO.pdf
-Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r -f tier2.gene.tsv -o plant_GO_figure/tier2_GO.pdf
-Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r -f tier3.gene.tsv -o plant_GO_figure/tier3_GO.pdf
+Rscript /mnt/e/project/srna/scripts/enrichgo_dotplot.r -f tier1.gene.tsv -o plant_GO_figure/tier1_GO.pdf
+Rscript /mnt/e/project/srna/scripts/enrichgo_dotplot.r -f tier2.gene.tsv -o plant_GO_figure/tier2_GO.pdf
+Rscript /mnt/e/project/srna/scripts/enrichgo_dotplot.r -f tier3.gene.tsv -o plant_GO_figure/tier3_GO.pdf
 ```
 
 ## Gene list information
@@ -215,7 +215,7 @@ sed '1d' | sed '1iTAIR' > ../all_gene_count_100.tsv
 ```
 
 ```bash
-Rscript /mnt/e/project/srna/script/enrichgo_dotplot.r -f all_gene_count_100.tsv -o plant_GO_figure/100_GO.pdf
+Rscript /mnt/e/project/srna/scripts/enrichgo_dotplot.r -f all_gene_count_100.tsv -o plant_GO_figure/100_GO.pdf
 ```
 
 ```bash

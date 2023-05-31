@@ -151,13 +151,13 @@ done
 - Plot
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f bac_ratio_group.trna.tsv -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f bac_ratio_group.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f bac_ratio_group.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
 ```
 
@@ -241,15 +241,15 @@ sort -nk 2 -r | sed '1iseq\tcount' \
 - Plot
 
 ```bash
-bash ../../../script/mclust.sh all_file_mis.all.tsv
-bash ../../../script/mclust.sh all_file_aliall.all.tsv
-bash ../../../script/mclust.sh all_file_unali.all.tsv
+bash ../../../scripts/mclust.sh all_file_mis.all.tsv
+bash ../../../scripts/mclust.sh all_file_aliall.all.tsv
+bash ../../../scripts/mclust.sh all_file_unali.all.tsv
 
 # choose rignt n according to the previous step figure
 
-bash ../../../script/mclust_dens.sh all_file_mis.all.tsv 3
-bash ../../../script/mclust_dens.sh all_file_aliall.all.tsv 3
-bash ../../../script/mclust_dens.sh all_file_unali.all.tsv 3
+bash ../../../scripts/mclust_dens.sh all_file_mis.all.tsv 3
+bash ../../../scripts/mclust_dens.sh all_file_aliall.all.tsv 3
+bash ../../../scripts/mclust_dens.sh all_file_unali.all.tsv 3
 ```
 
 - Summary
@@ -357,13 +357,13 @@ done
 - Plot
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f bac_ratio_group.tier1.tsv -t tier1 -y "Bac-reads in tRNA" -o ../figure/tier1_reads.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f bac_ratio_group.tier2.tsv -t tier2 -y "Bac-reads in rRNA" -o ../figure/tier2_reads.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f bac_ratio_group.tier3.tsv -t tier3 -y "Bac-reads in mRNA" -o ../figure/tier3_reads.pdf
 ```
 
@@ -807,7 +807,7 @@ cd /mnt/e/project/srna/output/target/trna
 
 for file in `ls *.fasta | perl -p -e 's/\.fasta//'`
 do
-cat ${file}.fasta | perl ../../../script/seq.pl | sort -nk 2 -r > ${file}_seq.tsv;
+cat ${file}.fasta | perl ../../../scripts/seq.pl | sort -nk 2 -r > ${file}_seq.tsv;
 done
 
 touch all_trna.tsv
@@ -987,13 +987,13 @@ print "$sum";
 ```bash
 cd /mnt/e/project/srna/output/cover
 
-perl ../../script/tpm.pl | sed '1ifile\tgroup\tcatgry\tttpm\trtpm\tmtpm' > tpm.tsv
+perl ../../scripts/tpm.pl | sed '1ifile\tgroup\tcatgry\tttpm\trtpm\tmtpm' > tpm.tsv
 
 tsv-select -H -f file,group,catgry,ttpm tpm.tsv | sed '1d' | sed '1ifile\tgroup\tcatgry\tnum' > ttpm.tsv
 tsv-select -H -f file,group,catgry,rtpm tpm.tsv | sed '1d' | sed '1ifile\tgroup\tcatgry\tnum' > rtpm.tsv
 tsv-select -H -f file,group,catgry,mtpm tpm.tsv | sed '1d' | sed '1ifile\tgroup\tcatgry\tnum' > mtpm.tsv
 
-Rscript /mnt/e/project/srna/script/rna_plot.r -f ttpm.tsv -o ../figure/ttpm.pdf -t trna -y TPM
-Rscript /mnt/e/project/srna/script/rna_plot.r -f rtpm.tsv -o ../figure/rtpm.pdf -t rrna -y TPM
-Rscript /mnt/e/project/srna/script/rna_plot.r -f mtpm.tsv -o ../figure/mtpm.pdf -t mrna -y TPM
+Rscript /mnt/e/project/srna/scripts/rna_plot.r -f ttpm.tsv -o ../figure/ttpm.pdf -t trna -y TPM
+Rscript /mnt/e/project/srna/scripts/rna_plot.r -f rtpm.tsv -o ../figure/rtpm.pdf -t rrna -y TPM
+Rscript /mnt/e/project/srna/scripts/rna_plot.r -f mtpm.tsv -o ../figure/mtpm.pdf -t mrna -y TPM
 ```

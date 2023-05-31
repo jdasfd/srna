@@ -72,7 +72,7 @@ tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields
 
 ```bash
 cd /mnt/e/project/srna/output/trf/tsv
-bash ../../../script/group_rna_count.sh > ../name_count.only_trf.tsv
+bash ../../../scripts/group_rna_count.sh > ../name_count.only_trf.tsv
 ```
 
 ```bash
@@ -86,7 +86,7 @@ print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 ```
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result.only_trf.tsv -t "only_trf" -y "Bac-reads in tRNA" -o ../figure/only_trf_percent.pdf
 ```
 
@@ -330,7 +330,7 @@ done
 
 rm *.trna.tsv
 
-bash ../../../script/group_rna_count.sh > ../name_count.trna.tsv
+bash ../../../scripts/group_rna_count.sh > ../name_count.trna.tsv
 ```
 
 ```bash
@@ -345,7 +345,7 @@ done
 
 rm *.rrna.tsv
 
-bash ../../../script/group_rna_count.sh > ../name_count.rrna.tsv
+bash ../../../scripts/group_rna_count.sh > ../name_count.rrna.tsv
 ```
 
 ```bash
@@ -360,7 +360,7 @@ done
 
 rm *.mrna.tsv
 
-bash ../../../script/group_rna_count.sh > ../name_count.mrna.tsv
+bash ../../../scripts/group_rna_count.sh > ../name_count.mrna.tsv
 ```
 
 ```bash
@@ -386,13 +386,13 @@ print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 ```
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result.trna.tsv -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads.pdf
 ```
 
@@ -405,13 +405,13 @@ cat result.mrna.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1 > re
 ```
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result_50.trna.tsv -t tRNA_region -y "Bac-reads in tRNA" -o ../figure/trna_reads_50.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result_50.rrna.tsv -t rRNA_region -y "Bac-reads in rRNA" -o ../figure/rrna_reads_50.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result_50.mrna.tsv -t mRNA_region -y "Bac-reads in mRNA" -o ../figure/mrna_reads_50.pdf
 ```
 
@@ -578,7 +578,7 @@ tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields
 
 rm *.tier1.tsv
 
-bash ../../../script/group_rna_count.sh > ../name_count.tier1.tsv
+bash ../../../scripts/group_rna_count.sh > ../name_count.tier1.tsv
 ```
 
 ```bash
@@ -595,7 +595,7 @@ tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields
 
 rm *.tier2.tsv
 
-bash ../../../script/group_rna_count.sh > ../name_count.tier2.tsv
+bash ../../../scripts/group_rna_count.sh > ../name_count.tier2.tsv
 ```
 
 ```bash
@@ -612,7 +612,7 @@ tsv-join --filter-file ../../count/all/{}.all.tsv --key-fields 1 --append-fields
 
 rm *.tier3.tsv
 
-bash ../../../script/group_rna_count.sh > ../name_count.tier3.tsv
+bash ../../../scripts/group_rna_count.sh > ../name_count.tier3.tsv
 ```
 
 ```bash
@@ -638,13 +638,13 @@ print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 ```
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result.tier1.tsv -t ">120_files" -y "Bac-reads in tRNA (T1)" -o ../figure/tier1_percent.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result.tier2.tsv -t "60-120_files" -y "Bac-reads in tRNA (T2)" -o ../figure/tier2_percent.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result.tier3.tsv -t "<60_files" -y "Bac-reads in tRNA (T3)" -o ../figure/tier3_percent.pdf
 ```
 
@@ -790,10 +790,10 @@ done
 - Plot
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f bac_ratio_group.trf.tsv -t tRF -y "Bac-reads in tRF" -o ../figure/trf_reads.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f bac_ratio_group.other.tsv -t others -y "Bac-reads in other" -o ../figure/other_reads.pdf
 ```
 
@@ -897,7 +897,7 @@ done
 
 rm *.trf3_5.tsv
 
-bash ../../../script/group_rna_count.sh > ../name_count.trf3_5.tsv
+bash ../../../scripts/group_rna_count.sh > ../name_count.trf3_5.tsv
 ```
 
 ```bash
@@ -912,7 +912,7 @@ done
 
 rm *.other_trf.tsv
 
-bash ../../../script/group_rna_count.sh > ../name_count.other_trf.tsv
+bash ../../../scripts/group_rna_count.sh > ../name_count.other_trf.tsv
 ```
 
 ```bash
@@ -932,10 +932,10 @@ print"$a[0]\t$a[1]\t$b\t$a[4]\n";
 ```
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result.trf3_5.tsv -t tRF-3/5_region -y "tRF3/5 Bac-reads" -o ../figure/trf3_5_percent.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result.other_trf.tsv -t other-tRNA_region -y "other tRNA Bac-reads" -o ../figure/other_trf_percent.pdf
 ```
 
@@ -947,10 +947,10 @@ cat result.other_trf.tsv | tsv-join -H --filter-file plant_50.tsv --key-fields 1
 ```
 
 ```bash
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result_50.trf3_5.tsv -t tRF-3/5_region -y "tRF3/5 Bac-reads" -o ../figure/trf3_5_percent_50.pdf
 
-Rscript /mnt/e/project/srna/script/rna_percent.r \
+Rscript /mnt/e/project/srna/scripts/rna_percent.r \
 -f result_50.other_trf.tsv -t other-tRNA_region -n 25 -y "other tRNA Bac-reads" -o ../figure/other_trf_percent_50.pdf
 ```
 

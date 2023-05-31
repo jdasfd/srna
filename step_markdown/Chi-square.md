@@ -451,7 +451,7 @@ done
 cd ..
 
 cat test2.rna_all.tsv | \
-perl ../../script/extract_chi_group.pl | \
+perl ../../scripts/extract_chi_group.pl | \
 sed '1,4d' > test2.group.tsv
 
 rm test2.rna_all.tsv
@@ -492,10 +492,10 @@ parallel --colsep '\t' -j 1 -k '
 * Use a simple script extracting chi-square value from the results
 
 ```bash
-cat test1.chi.all.txt | perl ../../script/chi_square_extraction.pl | \
+cat test1.chi.all.txt | perl ../../scripts/chi_square_extraction.pl | \
 sed '1ifile\trna\tchi' > test1.chi.all.tsv
 
-cat test1.chi.group.txt | perl ../../script/chi_square_extraction.pl | 
+cat test1.chi.group.txt | perl ../../scripts/chi_square_extraction.pl | 
 perl -n -e 'chomp;
 @a = split/\t/,$_;
 $a[1]=~/^(.+)\sof/;$rna=$1;
@@ -503,7 +503,7 @@ $a[1]=~/\sof(.+)$/;$group=$1;
 print "$a[0]\t$group\t$rna\t$a[2]\n";
 ' | sed '1ifile\tgroup\trna\tchi' > test1.chi.group.tsv
 
-cat test2.chi.rna.txt | perl ../../script/chi_square_extraction.pl | \
+cat test2.chi.rna.txt | perl ../../scripts/chi_square_extraction.pl | \
 perl -n -e 'chomp;
 @a = split/\t/,$_;
 $a[1]=~/^(.+)\s/;$rna=$1;
@@ -511,7 +511,7 @@ $a[1]=~/\s(.+)$/;$group=$1;
 print "$a[0]\t$group\t$rna\t$a[2]\n";
 ' | sed '1ifile\tgroup\trna\tchi' > test2.chi.rna.tsv
 
-cat test2.chi.group.txt | perl ../../script/chi_square_extraction.pl | \
+cat test2.chi.group.txt | perl ../../scripts/chi_square_extraction.pl | \
 perl -n -e 'chomp;
 @a = split/\t/,$_;
 $a[1]=~/^(.+)\s/;$group=$1;
